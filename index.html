@@ -46,7 +46,7 @@
         }
 
         /* ============================================================
-           ЧЁРНО-БЕЛЫЙ ПЕРЕЛИВАЮЩИЙСЯ ФОН
+           ФОН
            ============================================================ */
         .bg-container {
             position: fixed;
@@ -412,8 +412,8 @@
            HERO
            ============================================================ */
         .hero {
-            padding: 4rem 0 3rem;
-            min-height: 50vh;
+            padding: 4rem 0 2rem;
+            min-height: 45vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -555,7 +555,7 @@
            СЕКЦИИ
            ============================================================ */
         .section {
-            padding: 3.5rem 0 2rem;
+            padding: 3rem 0 2rem;
             border-top: 1px solid var(--border);
         }
 
@@ -569,7 +569,7 @@
             align-items: flex-end;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .section-title {
@@ -601,7 +601,7 @@
         }
 
         /* ============================================================
-           КАРТОЧКИ ВОЗМОЖНОСТЕЙ
+           КАРТОЧКИ ВОЗМОЖНОСТЕЙ (только на главной)
            ============================================================ */
         .features-grid {
             display: grid;
@@ -797,6 +797,7 @@
             text-transform: uppercase;
             letter-spacing: 1.5px;
             border-radius: 10px;
+            width: 100%;
         }
 
         .btn-buy:hover {
@@ -807,58 +808,72 @@
         }
 
         /* ============================================================
-           КОРЗИНА
+           СБРОС HWID
            ============================================================ */
-        .cart-items {
-            margin-top: 0.5rem;
+        .hwid-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem 2.5rem;
+            backdrop-filter: blur(8px);
+            transition: all 0.4s ease;
+            margin-top: 1rem;
         }
 
-        .cart-item {
+        .hwid-section:hover {
+            border-color: var(--border-hover);
+        }
+
+        .hwid-section .hwid-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.6rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            font-size: 0.9rem;
-            animation: fadeIn 0.3s ease-out;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .cart-item .name {
-            color: #ccc;
-        }
-
-        .cart-item .price {
-            color: #888;
+        .hwid-section .hwid-header h3 {
+            font-size: 1.1rem;
             font-weight: 600;
+            color: #fff;
         }
 
-        .cart-item .remove-btn {
-            background: none;
-            border: none;
-            color: #444;
-            cursor: pointer;
-            font-size: 0.7rem;
-            font-family: 'Inter', sans-serif;
-            transition: color 0.3s ease;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-        }
-
-        .cart-item .remove-btn:hover {
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.05);
-        }
-
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0 0.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            margin-top: 0.5rem;
+        .hwid-section .hwid-header .price-tag {
+            font-size: 1.2rem;
             font-weight: 700;
             color: #fff;
-            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .hwid-section p {
+            color: #888;
+            font-size: 0.9rem;
+            margin: 0.5rem 0 1.2rem;
+            line-height: 1.7;
+        }
+
+        .hwid-section .btn-hwid {
+            padding: 0.6rem 2.2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-radius: 10px;
+        }
+
+        .hwid-section .btn-hwid:hover {
+            background: #ef4444;
+            color: #fff;
+            transform: translateY(-2px);
         }
 
         /* ============================================================
@@ -1204,7 +1219,7 @@
         }
 
         /* ============================================================
-           АВТОРИЗАЦИЯ (МОДАЛКА)
+           АВТОРИЗАЦИЯ
            ============================================================ */
         .auth-overlay {
             position: fixed;
@@ -1464,6 +1479,13 @@
             .cabinet-content {
                 padding: 1.5rem;
             }
+            .hwid-section {
+                padding: 1.5rem;
+            }
+            .hwid-section .hwid-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1524,10 +1546,8 @@
                 </div>
                 <nav class="nav">
                     <a data-page="main">Главная</a>
-                    <a data-page="features">Возможности</a>
                     <a data-page="pricing">Цены</a>
                     <a data-page="cabinet">Кабинет</a>
-                    <a data-page="cart">Корзина</a>
                 </nav>
                 <div class="auth-buttons">
                     <span class="user-email" id="userEmailDisplay"></span>
@@ -1554,16 +1574,11 @@
                 </p>
                 <div class="btn-group">
                     <button class="btn btn-primary" data-page="pricing">Приобрести</button>
-                    <button class="btn btn-outline" data-page="features">Подробнее</button>
                     <button class="btn btn-outline" data-page="cabinet">Кабинет</button>
                 </div>
             </section>
-        </div>
 
-        <!-- ============================================================
-        СТРАНИЦА: ВОЗМОЖНОСТИ
-        ============================================================ -->
-        <div class="page" id="page-features">
+            <!-- ВОЗМОЖНОСТИ (только на главной) -->
             <section class="section">
                 <div class="section-header">
                     <h2 class="section-title">Возможности</h2>
@@ -1576,28 +1591,23 @@
                         <p>Молниеносное наведение, приоритет целей, автоматическая реакция — максимальная эффективность в бою.</p>
                     </div>
                     <div class="feature-item">
-                        <span class="icon">🛡</span>
                         <h3>Анти-детект</h3>
                         <p>Обход большинства античитов, маскировка процессов, автоматическая очистка следов.</p>
                     </div>
                     <div class="feature-item">
-                        <span class="icon">🎯</span>
                         <h3>Visual</h3>
                         <p>Настраиваемый ESP, скелеты, дистанция, здоровье, предметы — полная картина боя.</p>
                     </div>
                     <div class="feature-item">
-                        <span class="icon">🔧</span>
                         <h3>Misc</h3>
                         <p>Быстрая смена оружия, отключение отдачи, авто-присед, триггербот и многое другое.</p>
                     </div>
                     <div class="feature-item">
-                        <span class="icon">📊</span>
                         <h3>Статистика</h3>
                         <p>Отслеживание K/D, точности, времени в игре — анализируйте свою эффективность.</p>
                     </div>
                     <div class="feature-item">
-                        <span class="icon">🔄</span>
-                        <h3>Автообновления</h3>
+                        <h3>ЖОПА</h3>
                         <p>Автоматические обновления после патчей игры. Вы всегда на шаг впереди.</p>
                     </div>
                 </div>
@@ -1624,6 +1634,16 @@
                 <div class="pricing-grid" id="pricing-grid">
                     <!-- JS заполнение -->
                 </div>
+
+                <!-- СБРОС HWID -->
+                <div class="hwid-section" style="margin-top:2rem;">
+                    <div class="hwid-header">
+                        <h3>Сброс HWID</h3>
+                        <span class="price-tag">400 ₽</span>
+                    </div>
+                    <p>Перенесите лицензию на другой компьютер. После оплаты вы сможете сбросить привязку к текущему устройству.</p>
+                    <button class="btn-hwid" id="hwidBtn">Сбросить HWID</button>
+                </div>
             </section>
         </div>
 
@@ -1642,27 +1662,11 @@
             </section>
         </div>
 
-        <!-- ============================================================
-        СТРАНИЦА: КОРЗИНА
-        ============================================================ -->
-        <div class="page" id="page-cart">
-            <section class="section">
-                <div class="section-header">
-                    <h2 class="section-title">Корзина</h2>
-                    <span class="section-sub">оформление заказа</span>
-                </div>
-                <div id="cartContent">
-                    <div style="color:#555;padding:1rem 0;">Корзина пуста</div>
-                </div>
-            </section>
-        </div>
-
         <!-- ===== FOOTER ===== -->
         <footer class="footer">
             <span>&copy; 2026 Lethal DLC — Все права защищены</span>
             <div class="footer-links">
                 <a href="#" data-page="main">Главная</a>
-                <a href="#" data-page="features">Возможности</a>
                 <a href="#" data-page="pricing">Цены</a>
                 <a href="#" data-page="cabinet">Кабинет</a>
             </div>
@@ -1715,7 +1719,6 @@
                     subscription: 'Подписка',
                     ends: 'Заканчивается',
                     license_key: 'Лицензионный ключ',
-                    activate_key: 'Введите ключ активации',
                     no_subscription: 'Нет активной подписки',
                     buy_subscription: 'Купить подписку',
                     your_key: 'Ваш активационный ключ',
@@ -1729,7 +1732,7 @@
                     step4: 'Нажмите "Инжект" и запустите игру',
                     after_activation: 'После активации лоадер автоматически обновляется.',
                     download_loader: 'Скачать загрузчик',
-                    add_to_cart: 'В корзину',
+                    add_to_cart: 'Купить',
                     total: 'Итого',
                     empty_cart: 'Корзина пуста',
                     checkout: 'Оформить заказ',
@@ -1754,7 +1757,10 @@
                     pay: 'Оплатить',
                     payment_success: 'Оплата выполнена!',
                     key_issued: 'Ваш ключ активации',
-                    close: 'Закрыть'
+                    hwid_reset: 'Сброс HWID',
+                    hwid_reset_success: 'HWID успешно сброшен!',
+                    hwid_reset_desc: 'Перенесите лицензию на другой компьютер. После оплаты вы сможете сбросить привязку к текущему устройству.',
+                    hwid_price: '400 ₽'
                 },
                 en: {
                     login: 'Login',
@@ -1775,7 +1781,6 @@
                     subscription: 'Subscription',
                     ends: 'Ends',
                     license_key: 'License key',
-                    activate_key: 'Enter activation key',
                     no_subscription: 'No active subscription',
                     buy_subscription: 'Buy subscription',
                     your_key: 'Your activation key',
@@ -1789,7 +1794,7 @@
                     step4: 'Click "Inject" and launch the game',
                     after_activation: 'After activation, the loader updates automatically.',
                     download_loader: 'Download loader',
-                    add_to_cart: 'Add to cart',
+                    add_to_cart: 'Buy',
                     total: 'Total',
                     empty_cart: 'Cart is empty',
                     checkout: 'Checkout',
@@ -1814,7 +1819,10 @@
                     pay: 'Pay',
                     payment_success: 'Payment successful!',
                     key_issued: 'Your activation key',
-                    close: 'Close'
+                    hwid_reset: 'HWID Reset',
+                    hwid_reset_success: 'HWID successfully reset!',
+                    hwid_reset_desc: 'Move your license to another PC. After payment you can reset the binding to the current device.',
+                    hwid_price: '400 ₽'
                 }
             };
 
@@ -1823,7 +1831,6 @@
             // ============================================================
             let currentLang = 'ru';
             let currentCurrency = 'USD';
-            let cart = [];
             let users = JSON.parse(localStorage.getItem('lethal_users') || '{}');
             let currentUser = null;
             let currentUserEmail = null;
@@ -1893,7 +1900,6 @@
                 }
                 if (page === 'cabinet') renderCabinet();
                 if (page === 'pricing') renderPricing();
-                if (page === 'cart') renderCart();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
@@ -2002,7 +2008,6 @@
                     updateUI();
                     renderCabinet();
                     renderPricing();
-                    renderCart();
                     const heroSmall = document.querySelector('.hero h1 small');
                     const heroP = document.querySelector('.hero p');
                     if (currentLang === 'ru') {
@@ -2026,7 +2031,6 @@
                     this.classList.add('active');
                     currentCurrency = this.dataset.currency;
                     renderPricing();
-                    renderCart();
                 });
             });
 
@@ -2075,87 +2079,21 @@
                 grid.querySelectorAll('.btn-buy').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const plan = PRICES.find(p => p.id === this.dataset.id);
-                        if (plan) { addToCart(plan);
-                            navigateTo('cart'); }
+                        if (plan) {
+                            if (!currentUser) { showAuthModal('login'); return; }
+                            openPaymentModal(plan);
+                        }
                     });
                 });
             }
 
             // ============================================================
-            // КОРЗИНА
+            // МОДАЛКА ОПЛАТЫ
             // ============================================================
-            function addToCart(plan) {
-                const existing = cart.find(i => i.id === plan.id);
-                if (existing) existing.qty += 1;
-                else cart.push({ ...plan, qty: 1 });
-                renderCart();
-                const btn = document.querySelector(`.btn-buy[data-id="${plan.id}"]`);
-                if (btn) {
-                    const orig = btn.textContent;
-                    btn.textContent = '✓';
-                    btn.style.borderColor = '#22c55e';
-                    btn.style.color = '#22c55e';
-                    setTimeout(() => {
-                        btn.textContent = orig;
-                        btn.style.borderColor = '';
-                        btn.style.color = '';
-                    }, 1200);
-                }
-            }
-
-            function removeFromCart(id) {
-                cart = cart.filter(i => i.id !== id);
-                renderCart();
-            }
-
-            function renderCart() {
-                const container = document.getElementById('cartContent');
-                if (!container) return;
-                if (cart.length === 0) {
-                    container.innerHTML = `<div style="color:#555;padding:1rem 0;animation:fadeIn 0.3s ease-out;">${t('empty_cart')}</div>`;
-                    return;
-                }
-                let total = 0,
-                    html = '';
-                cart.forEach(item => {
-                    const val = getPriceInCurrency(item.price);
-                    const sub = val * item.qty;
-                    total += sub;
-                    const sym = RATES[currentCurrency].symbol;
-                    const label = currentLang === 'ru' ? item.label : item.labelEn;
-                    html += `
-                        <div class="cart-item">
-                            <span class="name">${label} × ${item.qty}</span>
-                            <span class="price">${sym}${Number.isInteger(sub) ? sub : sub.toFixed(2)}</span>
-                            <button class="remove-btn" data-id="${item.id}">✕</button>
-                        </div>
-                    `;
-                });
-                const totalStr = Number.isInteger(total) ? total.toString() : total.toFixed(2);
-                container.innerHTML = `
-                    <div class="cart-items">${html}</div>
-                    <div class="cart-total">
-                        <span>${t('total')}</span>
-                        <span>${RATES[currentCurrency].symbol}${totalStr}</span>
-                    </div>
-                    <button class="btn btn-primary" style="margin-top:1rem;padding:0.6rem 2rem;font-size:0.8rem;" id="checkoutBtn">${t('checkout')}</button>
-                `;
-                container.querySelectorAll('.remove-btn').forEach(btn => {
-                    btn.addEventListener('click', function() { removeFromCart(this.dataset.id); });
-                });
-                document.getElementById('checkoutBtn')?.addEventListener('click', function() {
-                    if (!currentUser) { showAuthModal('login'); return; }
-                    openPaymentModal();
-                });
-            }
-
-            // ============================================================
-            // МОДАЛКА ОПЛАТЫ (3 способа)
-            // ============================================================
-            function openPaymentModal() {
+            function openPaymentModal(plan) {
                 let selectedMethod = 'crypto';
-                const total = cart.reduce((sum, item) => sum + getPriceInCurrency(item.price) * item.qty, 0);
-                const totalStr = Number.isInteger(total) ? total.toString() : total.toFixed(2);
+                const price = getPriceInCurrency(plan.price);
+                const priceStr = Number.isInteger(price) ? price.toString() : price.toFixed(2);
                 const sym = RATES[currentCurrency].symbol;
 
                 const methods = {
@@ -2182,7 +2120,7 @@
                 overlay.innerHTML = `
                     <div class="payment-modal">
                         <h2>${t('checkout')}</h2>
-                        <div class="sub">${t('select_payment')}</div>
+                        <div class="sub">${plan.label} — ${sym}${priceStr}</div>
 
                         <div class="payment-methods">
                             <div class="payment-method selected" data-method="crypto">
@@ -2201,7 +2139,7 @@
 
                         <div class="payment-details">
                             <div class="row"><span class="label">${t('method')}</span><span class="value" id="payMethodLabel">${methods.crypto.label}</span></div>
-                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${totalStr}</span></div>
+                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${priceStr}</span></div>
                             <div class="row"><span class="label">${t('details')}</span><span class="value mono" id="payDetails" style="white-space:pre-wrap;font-size:0.7rem;text-align:right;">${methods.crypto.details}</span></div>
                         </div>
 
@@ -2212,7 +2150,6 @@
 
                 document.body.appendChild(overlay);
 
-                // Переключение методов
                 overlay.querySelectorAll('.payment-method').forEach(el => {
                     el.addEventListener('click', function() {
                         overlay.querySelectorAll('.payment-method').forEach(m => m.classList.remove(
@@ -2230,14 +2167,15 @@
 
                 overlay.querySelector('#payBtn').addEventListener('click', function() {
                     const key = generateKey();
-                    const planNames = cart.map(i => currentLang === 'ru' ? i.label : i.labelEn).join(', ');
+                    const planLabel = currentLang === 'ru' ? plan.label : plan.labelEn;
 
                     if (!currentUser.keys) currentUser.keys = [];
-                    currentUser.keys.push({ key, plan: planNames, purchased: new Date().toISOString() });
+                    currentUser.keys.push({ key, plan: planLabel, purchased: new Date().toISOString() });
                     currentUser.subscription = {
                         active: true,
-                        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-                        plan: planNames
+                        expires: new Date(Date.now() + (plan.id === 'lifetime' ? 365 * 24 * 60 * 60 * 1000 :
+                            30 * 24 * 60 * 60 * 1000)).toISOString(),
+                        plan: planLabel
                     };
                     saveUsers();
 
@@ -2253,13 +2191,60 @@
                     `;
                     overlay.querySelector('#successCloseBtn').addEventListener('click', function() {
                         overlay.remove();
-                        cart = [];
-                        renderCart();
                         navigateTo('cabinet');
                         renderCabinet();
                     });
                 });
             }
+
+            // ============================================================
+            // СБРОС HWID
+            // ============================================================
+            document.getElementById('hwidBtn')?.addEventListener('click', function() {
+                if (!currentUser) { showAuthModal('login'); return; }
+
+                const overlay = document.createElement('div');
+                overlay.className = 'payment-overlay';
+
+                overlay.innerHTML = `
+                    <div class="payment-modal" style="text-align:center;">
+                        <div style="font-size:2.5rem;color:#444;margin-bottom:0.5rem;">◆</div>
+                        <h2>${t('hwid_reset')}</h2>
+                        <div class="sub">${t('hwid_reset_desc')}</div>
+                        <div style="background:rgba(255,255,255,0.03);padding:0.8rem;border-radius:10px;margin:1rem 0;border:1px solid var(--border);">
+                            <span style="color:#888;">${t('amount')}:</span>
+                            <span style="color:#fff;font-weight:700;font-size:1.2rem;">400 ₽</span>
+                        </div>
+                        <button class="btn-pay" id="hwidPayBtn">${t('pay')}</button>
+                        <button class="btn-close-payment" id="hwidCloseBtn">${t('close')}</button>
+                    </div>
+                `;
+
+                document.body.appendChild(overlay);
+
+                overlay.querySelector('#hwidCloseBtn').addEventListener('click', () => overlay.remove());
+                overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+                overlay.querySelector('#hwidPayBtn').addEventListener('click', function() {
+                    currentUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
+                    saveUsers();
+                    overlay.innerHTML = `
+                        <div class="payment-modal" style="text-align:center;">
+                            <div style="font-size:3rem;color:#22c55e;margin-bottom:0.5rem;">✓</div>
+                            <h2>${t('hwid_reset_success')}</h2>
+                            <div class="sub">${t('hwid_reset_desc')}</div>
+                            <div style="background:rgba(255,255,255,0.03);padding:0.8rem;border-radius:10px;margin:1rem 0;border:1px solid var(--border);font-family:monospace;font-size:0.8rem;color:#888;">
+                                Новый HWID: ${currentUser.hwid}
+                            </div>
+                            <button class="btn-pay" id="hwidSuccessClose">${t('close')}</button>
+                        </div>
+                    `;
+                    overlay.querySelector('#hwidSuccessClose').addEventListener('click', function() {
+                        overlay.remove();
+                        renderCabinet();
+                    });
+                });
+            });
 
             // ============================================================
             // КАБИНЕТ
@@ -2306,6 +2291,7 @@
                             <div class="info-row"><span class="label">${t('status')}</span><span class="value red">${t('no_subscription')}</span></div>
                             `}
                             <div class="info-row"><span class="label">${t('key_count')}</span><span class="value">${currentUser.keys?.length || 0}</span></div>
+                            <div class="info-row"><span class="label">HWID</span><span class="value" style="font-weight:400;color:#666;">${currentUser.hwid || 'Not set'}</span></div>
                             <div class="divider"></div>
                             <button class="btn-sm" style="width:100%;font-size:0.6rem;border-color:#555;color:#aaa;" data-page="pricing">${t('buy_subscription')}</button>
                         </div>
@@ -2442,7 +2428,6 @@
             getSession();
             updateUI();
             renderPricing();
-            renderCart();
             navigateTo('main');
 
         })();
