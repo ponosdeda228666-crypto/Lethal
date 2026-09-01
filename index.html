@@ -5,28 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lethal DLC — Premium Cheat</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap');
-
+        /* ============================================================
+           ГЛОБАЛЬНЫЙ СБРОС
+           ============================================================ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap');
+
         :root {
             --bg: #050505;
-            --surface: #0a0a0a;
-            --card: #0d0d0d;
-            --border: rgba(255, 255, 255, 0.04);
-            --border-hover: rgba(255, 255, 255, 0.1);
+            --surface: rgba(255, 255, 255, 0.03);
+            --surface-hover: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.05);
+            --border-hover: rgba(255, 255, 255, 0.12);
             --text-primary: #f0f0f0;
             --text-secondary: #888;
-            --text-muted: #3a3a3a;
-            --green: #22c55e;
-            --red: #ef4444;
-            --radius: 10px;
-            --radius-lg: 16px;
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --text-muted: #444;
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.7);
+            --radius: 12px;
+            --radius-lg: 20px;
+            --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         html {
@@ -39,12 +41,14 @@
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
-            line-height: 1.5;
+            line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ===== ФОН С АНИМАЦИЕЙ ===== */
-        .bg-grid {
+        /* ============================================================
+           ЧЁРНО-БЕЛЫЙ ПЕРЕЛИВАЮЩИЙСЯ ФОН
+           ============================================================ */
+        .bg-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -52,36 +56,108 @@
             height: 100vh;
             z-index: 0;
             pointer-events: none;
-            background: var(--bg);
             overflow: hidden;
-        }
-        .bg-grid::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridDrift 70s linear infinite;
-        }
-        .bg-grid::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.015) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.005) 0%, transparent 60%);
-            animation: glowPulse 10s ease-in-out infinite alternate;
-        }
-        @keyframes gridDrift {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-20px, -20px) rotate(0.3deg); }
-        }
-        @keyframes glowPulse {
-            0% { opacity: 0.4; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.05); }
+            background: #050505;
         }
 
+        .bg-gradient {
+            position: absolute;
+            inset: -50%;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(180, 180, 180, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(120, 120, 120, 0.05) 0%, transparent 45%),
+                radial-gradient(ellipse at 40% 80%, rgba(200, 200, 200, 0.04) 0%, transparent 40%),
+                radial-gradient(ellipse at 70% 20%, rgba(150, 150, 150, 0.05) 0%, transparent 35%);
+            animation: gradientShift 30s ease-in-out infinite alternate;
+            transform-origin: center;
+        }
+
+        .bg-gradient2 {
+            position: absolute;
+            inset: -50%;
+            background:
+                radial-gradient(ellipse at 60% 40%, rgba(100, 100, 100, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 70%, rgba(160, 160, 160, 0.04) 0%, transparent 45%);
+            animation: gradientShift2 35s ease-in-out infinite alternate;
+            transform-origin: center;
+            opacity: 0.7;
+        }
+
+        @keyframes gradientShift {
+            0% { transform: rotate(0deg) scale(1); }
+            33% { transform: rotate(120deg) scale(1.1); }
+            66% { transform: rotate(240deg) scale(0.9); }
+            100% { transform: rotate(360deg) scale(1.05); }
+        }
+
+        @keyframes gradientShift2 {
+            0% { transform: rotate(0deg) scale(1) translate(0, 0); }
+            50% { transform: rotate(180deg) scale(1.15) translate(5%, 5%); }
+            100% { transform: rotate(360deg) scale(0.95) translate(-5%, -5%); }
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 55px 55px;
+            animation: gridDrift 70s linear infinite;
+        }
+
+        @keyframes gridDrift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-25px, -25px) rotate(0.5deg); }
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            animation: orbFloat 25s ease-in-out infinite alternate;
+        }
+
+        .bg-orb.orb1 {
+            width: 450px;
+            height: 450px;
+            background: rgba(200, 200, 200, 0.03);
+            top: -10%;
+            left: -5%;
+            animation-duration: 28s;
+        }
+
+        .bg-orb.orb2 {
+            width: 550px;
+            height: 550px;
+            background: rgba(150, 150, 150, 0.025);
+            bottom: -15%;
+            right: -10%;
+            animation-duration: 32s;
+            animation-delay: -6s;
+        }
+
+        .bg-orb.orb3 {
+            width: 380px;
+            height: 380px;
+            background: rgba(180, 180, 180, 0.02);
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-duration: 24s;
+            animation-delay: -12s;
+        }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(70px, -50px) scale(1.1); }
+            66% { transform: translate(-35px, 70px) scale(0.9); }
+            100% { transform: translate(50px, 35px) scale(1.05); }
+        }
+
+        /* ============================================================
+           ЧАСТИЦЫ
+           ============================================================ */
         #particles-canvas {
             position: fixed;
             top: 0;
@@ -90,121 +166,150 @@
             height: 100vh;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.1;
+            display: block;
+            opacity: 0.6;
         }
 
+        /* ============================================================
+           КОНТЕЙНЕР
+           ============================================================ */
         .container {
             position: relative;
             z-index: 1;
-            max-width: 1360px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 1rem 1.5rem 0.5rem;
+            padding: 1.5rem 2rem 3rem;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* ===== АНИМАЦИИ ===== */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulse {
-            0%,
-            100% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-        }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        .animate-on-load {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        .animate-on-load:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-        .animate-on-load:nth-child(3) {
-            animation-delay: 0.2s;
-        }
-        .animate-on-load:nth-child(4) {
-            animation-delay: 0.3s;
-        }
-        .animate-on-load:nth-child(5) {
-            animation-delay: 0.4s;
-        }
-
-        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
-        .top-bar {
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.8rem 0 1.2rem;
+            padding: 1rem 0 2rem;
             border-bottom: 1px solid var(--border);
             flex-wrap: wrap;
             gap: 1rem;
-            animation: fadeIn 0.5s ease-out;
+            animation: fadeDown 0.8s ease-out;
         }
-        .top-bar .brand {
-            font-size: 1.5rem;
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            font-size: 2rem;
             font-weight: 900;
-            letter-spacing: 4px;
+            letter-spacing: 5px;
             text-transform: uppercase;
             color: #fff;
-            transition: all 0.3s;
+            transition: all 0.5s;
             cursor: default;
+            position: relative;
         }
-        .top-bar .brand:hover {
-            letter-spacing: 6px;
-        }
-        .top-bar .brand span {
-            color: #444;
+
+        .logo span {
+            color: #555;
             font-weight: 300;
         }
-        .top-bar .right-controls {
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #fff, transparent);
+            transition: width 0.6s ease;
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .header-right {
             display: flex;
             align-items: center;
-            gap: 1.2rem;
+            gap: 1.5rem;
             flex-wrap: wrap;
         }
 
         .language-selector {
             display: flex;
             gap: 0.2rem;
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--surface);
             padding: 0.2rem;
             border-radius: 8px;
             border: 1px solid var(--border);
         }
+
         .lang-btn {
             background: transparent;
             border: none;
-            color: #444;
+            color: #555;
             padding: 0.3rem 0.8rem;
             border-radius: 6px;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+
         .lang-btn:hover {
             color: #fff;
-            transform: translateY(-1px);
         }
+
         .lang-btn.active {
             background: #fff;
             color: #000;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+        }
+
+        .nav a {
+            color: #777;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: #fff;
+        }
+
+        .nav a:hover::after {
+            width: 100%;
         }
 
         .auth-buttons {
@@ -212,16 +317,18 @@
             gap: 0.6rem;
             align-items: center;
         }
+
         .auth-buttons .user-email {
             color: #666;
             font-size: 0.7rem;
             font-weight: 500;
             display: none;
-            max-width: 140px;
+            max-width: 130px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
         .auth-buttons .user-email.show {
             display: inline;
             animation: fadeIn 0.3s ease-out;
@@ -230,11 +337,11 @@
         .btn-sm {
             padding: 0.35rem 1.2rem;
             font-family: 'Inter', sans-serif;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 700;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            border-radius: 6px;
+            border-radius: 8px;
             border: 1px solid #333;
             background: transparent;
             color: #888;
@@ -243,403 +350,575 @@
             position: relative;
             overflow: hidden;
         }
+
+        .btn-sm::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.03);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-sm:hover::before {
+            transform: scaleX(1);
+        }
+
         .btn-sm:hover {
             border-color: #fff;
             color: #fff;
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.03);
         }
-        .btn-sm:active {
-            transform: scale(0.96);
-        }
+
         .btn-sm.primary {
             border-color: #fff;
             color: #fff;
         }
+
         .btn-sm.primary:hover {
             background: #fff;
             color: #000;
         }
+
         .btn-sm.danger:hover {
-            border-color: var(--red);
-            color: var(--red);
-        }
-        .btn-sm.green:hover {
-            border-color: var(--green);
-            color: var(--green);
+            border-color: #ef4444;
+            color: #ef4444;
         }
 
-        /* ===== ОСНОВНАЯ СЕТКА ===== */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 220px 1fr;
-            gap: 2rem;
-            margin-top: 1.5rem;
-            flex: 1;
-        }
-
-        /* ===== БОКОВОЕ МЕНЮ ===== */
-        .sidebar {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 1.2rem 0.5rem;
-            height: fit-content;
-            position: sticky;
-            top: 1rem;
-            transition: all 0.3s;
-        }
-        .sidebar:hover {
-            border-color: var(--border-hover);
-        }
-        .sidebar .section-label {
-            font-size: 0.55rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #333;
-            padding: 0.4rem 1rem;
-            margin-top: 0.8rem;
-        }
-        .sidebar .section-label:first-child {
-            margin-top: 0;
-        }
-        .sidebar .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            padding: 0.45rem 1rem;
-            border-radius: 8px;
-            color: #555;
-            font-size: 0.78rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            background: transparent;
-            border: none;
-            width: 100%;
-            font-family: 'Inter', sans-serif;
-            position: relative;
-        }
-        .sidebar .menu-item:hover {
-            background: rgba(255, 255, 255, 0.04);
-            color: #fff;
-            transform: translateX(3px);
-        }
-        .sidebar .menu-item.active {
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-        }
-        .sidebar .menu-item.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 20%;
-            height: 60%;
-            width: 2px;
-            background: #fff;
-            border-radius: 2px;
-        }
-        .sidebar .menu-item .icon {
-            font-size: 0.9rem;
-            width: 1.2rem;
-            text-align: center;
-            opacity: 0.5;
-            transition: opacity 0.3s;
-        }
-        .sidebar .menu-item:hover .icon {
-            opacity: 1;
-        }
-        .sidebar .menu-item .badge {
-            margin-left: auto;
-            font-size: 0.5rem;
-            font-weight: 700;
-            color: #444;
-            background: rgba(255, 255, 255, 0.04);
-            padding: 0.1rem 0.5rem;
-            border-radius: 12px;
-            transition: all 0.3s;
-        }
-        .sidebar .menu-item:hover .badge {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        /* ===== КОНТЕНТ ===== */
-        .content-area {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
+        /* ============================================================
+           СТРАНИЦЫ
+           ============================================================ */
         .page {
             display: none;
-            animation: fadeIn 0.4s ease-out;
+            animation: fadeUp 0.6s ease-out;
         }
+
         .page.active {
             display: block;
         }
 
-        /* ===== КАРТОЧКИ ===== */
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem 1.8rem;
-            transition: all 0.4s ease;
-        }
-        .card:hover {
-            border-color: var(--border-hover);
-            box-shadow: var(--shadow);
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.8rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .card-header h3 {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #fff;
-        }
-        .card-header .sub {
-            font-size: 0.7rem;
-            color: #555;
-            font-weight: 400;
-        }
-        .card-header .action-link {
-            font-size: 0.7rem;
-            color: #666;
-            cursor: pointer;
-            transition: color 0.3s;
-            background: none;
-            border: none;
-            font-family: 'Inter', sans-serif;
-        }
-        .card-header .action-link:hover {
-            color: #fff;
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== HERO ===== */
-        .hero {
-            padding: 2.5rem 0 2rem;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
+
+        /* ============================================================
+           HERO
+           ============================================================ */
+        .hero {
+            padding: 4rem 0 3rem;
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #666;
+            border: 1px solid var(--border);
+            padding: 0.25rem 1.2rem;
+            border-radius: 30px;
+            margin-bottom: 1.5rem;
+            background: var(--surface);
+            animation: fadeDown 0.8s ease-out;
+        }
+
         .hero h1 {
-            font-size: 3.5rem;
+            font-size: 4.5rem;
             font-weight: 900;
-            letter-spacing: -0.5px;
+            letter-spacing: 4px;
             line-height: 1.05;
             color: #fff;
-            animation: fadeInUp 0.7s ease-out;
+            margin-bottom: 0.5rem;
+            animation: fadeUp 0.8s ease-out;
         }
+
         .hero h1 .accent {
-            color: #888;
-            font-weight: 300;
+            background: linear-gradient(135deg, #ffffff 20%, #666666 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
+
         .hero h1 small {
             display: block;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 300;
-            color: #444;
+            color: #555;
             letter-spacing: 8px;
             margin-top: 0.2rem;
+            -webkit-text-fill-color: #555;
         }
+
         .hero p {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 400;
-            color: #666;
-            max-width: 540px;
-            margin: 1.2rem 0 2rem;
+            color: #777;
+            max-width: 520px;
+            margin: 1.2rem 0 2.5rem;
             line-height: 1.9;
-            animation: fadeInUp 0.8s ease-out;
+            animation: fadeUp 1s ease-out;
         }
-        .hero .btn-group {
+
+        .btn-group {
             display: flex;
-            gap: 1rem;
+            gap: 1.2rem;
             flex-wrap: wrap;
-            animation: fadeInUp 0.9s ease-out;
+            animation: fadeUp 1.2s ease-out;
         }
 
         .btn {
-            padding: 0.7rem 2.2rem;
+            padding: 0.85rem 2.8rem;
             font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 2px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
             text-transform: uppercase;
-            border-radius: 8px;
-            border: 2px solid #fff;
+            border-radius: 10px;
+            border: 1.5px solid #fff;
             background: transparent;
             color: #fff;
             cursor: pointer;
-            transition: all 0.35s ease;
+            transition: all 0.4s ease;
             text-decoration: none;
             display: inline-block;
+            position: relative;
+            overflow: hidden;
         }
-        .btn:hover {
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
             background: #fff;
-            color: #000;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: -1;
+        }
+
+        .btn:hover {
+            color: #0a0a0a;
             transform: translateY(-3px);
             box-shadow: 0 8px 30px rgba(255, 255, 255, 0.05);
         }
+
+        .btn:hover::before {
+            transform: scaleX(1);
+        }
+
         .btn:active {
             transform: scale(0.96);
         }
+
         .btn-primary {
             background: #fff;
-            color: #000;
+            color: #0a0a0a;
             border-color: #fff;
         }
+
+        .btn-primary::before {
+            background: #0a0a0a;
+        }
+
         .btn-primary:hover {
-            background: transparent;
             color: #fff;
         }
+
         .btn-outline {
             border-color: #333;
             color: #888;
         }
-        .btn-outline:hover {
-            border-color: #fff;
-            color: #fff;
-            background: transparent;
+
+        .btn-outline::before {
+            background: #333;
         }
 
-        /* ===== ИНФОРМАЦИЯ О ЧИТЕ ===== */
+        .btn-outline:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        /* ============================================================
+           СЕКЦИИ
+           ============================================================ */
+        .section {
+            padding: 3.5rem 0 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 4px;
+            color: #ddd;
+            border-left: 4px solid #fff;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 1.2rem;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, #fff, transparent);
+        }
+
+        .section-sub {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #444;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ============================================================
+           КАРТОЧКИ ВОЗМОЖНОСТЕЙ
+           ============================================================ */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.2rem;
-            margin-top: 0.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
         }
-        .feature-card {
-            background: rgba(255, 255, 255, 0.02);
+
+        .feature-item {
+            padding: 2rem 1.8rem;
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem 1.5rem;
-            transition: all 0.4s ease;
+            transition: all 0.5s ease;
             cursor: default;
-            animation: fadeInUp 0.6s ease-out;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(8px);
+            position: relative;
+            overflow: hidden;
         }
-        .feature-card:hover {
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .feature-item:hover::before {
+            opacity: 1;
+        }
+
+        .feature-item:hover {
+            background: var(--surface-hover);
             border-color: var(--border-hover);
-            transform: translateY(-5px);
+            transform: translateY(-6px);
             box-shadow: var(--shadow);
-            background: rgba(255, 255, 255, 0.03);
         }
-        .feature-card .icon {
+
+        .feature-item .icon {
             font-size: 1.8rem;
-            color: #444;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s;
+            color: #555;
+            margin-bottom: 0.6rem;
+            transition: all 0.4s ease;
+            display: block;
         }
-        .feature-card:hover .icon {
+
+        .feature-item:hover .icon {
             color: #fff;
             transform: scale(1.1);
         }
-        .feature-card h4 {
-            font-size: 1rem;
-            font-weight: 700;
+
+        .feature-item h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
             color: #fff;
-            margin-bottom: 0.3rem;
-        }
-        .feature-card p {
-            font-size: 0.82rem;
-            color: #666;
-            line-height: 1.6;
+            margin-bottom: 0.4rem;
         }
 
-        /* ===== ТАРИФЫ ===== */
+        .feature-item p {
+            color: #888;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* ============================================================
+           ТАРИФЫ
+           ============================================================ */
+        .pricing-controls {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .pricing-controls .label {
+            color: #555;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .currency-selector {
+            display: flex;
+            gap: 0.2rem;
+            background: var(--surface);
+            padding: 0.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .currency-btn {
+            background: transparent;
+            border: none;
+            color: #555;
+            padding: 0.25rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .currency-btn:hover {
+            color: #fff;
+        }
+
+        .currency-btn.active {
+            background: #fff;
+            color: #000;
+        }
+
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 0.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
         }
+
         .price-card {
-            background: var(--card);
+            background: var(--surface);
+            padding: 2.5rem 1.8rem;
             border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 1.8rem 1.5rem;
             text-align: center;
+            transition: all 0.5s ease;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(8px);
             position: relative;
-            transition: all 0.4s ease;
-            animation: fadeInUp 0.5s ease-out;
         }
+
         .price-card:hover {
             border-color: var(--border-hover);
-            transform: translateY(-5px);
+            background: var(--surface-hover);
+            transform: translateY(-6px);
             box-shadow: var(--shadow);
         }
+
         .price-card .popular-badge {
             position: absolute;
-            top: -0.5rem;
+            top: -0.6rem;
             left: 50%;
             transform: translateX(-50%);
             background: #fff;
             color: #000;
             font-size: 0.5rem;
-            font-weight: 900;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
-            padding: 0.1rem 1rem;
+            padding: 0.15rem 1.2rem;
             border-radius: 30px;
         }
+
         .price-card .amount {
-            font-size: 2.5rem;
-            font-weight: 900;
+            font-size: 3rem;
+            font-weight: 800;
             color: #fff;
-        }
-        .price-card .period {
-            font-size: 0.65rem;
-            color: #444;
-            text-transform: uppercase;
             letter-spacing: 2px;
-        }
-        .price-card .desc {
-            color: #666;
-            font-size: 0.8rem;
-            margin: 0.8rem 0 1.2rem;
-            line-height: 1.5;
         }
 
-        /* ===== КЛЮЧ ===== */
-        .key-display {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 0.7rem 1rem;
-            border-radius: 8px;
-            font-family: 'Inter', monospace;
-            font-size: 0.85rem;
-            font-weight: 600;
+        .price-card .period {
+            color: #777;
+            font-size: 0.8rem;
+            text-transform: uppercase;
             letter-spacing: 2px;
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-top: 0.1rem;
+        }
+
+        .price-card .desc {
+            color: #999;
+            margin: 1.5rem 0 2rem;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .btn-buy {
+            padding: 0.6rem 2.2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border: 1px solid #555;
+            color: #aaa;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-radius: 10px;
+        }
+
+        .btn-buy:hover {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           КОРЗИНА
+           ============================================================ */
+        .cart-items {
+            margin-top: 0.5rem;
+        }
+
+        .cart-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 0.9rem;
+            animation: fadeIn 0.3s ease-out;
         }
-        .key-display:hover {
-            border-color: rgba(255, 255, 255, 0.08);
+
+        .cart-item .name {
+            color: #ccc;
         }
-        .key-display .copy-btn {
+
+        .cart-item .price {
+            color: #888;
+            font-weight: 600;
+        }
+
+        .cart-item .remove-btn {
             background: none;
             border: none;
             color: #444;
             cursor: pointer;
             font-size: 0.7rem;
             font-family: 'Inter', sans-serif;
-            transition: color 0.3s;
+            transition: color 0.3s ease;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
         }
-        .key-display .copy-btn:hover {
+
+        .cart-item .remove-btn:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 0.5rem;
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        /* ============================================================
+           КАБИНЕТ
+           ============================================================ */
+        .cabinet-grid {
+            display: grid;
+            grid-template-columns: 1fr 2.2fr;
+            gap: 2rem;
+        }
+
+        .cabinet-sidebar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            backdrop-filter: blur(8px);
+            transition: all 0.4s ease;
+        }
+
+        .cabinet-sidebar:hover {
+            border-color: var(--border-hover);
+        }
+
+        .cabinet-sidebar .avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #444;
+            margin-bottom: 0.8rem;
+            transition: all 0.4s ease;
+        }
+
+        .cabinet-sidebar:hover .avatar {
+            border-color: var(--border-hover);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .cabinet-sidebar .name {
+            font-size: 1.1rem;
+            font-weight: 600;
             color: #fff;
         }
 
-        .status-badge {
+        .cabinet-sidebar .email {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .cabinet-sidebar .status-badge {
+            margin-top: 0.8rem;
             display: inline-block;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
@@ -647,213 +926,268 @@
             border-radius: 30px;
             border: 1px solid #333;
             color: #555;
-            transition: all 0.3s;
-        }
-        .status-badge.active {
-            border-color: var(--green);
-            color: var(--green);
-            animation: pulse 2s infinite;
-        }
-        .status-badge.inactive {
-            border-color: var(--red);
-            color: var(--red);
+            transition: all 0.3s ease;
         }
 
-        .quick-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 0.8rem;
-            margin-top: 0.5rem;
-        }
-        .quick-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 0.8rem 1rem;
-            cursor: pointer;
-            transition: all 0.35s ease;
-            text-align: center;
-        }
-        .quick-item:hover {
-            background: rgba(255, 255, 255, 0.04);
-            border-color: var(--border-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-        .quick-item:active {
-            transform: scale(0.96);
-        }
-        .quick-item .label {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: #ccc;
-        }
-        .quick-item .desc {
-            font-size: 0.55rem;
-            color: #444;
-            margin-top: 0.2rem;
+        .cabinet-sidebar .status-badge.active {
+            border-color: #22c55e;
+            color: #22c55e;
         }
 
-        .row-space {
+        .cabinet-sidebar .status-badge.inactive {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .cabinet-sidebar .divider {
+            margin: 1.2rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .cabinet-sidebar .info-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             padding: 0.4rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
-        .row-space .label {
-            color: #666;
+
+        .cabinet-sidebar .info-row .label {
+            color: #555;
         }
-        .row-space .value {
+
+        .cabinet-sidebar .info-row .value {
             color: #fff;
             font-weight: 500;
         }
-        .row-space .value.green {
-            color: var(--green);
-        }
-        .row-space .value.red {
-            color: var(--red);
+
+        .cabinet-sidebar .info-row .value.green {
+            color: #22c55e;
         }
 
-        .input-group {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+        .cabinet-sidebar .info-row .value.red {
+            color: #ef4444;
         }
-        .input-group input {
-            flex: 1;
-            padding: 0.5rem 0.8rem;
-            background: rgba(255, 255, 255, 0.03);
+
+        .cabinet-content {
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.8rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        .input-group input:focus {
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-        .input-group input::placeholder {
-            color: #333;
-        }
-        .input-group .btn-sm {
-            padding: 0.4rem 1.2rem;
-            font-size: 0.6rem;
-            flex-shrink: 0;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            backdrop-filter: blur(8px);
+            transition: all 0.4s ease;
         }
 
-        /* ===== МОДАЛКА АВТОРИЗАЦИИ ===== */
-        .auth-overlay {
+        .cabinet-content:hover {
+            border-color: var(--border-hover);
+        }
+
+        .cabinet-content h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.8rem;
+        }
+
+        .cabinet-content .key-box {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #fff;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .cabinet-content .key-box:hover {
+            border-color: var(--border-hover);
+        }
+
+        .cabinet-content .key-box .copy-btn {
+            background: none;
+            border: none;
+            color: #444;
+            cursor: pointer;
+            font-size: 0.65rem;
+            font-family: 'Inter', sans-serif;
+            transition: color 0.3s ease;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+        }
+
+        .cabinet-content .key-box .copy-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .cabinet-content .instruction-text {
+            color: #888;
+            font-size: 0.9rem;
+            line-height: 1.9;
+        }
+
+        .cabinet-content .instruction-text .highlight {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* ============================================================
+           МОДАЛКА ОПЛАТЫ
+           ============================================================ */
+        .payment-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.94);
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(12px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 9999;
             padding: 1.5rem;
             animation: fadeIn 0.3s ease-out;
-            backdrop-filter: blur(4px);
         }
-        .auth-modal {
-            background: #0d0d0d;
+
+        .payment-modal {
+            background: #111;
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 2.5rem 3rem;
-            max-width: 400px;
+            padding: 2.8rem 3rem;
+            max-width: 480px;
             width: 100%;
             animation: slideUp 0.4s ease-out;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
         }
-        .auth-modal h2 {
-            font-size: 1.4rem;
-            font-weight: 800;
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .payment-modal h2 {
+            font-size: 1.6rem;
+            font-weight: 300;
+            letter-spacing: 4px;
             color: #fff;
+            text-align: center;
             margin-bottom: 0.3rem;
-            text-align: center;
         }
-        .auth-modal .sub {
+
+        .payment-modal .sub {
             color: #666;
-            font-size: 0.8rem;
-            font-weight: 400;
+            font-size: 0.85rem;
             text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.8rem;
             margin-bottom: 1.5rem;
         }
-        .auth-modal .field {
-            margin-bottom: 1rem;
-        }
-        .auth-modal .field label {
-            display: block;
-            font-size: 0.65rem;
-            font-weight: 700;
-            color: #555;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 0.2rem;
-        }
-        .auth-modal .field input {
-            width: 100%;
-            padding: 0.6rem 0.8rem;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: #fff;
+
+        .payment-method {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .payment-method:hover {
+            border-color: var(--border-hover);
+            background: var(--surface-hover);
+        }
+
+        .payment-method.selected {
+            border-color: #fff;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .payment-method .sub-text {
+            display: block;
+            font-weight: 400;
+            font-size: 0.55rem;
+            color: #444;
+            margin-top: 0.2rem;
+        }
+
+        .payment-details {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-details .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
             font-size: 0.85rem;
-            outline: none;
-            transition: border-color 0.3s;
         }
-        .auth-modal .field input:focus {
-            border-color: rgba(255, 255, 255, 0.15);
+
+        .payment-details .row .label {
+            color: #666;
         }
-        .auth-modal .field input::placeholder {
-            color: #2a2a2a;
+
+        .payment-details .row .value {
+            color: #fff;
+            font-weight: 500;
         }
-        .auth-modal .auth-submit {
+
+        .payment-details .row .value.mono {
+            font-family: monospace;
+            font-weight: 400;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .btn-pay {
             width: 100%;
-            padding: 0.7rem;
+            padding: 0.75rem;
             font-family: 'Inter', sans-serif;
             font-size: 0.75rem;
-            font-weight: 800;
+            font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
-            border-radius: 8px;
+            border-radius: 10px;
             border: none;
             background: #fff;
             color: #000;
             cursor: pointer;
-            transition: all 0.35s ease;
+            transition: all 0.3s ease;
         }
-        .auth-modal .auth-submit:hover {
+
+        .btn-pay:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
         }
-        .auth-modal .auth-submit:active {
-            transform: scale(0.96);
+
+        .btn-pay:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
         }
-        .auth-modal .toggle-auth {
-            text-align: center;
-            margin-top: 1rem;
-            font-size: 0.75rem;
-            color: #444;
-        }
-        .auth-modal .toggle-auth span {
-            color: #fff;
-            cursor: pointer;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-        .auth-modal .toggle-auth span:hover {
-            color: #888;
-        }
-        .auth-modal .close-auth {
+
+        .btn-close-payment {
             display: block;
             margin-top: 0.8rem;
             background: transparent;
             border: none;
-            color: #2a2a2a;
+            color: #333;
             font-size: 0.65rem;
             font-weight: 600;
             cursor: pointer;
@@ -862,109 +1196,339 @@
             font-family: 'Inter', sans-serif;
             width: 100%;
             padding: 0.4rem;
-            transition: color 0.3s;
+            transition: color 0.3s ease;
         }
+
+        .btn-close-payment:hover {
+            color: #fff;
+        }
+
+        /* ============================================================
+           АВТОРИЗАЦИЯ (МОДАЛКА)
+           ============================================================ */
+        .auth-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 1.5rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .auth-modal {
+            background: #111;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2.8rem 3rem;
+            max-width: 400px;
+            width: 100%;
+            animation: slideUp 0.4s ease-out;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .auth-modal h2 {
+            font-size: 1.6rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+
+        .auth-modal .sub {
+            color: #666;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .auth-modal .field {
+            margin-bottom: 1rem;
+        }
+
+        .auth-modal .field label {
+            display: block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.2rem;
+        }
+
+        .auth-modal .field input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .auth-modal .field input:focus {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .auth-modal .field input::placeholder {
+            color: #333;
+        }
+
+        .auth-modal .auth-submit {
+            width: 100%;
+            padding: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 10px;
+            border: none;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .auth-modal .auth-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .auth-modal .auth-submit:active {
+            transform: scale(0.96);
+        }
+
+        .auth-modal .toggle-auth {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: #444;
+        }
+
+        .auth-modal .toggle-auth span {
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .auth-modal .toggle-auth span:hover {
+            color: #888;
+        }
+
+        .auth-modal .close-auth {
+            display: block;
+            margin-top: 0.8rem;
+            background: transparent;
+            border: none;
+            color: #333;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            padding: 0.4rem;
+            transition: color 0.3s ease;
+        }
+
         .auth-modal .close-auth:hover {
             color: #fff;
         }
+
         .auth-error {
-            color: var(--red);
+            color: #ef4444;
             font-size: 0.7rem;
             text-align: center;
             margin-bottom: 0.8rem;
             display: none;
         }
+
         .auth-error.show {
             display: block;
             animation: fadeIn 0.3s ease-out;
         }
 
-        /* ===== FOOTER ===== */
+        /* ============================================================
+           FOOTER
+           ============================================================ */
         .footer {
-            margin-top: 2.5rem;
-            padding-top: 1.2rem;
+            margin-top: 4rem;
+            padding-top: 2rem;
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            font-size: 0.55rem;
-            font-weight: 600;
-            color: #1a1a1a;
-            letter-spacing: 2px;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #333;
+            letter-spacing: 1.5px;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 1rem;
         }
 
-        /* ===== АДАПТИВ ===== */
+        .footer a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #888;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        /* ============================================================
+           АДАПТИВ
+           ============================================================ */
         @media (max-width: 1024px) {
-            .main-grid {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            .cabinet-grid {
                 grid-template-columns: 1fr;
             }
-            .sidebar {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 0.2rem;
-                padding: 0.8rem;
-                position: static;
-            }
-            .sidebar .section-label {
-                display: none;
-            }
-            .sidebar .menu-item {
-                padding: 0.3rem 0.6rem;
-                font-size: 0.7rem;
-                justify-content: center;
-            }
-            .sidebar .menu-item .icon {
-                display: none;
-            }
-            .sidebar .menu-item .badge {
-                display: none;
-            }
-            .sidebar .menu-item.active::before {
-                display: none;
+            .payment-methods {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 768px) {
-            .container { padding: 0.8rem 1rem 0.5rem; }
-            .top-bar { flex-direction: column; align-items: flex-start; }
-            .top-bar .right-controls { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
-            .hero h1 { font-size: 2.4rem; }
-            .hero h1 small { font-size: 0.8rem; letter-spacing: 4px; }
-            .hero p { font-size: 0.95rem; }
-            .card { padding: 1.2rem 1.2rem; }
-            .quick-grid { grid-template-columns: 1fr 1fr; }
-            .auth-modal { padding: 1.8rem 1.2rem; }
-            .main-grid { gap: 1rem; }
-            .pricing-grid { grid-template-columns: 1fr; }
-            .features-grid { grid-template-columns: 1fr; }
+            .container {
+                padding: 1rem 1.2rem 2rem;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .header-right {
+                width: 100%;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+            .nav {
+                gap: 1.2rem;
+                font-size: 0.7rem;
+                flex-wrap: wrap;
+            }
+            .hero h1 {
+                font-size: 2.8rem;
+                letter-spacing: 2px;
+            }
+            .hero h1 small {
+                font-size: 1rem;
+                letter-spacing: 4px;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .btn {
+                padding: 0.7rem 1.8rem;
+                font-size: 0.7rem;
+            }
+            .section-title {
+                font-size: 1.4rem;
+            }
+            .features-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            .auth-modal,
+            .payment-modal {
+                padding: 2rem 1.5rem;
+            }
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            .cabinet-sidebar {
+                padding: 1.5rem;
+            }
+            .cabinet-content {
+                padding: 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
-            .hero h1 { font-size: 1.8rem; }
-            .btn-sm { padding: 0.25rem 0.8rem; font-size: 0.55rem; }
-            .lang-btn { padding: 0.2rem 0.5rem; font-size: 0.55rem; }
-            .quick-grid { grid-template-columns: 1fr; }
-            .sidebar { grid-template-columns: 1fr 1fr; }
-            .btn { padding: 0.5rem 1.5rem; font-size: 0.65rem; }
+            .hero h1 {
+                font-size: 2rem;
+                letter-spacing: 1px;
+            }
+            .hero h1 small {
+                font-size: 0.8rem;
+                letter-spacing: 2px;
+            }
+            .btn-sm {
+                padding: 0.2rem 0.8rem;
+                font-size: 0.5rem;
+            }
+            .lang-btn,
+            .currency-btn {
+                padding: 0.15rem 0.5rem;
+                font-size: 0.5rem;
+            }
+            .btn {
+                padding: 0.6rem 1.4rem;
+                font-size: 0.65rem;
+            }
+            .price-card .amount {
+                font-size: 2.4rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-grid"></div>
+    <!-- ============================================================
+    ФОН
+    ============================================================ -->
+    <div class="bg-container">
+        <div class="bg-gradient"></div>
+        <div class="bg-gradient2"></div>
+        <div class="bg-grid"></div>
+        <div class="bg-orb orb1"></div>
+        <div class="bg-orb orb2"></div>
+        <div class="bg-orb orb3"></div>
+    </div>
     <canvas id="particles-canvas"></canvas>
 
+    <!-- ============================================================
+    КОНТЕЙНЕР
+    ============================================================ -->
     <div class="container">
 
-        <!-- ===== ВЕРХНЯЯ ПАНЕЛЬ ===== -->
-        <div class="top-bar">
-            <div class="brand">Lethal <span>DLC</span></div>
-            <div class="right-controls">
+        <!-- ===== HEADER ===== -->
+        <header class="header">
+            <div class="logo">Lethal <span>DLC</span></div>
+            <div class="header-right">
                 <div class="language-selector">
                     <button class="lang-btn active" data-lang="ru">Ru</button>
                     <button class="lang-btn" data-lang="en">En</button>
                 </div>
+                <nav class="nav">
+                    <a data-page="main">Главная</a>
+                    <a data-page="features">Возможности</a>
+                    <a data-page="pricing">Цены</a>
+                    <a data-page="cabinet">Кабинет</a>
+                    <a data-page="cart">Корзина</a>
+                </nav>
                 <div class="auth-buttons">
                     <span class="user-email" id="userEmailDisplay"></span>
                     <button class="btn-sm primary" id="loginBtn">Войти</button>
@@ -972,130 +1536,304 @@
                     <button class="btn-sm danger" id="logoutBtn" style="display:none;">Выйти</button>
                 </div>
             </div>
+        </header>
+
+        <!-- ============================================================
+        СТРАНИЦА: ГЛАВНАЯ
+        ============================================================ -->
+        <div class="page active" id="page-main">
+            <section class="hero">
+                <div class="hero-tag">Premium Cheat Solution</div>
+                <h1>
+                    Lethal <span class="accent">DLC</span>
+                    <small>невидимость. точность. превосходство.</small>
+                </h1>
+                <p>
+                    Профессиональный инструмент для доминации. Полный контроль над игровой механикой,
+                    невидимая работа, защита от обнаружения. Совместим с большинством популярных игр.
+                </p>
+                <div class="btn-group">
+                    <button class="btn btn-primary" data-page="pricing">Приобрести</button>
+                    <button class="btn btn-outline" data-page="features">Подробнее</button>
+                    <button class="btn btn-outline" data-page="cabinet">Кабинет</button>
+                </div>
+            </section>
         </div>
 
-        <!-- ===== ОСНОВНАЯ СЕТКА ===== -->
-        <div class="main-grid">
-
-            <!-- ===== БОКОВОЕ МЕНЮ ===== -->
-            <aside class="sidebar" id="sidebar"></aside>
-
-            <!-- ===== КОНТЕНТ ===== -->
-            <div class="content-area">
-
-                <!-- СТРАНИЦА: Главная -->
-                <div class="page active" id="page-main">
-                    <section class="hero">
-                        <h1>
-                            Lethal <span class="accent">DLC</span>
-                            <small>невидимость. точность. превосходство.</small>
-                        </h1>
-                        <p>
-                            Профессиональный инструмент для доминации. Полный контроль над игровой механикой,
-                            невидимая работа, защита от обнаружения. Совместим с большинством популярных игр.
-                        </p>
-                        <div class="btn-group">
-                            <button class="btn btn-primary" data-page-link="pricing">Выбрать тариф</button>
-                            <button class="btn btn-outline" data-page-link="cabinet">Личный кабинет</button>
-                        </div>
-                    </section>
-
-                    <!-- Информация о чите -->
-                    <div class="card animate-on-load">
-                        <div class="card-header">
-                            <h3>Возможности чита</h3>
-                            <span class="sub">всё для победы</span>
-                        </div>
-                        <div class="features-grid">
-                            <div class="feature-card">
-                                <div class="icon">⚡</div>
-                                <h4>Combat</h4>
-                                <p>Молниеносное наведение, приоритет целей, автоматическая реакция — максимальная эффективность в бою.</p>
-                            </div>
-                            <div class="feature-card">
-                                <div class="icon">🛡</div>
-                                <h4>Анти-детект</h4>
-                                <p>Обход античитов, маскировка, автоматическая очистка следов. Работайте без риска блокировки.</p>
-                            </div>
-                            <div class="feature-card">
-                                <div class="icon">🎯</div>
-                                <h4>Visual</h4>
-                                <p>Настраиваемый ESP, скелеты, дистанция, здоровье, предметы — полная картина боя.</p>
-                            </div>
-                            <div class="feature-card">
-                                <div class="icon">🔧</div>
-                                <h4>Misc</h4>
-                                <p>Быстрая смена оружия, отключение отдачи, авто-присед, триггербот и многое другое.</p>
-                            </div>
-                            <div class="feature-card">
-                                <div class="icon">📊</div>
-                                <h4>Статистика</h4>
-                                <p>Отслеживание K/D, точности, времени в игре — анализируйте свою эффективность.</p>
-                            </div>
-                            <div class="feature-card">
-                                <div class="icon">🔄</div>
-                                <h4>Автообновления</h4>
-                                <p>Автоматические обновления после патчей. Вы всегда на шаг впереди.</p>
-                            </div>
-                        </div>
+        <!-- ============================================================
+        СТРАНИЦА: ВОЗМОЖНОСТИ
+        ============================================================ -->
+        <div class="page" id="page-features">
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Возможности</h2>
+                    <span class="section-sub">всё для победы</span>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span class="icon">⚡</span>
+                        <h3>Combat</h3>
+                        <p>Молниеносное наведение, приоритет целей, автоматическая реакция — максимальная эффективность в бою.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">🛡</span>
+                        <h3>Анти-детект</h3>
+                        <p>Обход большинства античитов, маскировка процессов, автоматическая очистка следов.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">🎯</span>
+                        <h3>Visual</h3>
+                        <p>Настраиваемый ESP, скелеты, дистанция, здоровье, предметы — полная картина боя.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">🔧</span>
+                        <h3>Misc</h3>
+                        <p>Быстрая смена оружия, отключение отдачи, авто-присед, триггербот и многое другое.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">📊</span>
+                        <h3>Статистика</h3>
+                        <p>Отслеживание K/D, точности, времени в игре — анализируйте свою эффективность.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">🔄</span>
+                        <h3>Автообновления</h3>
+                        <p>Автоматические обновления после патчей игры. Вы всегда на шаг впереди.</p>
                     </div>
                 </div>
-
-                <!-- СТРАНИЦА: Кабинет -->
-                <div class="page" id="page-cabinet"></div>
-
-                <!-- СТРАНИЦА: Цены -->
-                <div class="page" id="page-pricing">
-                    <div class="card animate-on-load">
-                        <div class="card-header">
-                            <h3>Тарифы</h3>
-                            <span class="sub">выберите свой</span>
-                        </div>
-                        <div style="display:flex;justify-content:flex-end;gap:0.8rem;margin-bottom:0.8rem;flex-wrap:wrap;">
-                            <div class="language-selector" style="background:rgba(255,255,255,0.02);">
-                                <button class="currency-btn active" data-currency="USD" style="background:transparent;border:none;color:#444;padding:0.2rem 0.7rem;border-radius:6px;font-size:0.6rem;font-weight:700;cursor:pointer;transition:all 0.3s;font-family:'Inter',sans-serif;">USD</button>
-                                <button class="currency-btn" data-currency="RUB" style="background:transparent;border:none;color:#444;padding:0.2rem 0.7rem;border-radius:6px;font-size:0.6rem;font-weight:700;cursor:pointer;transition:all 0.3s;font-family:'Inter',sans-serif;">RUB</button>
-                                <button class="currency-btn" data-currency="UAH" style="background:transparent;border:none;color:#444;padding:0.2rem 0.7rem;border-radius:6px;font-size:0.6rem;font-weight:700;cursor:pointer;transition:all 0.3s;font-family:'Inter',sans-serif;">UAH</button>
-                            </div>
-                        </div>
-                        <div class="pricing-grid" id="pricing-grid"></div>
-                    </div>
-                </div>
-
-                <!-- СТРАНИЦА: Корзина -->
-                <div class="page" id="page-cart">
-                    <div class="card animate-on-load">
-                        <div class="card-header">
-                            <h3>Корзина</h3>
-                            <span class="sub">оформление заказа</span>
-                        </div>
-                        <div id="cartContent"><div style="color:#555;font-size:0.85rem;padding:1rem 0;">Корзина пуста</div></div>
-                    </div>
-                </div>
-
-            </div>
+            </section>
         </div>
 
+        <!-- ============================================================
+        СТРАНИЦА: ЦЕНЫ
+        ============================================================ -->
+        <div class="page" id="page-pricing">
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Тарифы</h2>
+                    <span class="section-sub">выберите свой</span>
+                </div>
+                <div class="pricing-controls">
+                    <span class="label">Валюта</span>
+                    <div class="currency-selector">
+                        <button class="currency-btn active" data-currency="USD">USD</button>
+                        <button class="currency-btn" data-currency="RUB">RUB</button>
+                        <button class="currency-btn" data-currency="UAH">UAH</button>
+                    </div>
+                </div>
+                <div class="pricing-grid" id="pricing-grid">
+                    <!-- JS заполнение -->
+                </div>
+            </section>
+        </div>
+
+        <!-- ============================================================
+        СТРАНИЦА: КАБИНЕТ
+        ============================================================ -->
+        <div class="page" id="page-cabinet">
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Личный кабинет</h2>
+                    <span class="section-sub">управление подпиской</span>
+                </div>
+                <div id="cabinetContent">
+                    <!-- JS заполнение -->
+                </div>
+            </section>
+        </div>
+
+        <!-- ============================================================
+        СТРАНИЦА: КОРЗИНА
+        ============================================================ -->
+        <div class="page" id="page-cart">
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Корзина</h2>
+                    <span class="section-sub">оформление заказа</span>
+                </div>
+                <div id="cartContent">
+                    <div style="color:#555;padding:1rem 0;">Корзина пуста</div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
         <footer class="footer">
-            <span>&copy; 2026 Lethal DLC — All rights reserved</span>
-            <span>Made with precision</span>
+            <span>&copy; 2026 Lethal DLC — Все права защищены</span>
+            <div class="footer-links">
+                <a href="#" data-page="main">Главная</a>
+                <a href="#" data-page="features">Возможности</a>
+                <a href="#" data-page="pricing">Цены</a>
+                <a href="#" data-page="cabinet">Кабинет</a>
+            </div>
         </footer>
     </div>
 
+    <!-- ============================================================
+    JS
+    ============================================================ -->
     <script>
         (function() {
             'use strict';
 
-            // ---- ЦЕНЫ ----
+            // ============================================================
+            // ДАННЫЕ
+            // ============================================================
             const PRICES = [
                 { id: 'month', label: '1 месяц', labelEn: '1 Month', price: 5, period: 'месяц', periodEn: 'month',
-                    desc: 'Полный доступ. Приоритетная поддержка. Автообновления.', descEn: 'Full access. Priority support. Auto-updates.' },
+                    desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.', descEn: 'Full access. Priority support. Auto-updates.' },
                 { id: 'quarter', label: '3 месяца', labelEn: '3 Months', price: 8, period: '3 месяца', periodEn: '3 months',
-                    desc: 'Полный доступ. Приоритетная поддержка. Автообновления.', descEn: 'Full access. Priority support. Auto-updates.',
+                    desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.', descEn: 'Full access. Priority support. Auto-updates.',
                     popular: true },
                 { id: 'lifetime', label: 'Навсегда', labelEn: 'Lifetime', price: 12, period: 'навсегда', periodEn: 'lifetime',
                     desc: 'Пожизненная лицензия. Все будущие обновления включены.', descEn: 'Lifetime license. All future updates included.' }
             ];
+
+            const RATES = {
+                USD: { rate: 1, symbol: '$', round: false },
+                RUB: { rate: 96.7, symbol: '₽', round: true },
+                UAH: { rate: 41.2, symbol: '₴', round: true }
+            };
+
+            const TRANSLATIONS = {
+                ru: {
+                    login: 'Войти',
+                    register: 'Регистрация',
+                    login_title: 'Вход',
+                    register_title: 'Регистрация',
+                    login_sub: 'Войдите в свой аккаунт',
+                    register_sub: 'Создайте новый аккаунт',
+                    email: 'Email',
+                    name: 'Имя',
+                    no_account: 'Нет аккаунта? Зарегистрироваться',
+                    has_account: 'Уже есть аккаунт? Войти',
+                    close: 'Закрыть',
+                    error_email: 'Введите корректный email',
+                    error_user_exists: 'Пользователь уже существует',
+                    error_user_not_found: 'Пользователь не найден',
+                    log_out: 'Выйти',
+                    subscription: 'Подписка',
+                    ends: 'Заканчивается',
+                    license_key: 'Лицензионный ключ',
+                    activate_key: 'Введите ключ активации',
+                    no_subscription: 'Нет активной подписки',
+                    buy_subscription: 'Купить подписку',
+                    your_key: 'Ваш активационный ключ',
+                    key_not_found: 'Ключ не найден',
+                    copy_key: 'Скопировать ключ',
+                    copied: 'Скопировано!',
+                    install_instruction: 'Инструкция по установке:',
+                    step1: 'Скачайте лоадер по ссылке: lethaldlc.com/loader',
+                    step2: 'Запустите файл от имени администратора',
+                    step3: 'Введите активационный ключ (указан выше)',
+                    step4: 'Нажмите "Инжект" и запустите игру',
+                    after_activation: 'После активации лоадер автоматически обновляется.',
+                    download_loader: 'Скачать загрузчик',
+                    add_to_cart: 'В корзину',
+                    total: 'Итого',
+                    empty_cart: 'Корзина пуста',
+                    checkout: 'Оформить заказ',
+                    popular: 'Популярный',
+                    full_access: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
+                    lifetime_license: 'Пожизненная лицензия. Все будущие обновления включены.',
+                    status_active: 'Активна',
+                    status_inactive: 'Неактивна',
+                    key_count: 'Ключей',
+                    loader_install: 'Установка лоадера',
+                    buy_to_access: 'Приобретите подписку',
+                    select_payment: 'Выберите способ оплаты',
+                    crypto: 'Криптовалюта',
+                    card: 'Банковская карта',
+                    sbp: 'СБП',
+                    crypto_sub: 'BTC, USDT, ETH',
+                    card_sub: 'Visa, Mastercard, МИР',
+                    sbp_sub: 'Быстрые платежи',
+                    amount: 'Сумма',
+                    method: 'Способ',
+                    details: 'Реквизиты',
+                    pay: 'Оплатить',
+                    payment_success: 'Оплата выполнена!',
+                    key_issued: 'Ваш ключ активации',
+                    close: 'Закрыть'
+                },
+                en: {
+                    login: 'Login',
+                    register: 'Register',
+                    login_title: 'Login',
+                    register_title: 'Register',
+                    login_sub: 'Login to your account',
+                    register_sub: 'Create a new account',
+                    email: 'Email',
+                    name: 'Name',
+                    no_account: 'No account? Register',
+                    has_account: 'Already have an account? Login',
+                    close: 'Close',
+                    error_email: 'Enter a valid email',
+                    error_user_exists: 'User already exists',
+                    error_user_not_found: 'User not found',
+                    log_out: 'Log out',
+                    subscription: 'Subscription',
+                    ends: 'Ends',
+                    license_key: 'License key',
+                    activate_key: 'Enter activation key',
+                    no_subscription: 'No active subscription',
+                    buy_subscription: 'Buy subscription',
+                    your_key: 'Your activation key',
+                    key_not_found: 'Key not found',
+                    copy_key: 'Copy key',
+                    copied: 'Copied!',
+                    install_instruction: 'Installation instructions:',
+                    step1: 'Download the loader from: lethaldlc.com/loader',
+                    step2: 'Run the file as administrator',
+                    step3: 'Enter the activation key (shown above)',
+                    step4: 'Click "Inject" and launch the game',
+                    after_activation: 'After activation, the loader updates automatically.',
+                    download_loader: 'Download loader',
+                    add_to_cart: 'Add to cart',
+                    total: 'Total',
+                    empty_cart: 'Cart is empty',
+                    checkout: 'Checkout',
+                    popular: 'Popular',
+                    full_access: 'Full access. Priority support. Auto-updates.',
+                    lifetime_license: 'Lifetime license. All future updates included.',
+                    status_active: 'Active',
+                    status_inactive: 'Inactive',
+                    key_count: 'Keys',
+                    loader_install: 'Loader installation',
+                    buy_to_access: 'Buy subscription to access',
+                    select_payment: 'Select payment method',
+                    crypto: 'Cryptocurrency',
+                    card: 'Bank card',
+                    sbp: 'SBP',
+                    crypto_sub: 'BTC, USDT, ETH',
+                    card_sub: 'Visa, Mastercard, MIR',
+                    sbp_sub: 'Fast payments',
+                    amount: 'Amount',
+                    method: 'Method',
+                    details: 'Details',
+                    pay: 'Pay',
+                    payment_success: 'Payment successful!',
+                    key_issued: 'Your activation key',
+                    close: 'Close'
+                }
+            };
+
+            // ============================================================
+            // СОСТОЯНИЕ
+            // ============================================================
+            let currentLang = 'ru';
+            let currentCurrency = 'USD';
+            let cart = [];
+            let users = JSON.parse(localStorage.getItem('lethal_users') || '{}');
+            let currentUser = null;
+            let currentUserEmail = null;
+
+            // ============================================================
+            // ФУНКЦИИ
+            // ============================================================
+            function t(key) {
+                return TRANSLATIONS[currentLang]?.[key] || key;
+            }
 
             function roundPrice(v) {
                 if (v < 10) return Math.round(v);
@@ -1104,17 +1842,21 @@
                 if (v < 1000) return Math.ceil(v / 50) * 50;
                 return Math.ceil(v / 100) * 100;
             }
-            const RATES = { USD: { rate: 1, symbol: '$', round: false }, RUB: { rate: 96.7, symbol: '₽', round: true },
-                UAH: { rate: 41.2, symbol: '₴', round: true } };
-            let currentCurrency = 'USD';
-            let cart = [];
 
-            // ---- ПОЛЬЗОВАТЕЛИ ----
-            let users = JSON.parse(localStorage.getItem('lethal_users') || '{}');
-            let currentUser = null;
-            let currentUserEmail = null;
+            function getPriceInCurrency(usdPrice) {
+                const data = RATES[currentCurrency];
+                let raw = usdPrice * data.rate;
+                return data.round ? roundPrice(raw) : raw;
+            }
 
-            function saveUsers() { localStorage.setItem('lethal_users', JSON.stringify(users)); }
+            function generateKey() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                return 'L101N-' + Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+            }
+
+            function saveUsers() {
+                localStorage.setItem('lethal_users', JSON.stringify(users));
+            }
 
             function getSession() {
                 const email = localStorage.getItem('lethal_session');
@@ -1138,197 +1880,33 @@
                 currentUser = null;
             }
 
-            function generateKey() {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                return 'L101N-' + Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-            }
-
-            // ---- ЯЗЫКИ ----
-            let currentLang = 'ru';
-            const t = (key) => {
-                const dict = {
-                    ru: {
-                        account: 'Аккаунт',
-                        overview: 'Обзор',
-                        security: 'Безопасность',
-                        friends: 'Друзья',
-                        subscription: 'Подписка',
-                        key_hwid: 'Ключ & HWID',
-                        loader: 'Загрузчик',
-                        freeze_plan: 'Заморозить',
-                        install_help: 'Помощь с установкой',
-                        screenshare_help: 'Помощь с ScreenShare',
-                        marketplace: 'Маркетплейс',
-                        web_configs: 'Web конфиги',
-                        market: 'Маркет',
-                        download_loader: 'Скачать загрузчик',
-                        partnership: 'Партнёрство',
-                        finances: 'Финансы',
-                        hwid_reset: 'Сброс HWID',
-                        license_key: 'Лицензионный ключ',
-                        events: 'События',
-                        ends: 'Заканчивается',
-                        activate_key: 'Введите ключ активации',
-                        log_out: 'Выйти',
-                        build_download: 'Собрать и скачать загрузчик',
-                        add_friends: 'Добавляйте друзей и дарите подписки',
-                        pass_checks: 'Проходите проверки безопасно',
-                        buy_configs: 'Покупайте конфиги и ресурс-паки',
-                        quick_access: 'Быстрый доступ',
-                        media_program: 'Медиа-программа, промокоды и выплаты',
-                        step_by_step: 'Пошаговая инструкция по установке',
-                        build_share: 'Создавайте, делитесь и импортируйте пресеты GUI',
-                        balance: 'Баланс, пополнение и история',
-                        pause_subscription: 'Приостановите подписку на время отсутствия',
-                        move_license: 'Перенесите лицензию на другой ПК',
-                        gift_subscriptions: 'Дарите подписки друзьям',
-                        live_events: 'Список живых событий',
-                        pricing: 'Цены',
-                        cart: 'Корзина',
-                        cabinet: 'Кабинет',
-                        main: 'Главная',
-                        total: 'Итого',
-                        empty_cart: 'Корзина пуста',
-                        add_to_cart: 'В корзину',
-                        checkout: 'Оформить заказ',
-                        popular: 'Популярный',
-                        full_access: 'Полный доступ. Приоритетная поддержка. Автообновления.',
-                        lifetime_license: 'Пожизненная лицензия. Все будущие обновления включены.',
-                        no_subscription: 'Нет активной подписки',
-                        buy_subscription: 'Купить подписку',
-                        your_key: 'Ваш активационный ключ',
-                        key_not_found: 'Ключ не найден',
-                        copy_key: 'Скопировать ключ',
-                        copied: 'Скопировано!',
-                        install_instruction: 'Инструкция по установке:',
-                        step1: 'Скачайте лоадер по ссылке: lethaldlc.com/loader',
-                        step2: 'Запустите файл от имени администратора',
-                        step3: 'Введите активационный ключ (указан выше)',
-                        step4: 'Нажмите "Инжект" и запустите игру',
-                        after_activation: 'После активации лоадер автоматически обновляется.',
-                        login: 'Войти',
-                        register: 'Регистрация',
-                        login_title: 'Вход',
-                        register_title: 'Регистрация',
-                        login_sub: 'Войдите в свой аккаунт',
-                        register_sub: 'Создайте новый аккаунт',
-                        email: 'Email',
-                        name: 'Имя',
-                        no_account: 'Нет аккаунта? Зарегистрироваться',
-                        has_account: 'Уже есть аккаунт? Войти',
-                        close: 'Закрыть',
-                        error_email: 'Введите корректный email',
-                        error_user_exists: 'Пользователь уже существует',
-                        error_user_not_found: 'Пользователь не найден',
-                        features: 'Возможности чита',
-                        everything_for_win: 'всё для победы'
-                    },
-                    en: {
-                        account: 'Account',
-                        overview: 'Overview',
-                        security: 'Security',
-                        friends: 'Friends',
-                        subscription: 'Subscription',
-                        key_hwid: 'Key & HWID',
-                        loader: 'Loader',
-                        freeze_plan: 'Freeze plan',
-                        install_help: 'Install help',
-                        screenshare_help: 'ScreenShare Help',
-                        marketplace: 'Marketplace',
-                        web_configs: 'Web configs',
-                        market: 'Market',
-                        download_loader: 'Download loader',
-                        partnership: 'Partnership',
-                        finances: 'Finances',
-                        hwid_reset: 'HWID reset',
-                        license_key: 'License key',
-                        events: 'Events',
-                        ends: 'Ends',
-                        activate_key: 'Enter activation key',
-                        log_out: 'Log out',
-                        build_download: 'Build & download the loader for your subscription',
-                        add_friends: 'Add friends and gift subscriptions',
-                        pass_checks: 'Pass checks safely',
-                        buy_configs: 'Buy configs and resource packs',
-                        quick_access: 'Quick Access',
-                        media_program: 'Media program, promo code & payouts',
-                        step_by_step: 'Step-by-step installation guide',
-                        build_share: 'Build, share and import GUI presets',
-                        balance: 'Balance, top-up and history',
-                        pause_subscription: 'Pause your subscription while away',
-                        move_license: 'Move your license to another PC',
-                        gift_subscriptions: 'Gift subscriptions to friends',
-                        live_events: 'Live event list',
-                        pricing: 'Pricing',
-                        cart: 'Cart',
-                        cabinet: 'Cabinet',
-                        main: 'Main',
-                        total: 'Total',
-                        empty_cart: 'Cart is empty',
-                        add_to_cart: 'Add to cart',
-                        checkout: 'Checkout',
-                        popular: 'Popular',
-                        full_access: 'Full access. Priority support. Auto-updates.',
-                        lifetime_license: 'Lifetime license. All future updates included.',
-                        no_subscription: 'No active subscription',
-                        buy_subscription: 'Buy subscription',
-                        your_key: 'Your activation key',
-                        key_not_found: 'Key not found',
-                        copy_key: 'Copy key',
-                        copied: 'Copied!',
-                        install_instruction: 'Installation instructions:',
-                        step1: 'Download the loader from: lethaldlc.com/loader',
-                        step2: 'Run the file as administrator',
-                        step3: 'Enter the activation key (shown above)',
-                        step4: 'Click "Inject" and launch the game',
-                        after_activation: 'After activation, the loader updates automatically.',
-                        login: 'Login',
-                        register: 'Register',
-                        login_title: 'Login',
-                        register_title: 'Register',
-                        login_sub: 'Login to your account',
-                        register_sub: 'Create a new account',
-                        email: 'Email',
-                        name: 'Name',
-                        no_account: 'No account? Register',
-                        has_account: 'Already have an account? Login',
-                        close: 'Close',
-                        error_email: 'Enter a valid email',
-                        error_user_exists: 'User already exists',
-                        error_user_not_found: 'User not found',
-                        features: 'Cheat Features',
-                        everything_for_win: 'everything for victory'
-                    }
-                };
-                return dict[currentLang]?.[key] || key;
-            };
-
-            // ---- НАВИГАЦИЯ ----
+            // ============================================================
+            // НАВИГАЦИЯ
+            // ============================================================
             function navigateTo(page) {
                 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
                 const target = document.getElementById('page-' + page);
                 if (target) {
                     target.classList.add('active');
-                    // Анимация появления
                     target.style.animation = 'none';
-                    setTimeout(() => target.style.animation = 'fadeIn 0.4s ease-out', 10);
+                    setTimeout(() => target.style.animation = 'fadeUp 0.6s ease-out', 10);
                 }
-                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-                const menuItem = document.querySelector(`.menu-item[data-page="${page}"]`);
-                if (menuItem) menuItem.classList.add('active');
                 if (page === 'cabinet') renderCabinet();
                 if (page === 'pricing') renderPricing();
                 if (page === 'cart') renderCart();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
-            document.querySelectorAll('[data-page-link]').forEach(el => {
+            document.querySelectorAll('[data-page]').forEach(el => {
                 el.addEventListener('click', function(e) {
                     e.preventDefault();
-                    navigateTo(this.dataset.pageLink);
+                    navigateTo(this.dataset.page);
                 });
             });
 
-            // ---- АВТОРИЗАЦИЯ ----
+            // ============================================================
+            // АВТОРИЗАЦИЯ
+            // ============================================================
             function showAuthModal(mode) {
                 const overlay = document.createElement('div');
                 overlay.className = 'auth-overlay';
@@ -1354,6 +1932,7 @@
                         showAuthModal(isLogin ? 'register' : 'login');
                     }
                 });
+
                 overlay.querySelector('#closeAuthBtn').addEventListener('click', () => overlay.remove());
                 overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 
@@ -1381,8 +1960,14 @@
                             return;
                         }
                         const name = overlay.querySelector('#authName').value.trim() || email.split('@')[0];
-                        users[email] = { name, email, key: null, subscription: { active: false, expires: null,
-                                plan: null }, keys: [], hwid: null };
+                        users[email] = {
+                            name,
+                            email,
+                            key: null,
+                            subscription: { active: false, expires: null, plan: null },
+                            keys: [],
+                            hwid: null
+                        };
                         saveUsers();
                         setSession(email);
                         overlay.remove();
@@ -1391,7 +1976,6 @@
                     }
                 });
 
-                // Enter для отправки
                 overlay.querySelectorAll('input').forEach(inp => {
                     inp.addEventListener('keydown', function(e) {
                         if (e.key === 'Enter') overlay.querySelector('#authSubmitBtn').click();
@@ -1401,11 +1985,15 @@
 
             document.getElementById('loginBtn').addEventListener('click', () => showAuthModal('login'));
             document.getElementById('registerBtn').addEventListener('click', () => showAuthModal('register'));
-            document.getElementById('logoutBtn').addEventListener('click', () => { clearSession();
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                clearSession();
                 updateUI();
-                navigateTo('main'); });
+                navigateTo('main');
+            });
 
-            // ---- ЯЗЫКИ ----
+            // ============================================================
+            // ЯЗЫКИ
+            // ============================================================
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -1415,36 +2003,36 @@
                     renderCabinet();
                     renderPricing();
                     renderCart();
-                    // Обновляем текст на главной
-                    document.querySelector('.hero h1 small').textContent = currentLang === 'ru' ?
-                        'невидимость. точность. превосходство.' : 'invisible. precise. superior.';
-                    document.querySelector('.hero p').textContent = currentLang === 'ru' ?
-                        'Профессиональный инструмент для доминации. Полный контроль над игровой механикой, невидимая работа, защита от обнаружения. Совместим с большинством популярных игр.' :
-                        'Professional domination tool. Full control over game mechanics, invisible operation, detection protection. Compatible with most popular games.';
-                    document.querySelectorAll('.card-header h3')[0].textContent = t('features');
-                    document.querySelectorAll('.card-header .sub')[0].textContent = t('everything_for_win');
+                    const heroSmall = document.querySelector('.hero h1 small');
+                    const heroP = document.querySelector('.hero p');
+                    if (currentLang === 'ru') {
+                        heroSmall.textContent = 'невидимость. точность. превосходство.';
+                        heroP.textContent =
+                            'Профессиональный инструмент для доминации. Полный контроль над игровой механикой, невидимая работа, защита от обнаружения. Совместим с большинством популярных игр.';
+                    } else {
+                        heroSmall.textContent = 'invisible. precise. superior.';
+                        heroP.textContent =
+                            'Professional domination tool. Full control over game mechanics, invisible operation, detection protection. Compatible with most popular games.';
+                    }
                 });
             });
 
-            // ---- ВАЛЮТЫ ----
+            // ============================================================
+            // ВАЛЮТЫ
+            // ============================================================
             document.querySelectorAll('.currency-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    document.querySelectorAll('.currency-btn').forEach(b => {
-                        b.style.color = '#444';
-                        b.style.background = 'transparent';
-                    });
-                    this.style.color = '#fff';
-                    this.style.background = 'rgba(255,255,255,0.06)';
+                    document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
                     currentCurrency = this.dataset.currency;
                     renderPricing();
                     renderCart();
                 });
             });
-            // Активируем USD по умолчанию
-            document.querySelector('.currency-btn[data-currency="USD"]').style.color = '#fff';
-            document.querySelector('.currency-btn[data-currency="USD"]').style.background = 'rgba(255,255,255,0.06)';
 
-            // ---- ОБНОВЛЕНИЕ UI ----
+            // ============================================================
+            // ОБНОВЛЕНИЕ UI
+            // ============================================================
             function updateUI() {
                 const isAuth = !!currentUser;
                 document.getElementById('loginBtn').style.display = isAuth ? 'none' : 'inline-block';
@@ -1457,189 +2045,11 @@
                 } else {
                     display.classList.remove('show');
                 }
-                renderSidebar();
             }
 
-            // ---- БОКОВОЕ МЕНЮ ----
-            function renderSidebar() {
-                const sidebar = document.getElementById('sidebar');
-                const isAuth = !!currentUser;
-                const isActive = isAuth && currentUser.subscription?.active;
-                const sections = [
-                    { label: t('account'), items: [{ page: 'cabinet', icon: '◆', label: t('overview') },
-                        { page: 'cabinet', icon: '◈', label: t('security') }, { page: 'cabinet', icon: '◊',
-                            label: t('friends') }] },
-                    { label: t('subscription'), items: [{ page: 'cabinet', icon: '●', label: t('key_hwid') },
-                        { page: 'cabinet', icon: '○', label: t('loader'), badge: isActive ? t(
-                                'download_loader') : null }, { page: 'cabinet', icon: '◌', label: t(
-                                'freeze_plan') }] },
-                    { label: t('help'), items: [{ page: 'cabinet', icon: '?', label: t('install_help') },
-                        { page: 'cabinet', icon: '☰', label: t('screenshare_help') }] },
-                    { label: t('marketplace'), items: [{ page: 'cabinet', icon: '▤', label: t('web_configs') },
-                        { page: 'cabinet', icon: '▦', label: t('market') }] }
-                ];
-                let html = '';
-                sections.forEach(s => {
-                    html += `<div class="section-label">${s.label}</div>`;
-                    s.items.forEach(item => {
-                        const active = document.getElementById('page-cabinet')?.classList.contains(
-                            'active') ? 'active' : '';
-                        html += `
-                            <button class="menu-item ${active}" data-page="${item.page}">
-                                <span class="icon">${item.icon}</span>
-                                ${item.label}
-                                ${item.badge ? `<span class="badge">${item.badge}</span>` : ''}
-                            </button>
-                        `;
-                    });
-                });
-                sidebar.innerHTML = html;
-                sidebar.querySelectorAll('.menu-item').forEach(el => {
-                    el.addEventListener('click', function() { navigateTo(this.dataset.page); });
-                });
-            }
-
-            // ---- КАБИНЕТ ----
-            function renderCabinet() {
-                const container = document.getElementById('page-cabinet');
-                if (!currentUser) {
-                    container.innerHTML =
-                        `<div class="card" style="text-align:center;padding:3rem 2rem;animation:fadeInUp 0.6s ease-out;"><div style="font-size:2.5rem;color:#333;margin-bottom:1rem;">◆</div><h3 style="color:#fff;font-weight:800;font-size:1.1rem;">${t('login')}</h3><p style="color:#666;font-size:0.85rem;margin:0.5rem 0 1.5rem;">${t('login_sub')}</p><button class="btn-sm primary" id="cabinetLoginBtn" style="padding:0.6rem 2rem;">${t('login')}</button></div>`;
-                    document.getElementById('cabinetLoginBtn')?.addEventListener('click', () => showAuthModal(
-                        'login'));
-                    return;
-                }
-                const sub = currentUser.subscription || { active: false, expires: null, plan: null };
-                const isActive = sub.active;
-                const dateStr = sub.expires ? new Date(sub.expires).toLocaleDateString('ru-RU', { day: 'numeric',
-                    month: 'short', year: 'numeric' }) : '—';
-                const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
-
-                container.innerHTML = `
-                    <div style="display:flex;flex-direction:column;gap:1.2rem;animation:fadeInUp 0.5s ease-out;">
-                        <div class="card">
-                            <div class="card-header"><h3>${t('quick_access')}</h3></div>
-                            <div class="quick-grid">
-                                ${[
-                                    {label:t('pricing'), desc:t('buy_subscription'), action:'pricing'},
-                                    {label:t('download_loader'), desc:isActive ? t('build_download') : t('buy_subscription'), action:'cabinet'},
-                                    {label:t('partnership'), desc:t('media_program')},
-                                    {label:t('install_help'), desc:t('step_by_step')},
-                                    {label:t('web_configs'), desc:t('build_share')},
-                                    {label:t('finances'), desc:t('balance')},
-                                    {label:t('freeze_plan'), desc:t('pause_subscription')},
-                                    {label:t('hwid_reset'), desc:t('move_license')},
-                                    {label:t('friends'), desc:t('gift_subscriptions')},
-                                    {label:t('screenshare_help'), desc:t('pass_checks')},
-                                    {label:t('marketplace'), desc:t('buy_configs')},
-                                    {label:t('events'), desc:t('live_events')}
-                                ].map(q => `
-                                    <div class="quick-item" ${q.action ? `onclick="navigateTo('${q.action}')"` : ''}>
-                                        <div class="label">${q.label}</div>
-                                        <div class="desc">${q.desc}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>${t('subscription')}</h3>
-                                <span class="status-badge ${isActive ? 'active' : 'inactive'}">${isActive ? 'Active' : 'Inactive'}</span>
-                            </div>
-                            <div class="row-space"><span class="label">${t('ends')}</span><span class="value">${isActive ? dateStr : '—'}</span></div>
-                            ${isActive ? `
-                            <div class="row-space"><span class="label">${t('license_key')}</span><span class="value" style="font-family:monospace;letter-spacing:1px;">${lastKey ? lastKey.key : '—'}</span></div>
-                            <div class="row-space"><span class="label">HWID</span><span class="value" style="font-weight:400;color:#666;">${currentUser.hwid || 'Not set'}</span></div>
-                            <div class="input-group">
-                                <input type="text" placeholder="${t('activate_key')}" id="activateInput">
-                                <button class="btn-sm primary" id="activateBtn">${t('activate_key')}</button>
-                            </div>
-                            ` : `
-                            <div style="text-align:center;padding:1rem 0;">
-                                <p style="color:#666;font-size:0.85rem;">${t('no_subscription')}</p>
-                                <button class="btn-sm primary" style="margin-top:0.8rem;padding:0.5rem 1.8rem;" data-page-link="pricing">${t('buy_subscription')}</button>
-                            </div>
-                            `}
-                        </div>
-
-                        ${isActive ? `
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>${t('loader')}</h3>
-                                <button class="action-link" id="copyKeyBtn">${t('copy_key')}</button>
-                            </div>
-                            <div class="key-display">
-                                <span>${lastKey ? lastKey.key : t('key_not_found')}</span>
-                                <button class="copy-btn" id="copyKeyBtn2">${t('copy_key')}</button>
-                            </div>
-                            <div style="margin-top:1rem;font-size:0.85rem;color:#888;line-height:1.8;">
-                                <p><strong style="color:#fff;">${t('install_instruction')}</strong></p>
-                                <p style="color:#666;">▼ ${t('step1')}</p>
-                                <p style="color:#666;">▼ ${t('step2')}</p>
-                                <p style="color:#666;">▼ ${t('step3')}</p>
-                                <p style="color:#666;">▼ ${t('step4')}</p>
-                                <p style="color:#444;margin-top:0.5rem;">${t('after_activation')}</p>
-                            </div>
-                            <button class="btn-sm primary" style="margin-top:1rem;padding:0.5rem 1.8rem;">${t('download_loader')}</button>
-                        </div>
-                        ` : ''}
-
-                        <div class="card"><div class="card-header"><h3>${t('friends')}</h3><span class="sub">${t('add_friends')}</span></div><div style="color:#555;font-size:0.8rem;">${t('gift_subscriptions')}</div></div>
-                        <div class="card"><div class="card-header"><h3>${t('screenshare_help')}</h3></div><div style="color:#555;font-size:0.8rem;">${t('pass_checks')}</div></div>
-                        <div class="card"><div class="card-header"><h3>${t('marketplace')}</h3></div><div style="color:#555;font-size:0.8rem;">${t('buy_configs')}</div></div>
-
-                        <div style="text-align:right;padding:0.5rem 0;">
-                            <button class="btn-sm danger" id="logoutBtn2">${t('log_out')}</button>
-                        </div>
-                    </div>
-                `;
-
-                document.querySelectorAll('#copyKeyBtn, #copyKeyBtn2').forEach(el => {
-                    el.addEventListener('click', function() {
-                        const keyEl = document.querySelector('.key-display span');
-                        if (keyEl && keyEl.textContent !== t('key_not_found')) {
-                            navigator.clipboard.writeText(keyEl.textContent).then(() => {
-                                this.textContent = t('copied');
-                                setTimeout(() => this.textContent = t('copy_key'), 2000);
-                            }).catch(() => {});
-                        }
-                    });
-                });
-
-                document.getElementById('activateBtn')?.addEventListener('click', function() {
-                    const input = document.getElementById('activateInput');
-                    if (input && input.value.trim()) {
-                        const key = input.value.trim();
-                        if (!currentUser.keys) currentUser.keys = [];
-                        currentUser.keys.push({ key, purchased: new Date().toISOString() });
-                        currentUser.subscription.active = true;
-                        currentUser.subscription.expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-                            .toISOString();
-                        currentUser.subscription.plan = 'Manual';
-                        saveUsers();
-                        renderCabinet();
-                    }
-                });
-
-                document.getElementById('logoutBtn2')?.addEventListener('click', function() {
-                    clearSession();
-                    updateUI();
-                    navigateTo('main');
-                });
-
-                document.querySelectorAll('[data-page-link]').forEach(el => {
-                    el.addEventListener('click', function() { navigateTo(this.dataset.pageLink); });
-                });
-            }
-
-            // ---- ЦЕНЫ ----
-            function getPriceInCurrency(usdPrice) {
-                const data = RATES[currentCurrency];
-                let raw = usdPrice * data.rate;
-                return data.round ? roundPrice(raw) : raw;
-            }
-
+            // ============================================================
+            // РЕНДЕР ЦЕН
+            // ============================================================
             function renderPricing() {
                 const grid = document.getElementById('pricing-grid');
                 if (!grid) return;
@@ -1651,17 +2061,18 @@
                     const label = isRu ? item.label : item.labelEn;
                     const period = isRu ? item.period : item.periodEn;
                     const desc = isRu ? item.desc : item.descEn;
+                    const pop = item.popular ? `<div class="popular-badge">${t('popular')}</div>` : '';
                     return `
-                        <div class="price-card animate-on-load">
-                            ${item.popular ? '<div class="popular-badge">'+t('popular')+'</div>' : ''}
+                        <div class="price-card">
+                            ${pop}
                             <div class="amount">${sym}${str}</div>
                             <div class="period">${period}</div>
                             <div class="desc">${desc}</div>
-                            <button class="btn-sm" style="width:100%;padding:0.5rem;font-size:0.65rem;border-color:#444;" data-id="${item.id}">${t('add_to_cart')}</button>
+                            <button class="btn-buy" data-id="${item.id}">${t('add_to_cart')}</button>
                         </div>
                     `;
                 }).join('');
-                grid.querySelectorAll('.btn-sm[data-id]').forEach(btn => {
+                grid.querySelectorAll('.btn-buy').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const plan = PRICES.find(p => p.id === this.dataset.id);
                         if (plan) { addToCart(plan);
@@ -1670,17 +2081,25 @@
                 });
             }
 
-            // ---- КОРЗИНА ----
+            // ============================================================
+            // КОРЗИНА
+            // ============================================================
             function addToCart(plan) {
                 const existing = cart.find(i => i.id === plan.id);
                 if (existing) existing.qty += 1;
                 else cart.push({ ...plan, qty: 1 });
                 renderCart();
-                // Анимация добавления
-                const btn = document.querySelector(`.btn-sm[data-id="${plan.id}"]`);
+                const btn = document.querySelector(`.btn-buy[data-id="${plan.id}"]`);
                 if (btn) {
+                    const orig = btn.textContent;
                     btn.textContent = '✓';
-                    setTimeout(() => btn.textContent = t('add_to_cart'), 1000);
+                    btn.style.borderColor = '#22c55e';
+                    btn.style.color = '#22c55e';
+                    setTimeout(() => {
+                        btn.textContent = orig;
+                        btn.style.borderColor = '';
+                        btn.style.color = '';
+                    }, 1200);
                 }
             }
 
@@ -1693,7 +2112,7 @@
                 const container = document.getElementById('cartContent');
                 if (!container) return;
                 if (cart.length === 0) {
-                    container.innerHTML = `<div style="color:#555;font-size:0.85rem;padding:1rem 0;animation:fadeIn 0.3s ease-out;">${t('empty_cart')}</div>`;
+                    container.innerHTML = `<div style="color:#555;padding:1rem 0;animation:fadeIn 0.3s ease-out;">${t('empty_cart')}</div>`;
                     return;
                 }
                 let total = 0,
@@ -1705,85 +2124,287 @@
                     const sym = RATES[currentCurrency].symbol;
                     const label = currentLang === 'ru' ? item.label : item.labelEn;
                     html += `
-                        <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.02);font-size:0.85rem;animation:fadeIn 0.3s ease-out;">
-                            <span style="color:#ccc;">${label} × ${item.qty}</span>
-                            <span style="color:#888;font-weight:700;">${sym}${Number.isInteger(sub) ? sub : sub.toFixed(2)}</span>
-                            <button class="btn-sm" style="padding:0.15rem 0.8rem;font-size:0.55rem;border-color:#333;" data-id="${item.id}">✕</button>
+                        <div class="cart-item">
+                            <span class="name">${label} × ${item.qty}</span>
+                            <span class="price">${sym}${Number.isInteger(sub) ? sub : sub.toFixed(2)}</span>
+                            <button class="remove-btn" data-id="${item.id}">✕</button>
                         </div>
                     `;
                 });
                 const totalStr = Number.isInteger(total) ? total.toString() : total.toFixed(2);
                 container.innerHTML = `
-                    ${html}
-                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.8rem 0;margin-top:0.5rem;border-top:1px solid var(--border);">
-                        <span style="font-weight:700;color:#fff;">${t('total')}: ${RATES[currentCurrency].symbol}${totalStr}</span>
-                        <button class="btn-sm primary" id="checkoutBtn" style="padding:0.5rem 1.8rem;">${t('checkout')}</button>
+                    <div class="cart-items">${html}</div>
+                    <div class="cart-total">
+                        <span>${t('total')}</span>
+                        <span>${RATES[currentCurrency].symbol}${totalStr}</span>
                     </div>
+                    <button class="btn btn-primary" style="margin-top:1rem;padding:0.6rem 2rem;font-size:0.8rem;" id="checkoutBtn">${t('checkout')}</button>
                 `;
-                container.querySelectorAll('.btn-sm[data-id]').forEach(btn => {
+                container.querySelectorAll('.remove-btn').forEach(btn => {
                     btn.addEventListener('click', function() { removeFromCart(this.dataset.id); });
                 });
                 document.getElementById('checkoutBtn')?.addEventListener('click', function() {
                     if (!currentUser) { showAuthModal('login'); return; }
-                    const key = generateKey();
-                    if (!currentUser.keys) currentUser.keys = [];
-                    const planNames = cart.map(i => currentLang === 'ru' ? i.label : i.labelEn).join(', ');
-                    currentUser.keys.push({ key, plan: planNames, purchased: new Date().toISOString() });
-                    currentUser.subscription = { active: true, expires: new Date(Date.now() + 30 * 24 * 60 * 60 *
-                            1000).toISOString(), plan: planNames };
-                    saveUsers();
-                    cart = [];
-                    renderCart();
-                    navigateTo('cabinet');
-                    renderCabinet();
+                    openPaymentModal();
                 });
             }
 
-            // ---- ЧАСТИЦЫ ----
+            // ============================================================
+            // МОДАЛКА ОПЛАТЫ (3 способа)
+            // ============================================================
+            function openPaymentModal() {
+                let selectedMethod = 'crypto';
+                const total = cart.reduce((sum, item) => sum + getPriceInCurrency(item.price) * item.qty, 0);
+                const totalStr = Number.isInteger(total) ? total.toString() : total.toFixed(2);
+                const sym = RATES[currentCurrency].symbol;
+
+                const methods = {
+                    crypto: {
+                        label: t('crypto'),
+                        sub: t('crypto_sub'),
+                        details: 'BTC: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa\nUSDT (TRC20): TKn5...9zX'
+                    },
+                    card: {
+                        label: t('card'),
+                        sub: t('card_sub'),
+                        details: 'Visa: 2200 1234 5678 9012\nMastercard: 5200 1234 5678 9012'
+                    },
+                    sbp: {
+                        label: t('sbp'),
+                        sub: t('sbp_sub'),
+                        details: 'СБП: +7 999 123-45-67\nПо номеру телефона'
+                    }
+                };
+
+                const overlay = document.createElement('div');
+                overlay.className = 'payment-overlay';
+
+                overlay.innerHTML = `
+                    <div class="payment-modal">
+                        <h2>${t('checkout')}</h2>
+                        <div class="sub">${t('select_payment')}</div>
+
+                        <div class="payment-methods">
+                            <div class="payment-method selected" data-method="crypto">
+                                ${t('crypto')}
+                                <span class="sub-text">${t('crypto_sub')}</span>
+                            </div>
+                            <div class="payment-method" data-method="card">
+                                ${t('card')}
+                                <span class="sub-text">${t('card_sub')}</span>
+                            </div>
+                            <div class="payment-method" data-method="sbp">
+                                ${t('sbp')}
+                                <span class="sub-text">${t('sbp_sub')}</span>
+                            </div>
+                        </div>
+
+                        <div class="payment-details">
+                            <div class="row"><span class="label">${t('method')}</span><span class="value" id="payMethodLabel">${methods.crypto.label}</span></div>
+                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${totalStr}</span></div>
+                            <div class="row"><span class="label">${t('details')}</span><span class="value mono" id="payDetails" style="white-space:pre-wrap;font-size:0.7rem;text-align:right;">${methods.crypto.details}</span></div>
+                        </div>
+
+                        <button class="btn-pay" id="payBtn">${t('pay')}</button>
+                        <button class="btn-close-payment" id="closePaymentBtn">${t('close')}</button>
+                    </div>
+                `;
+
+                document.body.appendChild(overlay);
+
+                // Переключение методов
+                overlay.querySelectorAll('.payment-method').forEach(el => {
+                    el.addEventListener('click', function() {
+                        overlay.querySelectorAll('.payment-method').forEach(m => m.classList.remove(
+                        'selected'));
+                        this.classList.add('selected');
+                        selectedMethod = this.dataset.method;
+                        overlay.querySelector('#payMethodLabel').textContent = methods[selectedMethod]
+                        .label;
+                        overlay.querySelector('#payDetails').textContent = methods[selectedMethod].details;
+                    });
+                });
+
+                overlay.querySelector('#closePaymentBtn').addEventListener('click', () => overlay.remove());
+                overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+                overlay.querySelector('#payBtn').addEventListener('click', function() {
+                    const key = generateKey();
+                    const planNames = cart.map(i => currentLang === 'ru' ? i.label : i.labelEn).join(', ');
+
+                    if (!currentUser.keys) currentUser.keys = [];
+                    currentUser.keys.push({ key, plan: planNames, purchased: new Date().toISOString() });
+                    currentUser.subscription = {
+                        active: true,
+                        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                        plan: planNames
+                    };
+                    saveUsers();
+
+                    overlay.innerHTML = `
+                        <div class="payment-modal" style="text-align:center;">
+                            <div style="font-size:3rem;color:#fff;font-weight:300;margin-bottom:0.5rem;">◆</div>
+                            <h2>${t('payment_success')}</h2>
+                            <div class="sub">${t('key_issued')}</div>
+                            <div style="background:rgba(255,255,255,0.03);padding:1rem;border-radius:10px;font-family:monospace;font-size:1rem;font-weight:600;letter-spacing:2px;color:#fff;margin:1rem 0;border:1px solid var(--border);">${key}</div>
+                            <div style="color:#555;font-size:0.75rem;margin-bottom:1rem;">${t('your_key')}</div>
+                            <button class="btn-pay" id="successCloseBtn">${t('close')}</button>
+                        </div>
+                    `;
+                    overlay.querySelector('#successCloseBtn').addEventListener('click', function() {
+                        overlay.remove();
+                        cart = [];
+                        renderCart();
+                        navigateTo('cabinet');
+                        renderCabinet();
+                    });
+                });
+            }
+
+            // ============================================================
+            // КАБИНЕТ
+            // ============================================================
+            function renderCabinet() {
+                const container = document.getElementById('cabinetContent');
+                if (!currentUser) {
+                    container.innerHTML = `
+                        <div style="text-align:center;padding:3rem 0;">
+                            <div style="font-size:2.5rem;color:#333;margin-bottom:1rem;">◆</div>
+                            <h3 style="color:#fff;font-weight:400;font-size:1.2rem;">${t('login')}</h3>
+                            <p style="color:#666;font-size:0.9rem;margin:0.5rem 0 1.5rem;">${t('login_sub')}</p>
+                            <button class="btn-sm primary" id="cabinetLoginBtn" style="padding:0.6rem 2rem;font-size:0.7rem;">${t('login')}</button>
+                        </div>
+                    `;
+                    document.getElementById('cabinetLoginBtn')?.addEventListener('click', () => showAuthModal(
+                    'login'));
+                    return;
+                }
+
+                const sub = currentUser.subscription || { active: false, expires: null, plan: null };
+                const isActive = sub.active;
+                const dateStr = sub.expires ? new Date(sub.expires).toLocaleDateString(
+                    currentLang === 'ru' ? 'ru-RU' : 'en-US', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    }) : '—';
+                const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
+
+                container.innerHTML = `
+                    <div class="cabinet-grid">
+                        <div class="cabinet-sidebar">
+                            <div class="avatar">${currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}</div>
+                            <div class="name">${currentUser.name || 'Пользователь'}</div>
+                            <div class="email">${currentUser.email}</div>
+                            <div class="status-badge ${isActive ? 'active' : 'inactive'}">${isActive ? t('status_active') : t('status_inactive')}</div>
+                            <div class="divider"></div>
+                            <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${isActive ? 'green' : 'red'}">${isActive ? t('status_active') : t('status_inactive')}</span></div>
+                            ${isActive ? `
+                            <div class="info-row"><span class="label">${t('ends')}</span><span class="value">${dateStr}</span></div>
+                            <div class="info-row"><span class="label">${t('license_key')}</span><span class="value" style="font-family:monospace;font-size:0.75rem;letter-spacing:0.5px;">${lastKey ? lastKey.key : '—'}</span></div>
+                            ` : `
+                            <div class="info-row"><span class="label">${t('status')}</span><span class="value red">${t('no_subscription')}</span></div>
+                            `}
+                            <div class="info-row"><span class="label">${t('key_count')}</span><span class="value">${currentUser.keys?.length || 0}</span></div>
+                            <div class="divider"></div>
+                            <button class="btn-sm" style="width:100%;font-size:0.6rem;border-color:#555;color:#aaa;" data-page="pricing">${t('buy_subscription')}</button>
+                        </div>
+
+                        <div class="cabinet-content">
+                            <h3>${isActive ? t('loader_install') : t('buy_to_access')}</h3>
+                            ${isActive ? `
+                            <div style="margin-bottom:1rem;">
+                                <div style="color:#666;font-size:0.75rem;margin-bottom:0.3rem;">${t('your_key')}</div>
+                                <div class="key-box">
+                                    <span>${lastKey ? lastKey.key : t('key_not_found')}</span>
+                                    <button class="copy-btn" id="copyKeyBtn">${t('copy_key')}</button>
+                                </div>
+                            </div>
+                            <div class="instruction-text">
+                                <p><span class="highlight">${t('install_instruction')}</span></p>
+                                <p style="color:#666;">▼ ${t('step1')}</p>
+                                <p style="color:#666;">▼ ${t('step2')}</p>
+                                <p style="color:#666;">▼ ${t('step3')}</p>
+                                <p style="color:#666;">▼ ${t('step4')}</p>
+                                <p style="color:#444;margin-top:0.5rem;">${t('after_activation')}</p>
+                            </div>
+                            <button class="btn-sm primary" style="margin-top:1rem;padding:0.5rem 1.8rem;font-size:0.7rem;">${t('download_loader')}</button>
+                            ` : `
+                            <div style="text-align:center;padding:2rem 0;">
+                                <p style="color:#666;font-size:0.95rem;margin-bottom:1.5rem;">${t('no_subscription')}</p>
+                                <button class="btn-sm primary" style="padding:0.6rem 2rem;font-size:0.7rem;" data-page="pricing">${t('buy_subscription')}</button>
+                            </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('copyKeyBtn')?.addEventListener('click', function() {
+                    const keyEl = document.querySelector('.key-box span');
+                    if (keyEl && keyEl.textContent !== t('key_not_found')) {
+                        navigator.clipboard.writeText(keyEl.textContent).then(() => {
+                            this.textContent = t('copied');
+                            setTimeout(() => this.textContent = t('copy_key'), 2000);
+                        }).catch(() => {});
+                    }
+                });
+
+                document.querySelectorAll('[data-page]').forEach(el => {
+                    el.addEventListener('click', function() { navigateTo(this.dataset.page); });
+                });
+            }
+
+            // ============================================================
+            // ЧАСТИЦЫ
+            // ============================================================
             const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
-            let width, height, particles = [];
-            const COUNT = 80,
-                CONN = 120;
+            let width, height;
+            let particles = [];
+            const PARTICLE_COUNT = 130;
+            const CONNECTION_DIST = 140;
 
-            function resize() {
+            function resizeParticles() {
                 width = window.innerWidth;
                 height = window.innerHeight;
                 canvas.width = width;
                 canvas.height = height;
             }
-            window.addEventListener('resize', resize);
-            resize();
+            window.addEventListener('resize', resizeParticles);
+            resizeParticles();
 
             class Particle {
                 constructor() { this.reset(); }
                 reset() {
                     this.x = Math.random() * width;
                     this.y = Math.random() * height;
-                    this.size = 0.6 + Math.random() * 2.2;
-                    this.sx = (Math.random() - 0.5) * 0.25;
-                    this.sy = (Math.random() - 0.5) * 0.25;
-                    this.op = 0.04 + Math.random() * 0.14;
+                    this.size = 0.8 + Math.random() * 2.5;
+                    this.speedX = (Math.random() - 0.5) * 0.3;
+                    this.speedY = (Math.random() - 0.5) * 0.3;
+                    this.opacity = 0.06 + Math.random() * 0.18;
                     this.pulse = Math.random() * Math.PI * 2;
-                    this.ps = 0.003 + Math.random() * 0.007;
+                    this.pulseSpeed = 0.005 + Math.random() * 0.01;
                 }
                 update() {
-                    this.x += this.sx;
-                    this.y += this.sy;
-                    this.pulse += this.ps;
-                    if (this.x < 0 || this.x > width) this.sx *= -1;
-                    if (this.y < 0 || this.y > height) this.sy *= -1;
-                    this.cs = this.size + Math.sin(this.pulse) * 0.25;
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.pulse += this.pulseSpeed;
+                    if (this.x < 0 || this.x > width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > height) this.speedY *= -1;
+                    this.currentSize = this.size + Math.sin(this.pulse) * 0.3;
                 }
                 draw() {
-                    const a = this.op * (0.6 + 0.4 * Math.sin(this.pulse));
+                    const alpha = this.opacity * (0.6 + 0.4 * Math.sin(this.pulse));
                     ctx.beginPath();
-                    ctx.arc(this.x, this.y, Math.max(0.15, this.cs), 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255,255,255,${a})`;
+                    ctx.arc(this.x, this.y, Math.max(0.2, this.currentSize), 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
                     ctx.fill();
                 }
             }
-            for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
 
             function drawParticles() {
                 ctx.clearRect(0, 0, width, height);
@@ -1793,14 +2414,14 @@
                     for (let j = i + 1; j < particles.length; j++) {
                         const dx = particles[i].x - particles[j].x;
                         const dy = particles[i].y - particles[j].y;
-                        const d = Math.sqrt(dx * dx + dy * dy);
-                        if (d < CONN) {
-                            const a = (1 - d / CONN) * 0.035;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < CONNECTION_DIST) {
+                            const alpha = (1 - dist / CONNECTION_DIST) * 0.07;
                             ctx.beginPath();
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(255,255,255,${a})`;
-                            ctx.lineWidth = 0.25;
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+                            ctx.lineWidth = 0.3;
                             ctx.stroke();
                         }
                     }
@@ -1810,21 +2431,19 @@
             drawParticles();
 
             window.addEventListener('resize', () => {
-                resize();
+                resizeParticles();
                 for (let p of particles) { p.x = Math.random() * width;
                     p.y = Math.random() * height; }
             });
 
-            // ---- ЗАПУСК ----
+            // ============================================================
+            // ЗАПУСК
+            // ============================================================
             getSession();
             updateUI();
-            renderSidebar();
             renderPricing();
             renderCart();
             navigateTo('main');
-
-            // Добавляем navigateTo в глобальный доступ для onclick
-            window.navigateTo = navigateTo;
 
         })();
     </script>
