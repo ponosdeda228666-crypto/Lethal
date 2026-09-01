@@ -185,7 +185,7 @@
         }
 
         /* ============================================================
-           HEADER
+           HEADER (сокращён для экономии места)
            ============================================================ */
         .header {
             display: flex;
@@ -209,16 +209,10 @@
             letter-spacing: 5px;
             text-transform: uppercase;
             color: #fff;
-            transition: all 0.5s;
             cursor: default;
             position: relative;
         }
-
-        .logo span {
-            color: #555;
-            font-weight: 300;
-        }
-
+        .logo span { color: #555; font-weight: 300; }
         .logo::after {
             content: '';
             position: absolute;
@@ -229,10 +223,7 @@
             background: linear-gradient(90deg, #fff, transparent);
             transition: width 0.6s ease;
         }
-
-        .logo:hover::after {
-            width: 100%;
-        }
+        .logo:hover::after { width: 100%; }
 
         .header-right {
             display: flex;
@@ -249,7 +240,6 @@
             border-radius: 8px;
             border: 1px solid var(--border);
         }
-
         .lang-btn {
             background: transparent;
             border: none;
@@ -262,17 +252,9 @@
             transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-
-        .lang-btn:hover {
-            color: #fff;
-        }
-
-        .lang-btn.active {
-            background: #fff;
-            color: #000;
-        }
+        .lang-btn:hover { color: #fff; }
+        .lang-btn.active { background: #fff; color: #000; }
 
         .nav {
             display: flex;
@@ -282,7 +264,6 @@
             letter-spacing: 1.5px;
             font-weight: 500;
         }
-
         .nav a {
             color: #777;
             text-decoration: none;
@@ -292,7 +273,6 @@
             cursor: pointer;
             position: relative;
         }
-
         .nav a::after {
             content: '';
             position: absolute;
@@ -303,21 +283,14 @@
             background: #fff;
             transition: width 0.3s ease;
         }
-
-        .nav a:hover {
-            color: #fff;
-        }
-
-        .nav a:hover::after {
-            width: 100%;
-        }
+        .nav a:hover { color: #fff; }
+        .nav a:hover::after { width: 100%; }
 
         .auth-buttons {
             display: flex;
             gap: 0.6rem;
             align-items: center;
         }
-
         .auth-buttons .user-email {
             color: #666;
             font-size: 0.7rem;
@@ -328,11 +301,7 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-
-        .auth-buttons .user-email.show {
-            display: inline;
-            animation: fadeIn 0.3s ease-out;
-        }
+        .auth-buttons .user-email.show { display: inline; animation: fadeIn 0.3s ease-out; }
 
         .btn-sm {
             padding: 0.35rem 1.2rem;
@@ -350,7 +319,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .btn-sm::before {
             content: '';
             position: absolute;
@@ -360,49 +328,21 @@
             transform-origin: left;
             transition: transform 0.3s ease;
         }
-
-        .btn-sm:hover::before {
-            transform: scaleX(1);
-        }
-
-        .btn-sm:hover {
-            border-color: #fff;
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .btn-sm.primary {
-            border-color: #fff;
-            color: #fff;
-        }
-
-        .btn-sm.primary:hover {
-            background: #fff;
-            color: #000;
-        }
-
-        .btn-sm.danger:hover {
-            border-color: #ef4444;
-            color: #ef4444;
-        }
+        .btn-sm:hover::before { transform: scaleX(1); }
+        .btn-sm:hover { border-color: #fff; color: #fff; transform: translateY(-2px); }
+        .btn-sm.primary { border-color: #fff; color: #fff; }
+        .btn-sm.primary:hover { background: #fff; color: #000; }
+        .btn-sm.danger:hover { border-color: #ef4444; color: #ef4444; }
 
         /* ============================================================
            СТРАНИЦЫ
            ============================================================ */
-        .page {
-            display: none;
-            animation: fadeUp 0.6s ease-out;
-        }
-
-        .page.active {
-            display: block;
-        }
-
+        .page { display: none; animation: fadeUp 0.6s ease-out; }
+        .page.active { display: block; }
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -444,14 +384,12 @@
             margin-bottom: 0.5rem;
             animation: fadeUp 0.8s ease-out;
         }
-
         .hero h1 .accent {
             background: linear-gradient(135deg, #ffffff 20%, #666666 80%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .hero h1 small {
             display: block;
             font-size: 1.2rem;
@@ -461,7 +399,6 @@
             margin-top: 0.2rem;
             -webkit-text-fill-color: #555;
         }
-
         .hero p {
             font-size: 1.1rem;
             font-weight: 400;
@@ -497,7 +434,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .btn::before {
             content: '';
             position: absolute;
@@ -508,60 +444,37 @@
             transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             z-index: -1;
         }
-
         .btn:hover {
             color: #0a0a0a;
             transform: translateY(-3px);
             box-shadow: 0 8px 30px rgba(255, 255, 255, 0.05);
         }
-
-        .btn:hover::before {
-            transform: scaleX(1);
-        }
-
-        .btn:active {
-            transform: scale(0.96);
-        }
+        .btn:hover::before { transform: scaleX(1); }
+        .btn:active { transform: scale(0.96); }
 
         .btn-primary {
             background: #fff;
             color: #0a0a0a;
             border-color: #fff;
         }
-
-        .btn-primary::before {
-            background: #0a0a0a;
-        }
-
-        .btn-primary:hover {
-            color: #fff;
-        }
+        .btn-primary::before { background: #0a0a0a; }
+        .btn-primary:hover { color: #fff; }
 
         .btn-outline {
             border-color: #333;
             color: #888;
         }
-
-        .btn-outline::before {
-            background: #333;
-        }
-
-        .btn-outline:hover {
-            color: #fff;
-            border-color: #fff;
-        }
+        .btn-outline::before { background: #333; }
+        .btn-outline:hover { color: #fff; border-color: #fff; }
 
         /* ============================================================
-           СЕКЦИИ
+           СЕКЦИЯ ВОЗМОЖНОСТЕЙ — КРАСИВЫЕ ДИНАМИЧНЫЕ БАННЕРЫ
            ============================================================ */
         .section {
             padding: 3rem 0 2rem;
             border-top: 1px solid var(--border);
         }
-
-        .section:last-of-type {
-            border-bottom: none;
-        }
+        .section:last-of-type { border-bottom: none; }
 
         .section-header {
             display: flex;
@@ -571,7 +484,6 @@
             gap: 1rem;
             margin-bottom: 2rem;
         }
-
         .section-title {
             font-size: 1.8rem;
             font-weight: 600;
@@ -581,7 +493,6 @@
             padding-left: 1.2rem;
             position: relative;
         }
-
         .section-title::after {
             content: '';
             position: absolute;
@@ -591,7 +502,6 @@
             height: 2px;
             background: linear-gradient(90deg, #fff, transparent);
         }
-
         .section-sub {
             font-size: 0.7rem;
             font-weight: 500;
@@ -600,79 +510,235 @@
             text-transform: uppercase;
         }
 
-        /* ============================================================
-           КАРТОЧКИ ВОЗМОЖНОСТЕЙ (только на главной)
-           ============================================================ */
+        /* ===== КРАСИВЫЕ БАННЕРЫ ===== */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
         }
 
         .feature-item {
-            padding: 2rem 1.8rem;
+            position: relative;
+            padding: 2.5rem 2rem;
             background: var(--surface);
             border: 1px solid var(--border);
-            transition: all 0.5s ease;
-            cursor: default;
             border-radius: var(--radius-lg);
-            backdrop-filter: blur(8px);
-            position: relative;
             overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: default;
+            backdrop-filter: blur(8px);
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
         }
 
+        /* Анимированный фон баннера */
         .feature-item::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #fff, transparent);
+            inset: 0;
+            background:
+                radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.04) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.5s ease;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .feature-item:hover::before {
             opacity: 1;
         }
 
-        .feature-item:hover {
-            background: var(--surface-hover);
-            border-color: var(--border-hover);
-            transform: translateY(-6px);
-            box-shadow: var(--shadow);
+        /* Светящаяся линия сверху */
+        .feature-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+            transition: left 0.8s ease;
+            z-index: 1;
         }
 
-        .feature-item .icon {
-            font-size: 1.8rem;
-            color: #555;
-            margin-bottom: 0.6rem;
+        .feature-item:hover::after {
+            left: 100%;
+        }
+
+        /* Номер / индекс */
+        .feature-item .index {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            font-size: 0.5rem;
+            font-weight: 700;
+            color: #333;
+            letter-spacing: 2px;
             transition: all 0.4s ease;
-            display: block;
+            z-index: 1;
         }
 
-        .feature-item:hover .icon {
-            color: #fff;
-            transform: scale(1.1);
+        .feature-item:hover .index {
+            color: #666;
+            transform: translateX(-4px);
         }
 
+        /* Категория */
+        .feature-item .category {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #444;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover .category {
+            color: #888;
+        }
+
+        /* Заголовок */
         .feature-item h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: 1px;
+            font-size: 1.4rem;
+            font-weight: 700;
             color: #fff;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+            letter-spacing: -0.5px;
         }
 
+        .feature-item:hover h3 {
+            transform: translateX(4px);
+        }
+
+        /* Описание */
         .feature-item p {
             color: #888;
             font-size: 0.9rem;
             line-height: 1.7;
+            position: relative;
+            z-index: 1;
+            max-width: 90%;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover p {
+            color: #aaa;
+        }
+
+        /* Декоративный элемент — геометрическая фигура */
+        .feature-item .shape {
+            position: absolute;
+            bottom: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            border-radius: 50%;
+            transition: all 0.8s ease;
+            z-index: 0;
+        }
+
+        .feature-item:hover .shape {
+            width: 160px;
+            height: 160px;
+            border-color: rgba(255, 255, 255, 0.04);
+            bottom: -40px;
+            right: -40px;
+        }
+
+        .feature-item .shape2 {
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 100px;
+            height: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.015);
+            border-radius: 50%;
+            transition: all 0.8s ease;
+            z-index: 0;
+        }
+
+        .feature-item:hover .shape2 {
+            width: 140px;
+            height: 140px;
+            border-color: rgba(255, 255, 255, 0.03);
+            top: -60px;
+            left: -60px;
+        }
+
+        /* Линия-акцент слева */
+        .feature-item .accent-line {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 3px;
+            height: 0;
+            background: #fff;
+            transition: height 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 1;
+        }
+
+        .feature-item:hover .accent-line {
+            height: 60%;
+        }
+
+        /* Анимация при загрузке */
+        .feature-item {
+            opacity: 0;
+            animation: featureAppear 0.8s ease-out forwards;
+        }
+
+        .feature-item:nth-child(1) { animation-delay: 0.1s; }
+        .feature-item:nth-child(2) { animation-delay: 0.2s; }
+        .feature-item:nth-child(3) { animation-delay: 0.3s; }
+        .feature-item:nth-child(4) { animation-delay: 0.4s; }
+        .feature-item:nth-child(5) { animation-delay: 0.5s; }
+        .feature-item:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes featureAppear {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Мигающая точка-индикатор */
+        .feature-item .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #333;
+            margin-right: 0.5rem;
+            transition: all 0.4s ease;
+            vertical-align: middle;
+        }
+
+        .feature-item:hover .dot {
+            background: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
         }
 
         /* ============================================================
-           ТАРИФЫ
+           ОСТАЛЬНЫЕ СТИЛИ (сокращены)
            ============================================================ */
         .pricing-controls {
             display: flex;
@@ -682,7 +748,6 @@
             margin-bottom: 1.5rem;
             flex-wrap: wrap;
         }
-
         .pricing-controls .label {
             color: #555;
             font-size: 0.7rem;
@@ -690,7 +755,6 @@
             text-transform: uppercase;
             letter-spacing: 1.5px;
         }
-
         .currency-selector {
             display: flex;
             gap: 0.2rem;
@@ -699,7 +763,6 @@
             border-radius: 8px;
             border: 1px solid var(--border);
         }
-
         .currency-btn {
             background: transparent;
             border: none;
@@ -711,17 +774,9 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
-            letter-spacing: 0.5px;
         }
-
-        .currency-btn:hover {
-            color: #fff;
-        }
-
-        .currency-btn.active {
-            background: #fff;
-            color: #000;
-        }
+        .currency-btn:hover { color: #fff; }
+        .currency-btn.active { background: #fff; color: #000; }
 
         .pricing-grid {
             display: grid;
@@ -739,14 +794,12 @@
             backdrop-filter: blur(8px);
             position: relative;
         }
-
         .price-card:hover {
             border-color: var(--border-hover);
             background: var(--surface-hover);
             transform: translateY(-6px);
             box-shadow: var(--shadow);
         }
-
         .price-card .popular-badge {
             position: absolute;
             top: -0.6rem;
@@ -761,14 +814,12 @@
             padding: 0.15rem 1.2rem;
             border-radius: 30px;
         }
-
         .price-card .amount {
             font-size: 3rem;
             font-weight: 800;
             color: #fff;
             letter-spacing: 2px;
         }
-
         .price-card .period {
             color: #777;
             font-size: 0.8rem;
@@ -776,14 +827,12 @@
             letter-spacing: 2px;
             margin-top: 0.1rem;
         }
-
         .price-card .desc {
             color: #999;
             margin: 1.5rem 0 2rem;
             font-size: 0.9rem;
             line-height: 1.7;
         }
-
         .btn-buy {
             padding: 0.6rem 2.2rem;
             font-family: 'Inter', sans-serif;
@@ -799,7 +848,6 @@
             border-radius: 10px;
             width: 100%;
         }
-
         .btn-buy:hover {
             background: #fff;
             color: #000;
@@ -807,9 +855,6 @@
             transform: translateY(-2px);
         }
 
-        /* ============================================================
-           СБРОС HWID
-           ============================================================ */
         .hwid-section {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -819,11 +864,7 @@
             transition: all 0.4s ease;
             margin-top: 1rem;
         }
-
-        .hwid-section:hover {
-            border-color: var(--border-hover);
-        }
-
+        .hwid-section:hover { border-color: var(--border-hover); }
         .hwid-section .hwid-header {
             display: flex;
             justify-content: space-between;
@@ -831,13 +872,11 @@
             flex-wrap: wrap;
             gap: 1rem;
         }
-
         .hwid-section .hwid-header h3 {
             font-size: 1.1rem;
             font-weight: 600;
             color: #fff;
         }
-
         .hwid-section .hwid-header .price-tag {
             font-size: 1.2rem;
             font-weight: 700;
@@ -847,14 +886,12 @@
             border-radius: 30px;
             border: 1px solid var(--border);
         }
-
         .hwid-section p {
             color: #888;
             font-size: 0.9rem;
             margin: 0.5rem 0 1.2rem;
             line-height: 1.7;
         }
-
         .hwid-section .btn-hwid {
             padding: 0.6rem 2.2rem;
             font-family: 'Inter', sans-serif;
@@ -869,22 +906,17 @@
             letter-spacing: 1.5px;
             border-radius: 10px;
         }
-
         .hwid-section .btn-hwid:hover {
             background: #ef4444;
             color: #fff;
             transform: translateY(-2px);
         }
 
-        /* ============================================================
-           КАБИНЕТ
-           ============================================================ */
         .cabinet-grid {
             display: grid;
             grid-template-columns: 1fr 2.2fr;
             gap: 2rem;
         }
-
         .cabinet-sidebar {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -893,11 +925,7 @@
             backdrop-filter: blur(8px);
             transition: all 0.4s ease;
         }
-
-        .cabinet-sidebar:hover {
-            border-color: var(--border-hover);
-        }
-
+        .cabinet-sidebar:hover { border-color: var(--border-hover); }
         .cabinet-sidebar .avatar {
             width: 68px;
             height: 68px;
@@ -913,23 +941,12 @@
             margin-bottom: 0.8rem;
             transition: all 0.4s ease;
         }
-
         .cabinet-sidebar:hover .avatar {
             border-color: var(--border-hover);
             background: rgba(255, 255, 255, 0.06);
         }
-
-        .cabinet-sidebar .name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .cabinet-sidebar .email {
-            color: #666;
-            font-size: 0.8rem;
-        }
-
+        .cabinet-sidebar .name { font-size: 1.1rem; font-weight: 600; color: #fff; }
+        .cabinet-sidebar .email { color: #666; font-size: 0.8rem; }
         .cabinet-sidebar .status-badge {
             margin-top: 0.8rem;
             display: inline-block;
@@ -943,45 +960,19 @@
             color: #555;
             transition: all 0.3s ease;
         }
-
-        .cabinet-sidebar .status-badge.active {
-            border-color: #22c55e;
-            color: #22c55e;
-        }
-
-        .cabinet-sidebar .status-badge.inactive {
-            border-color: #ef4444;
-            color: #ef4444;
-        }
-
-        .cabinet-sidebar .divider {
-            margin: 1.2rem 0;
-            border-top: 1px solid var(--border);
-        }
-
+        .cabinet-sidebar .status-badge.active { border-color: #22c55e; color: #22c55e; }
+        .cabinet-sidebar .status-badge.inactive { border-color: #ef4444; color: #ef4444; }
+        .cabinet-sidebar .divider { margin: 1.2rem 0; border-top: 1px solid var(--border); }
         .cabinet-sidebar .info-row {
             display: flex;
             justify-content: space-between;
             padding: 0.4rem 0;
             font-size: 0.8rem;
         }
-
-        .cabinet-sidebar .info-row .label {
-            color: #555;
-        }
-
-        .cabinet-sidebar .info-row .value {
-            color: #fff;
-            font-weight: 500;
-        }
-
-        .cabinet-sidebar .info-row .value.green {
-            color: #22c55e;
-        }
-
-        .cabinet-sidebar .info-row .value.red {
-            color: #ef4444;
-        }
+        .cabinet-sidebar .info-row .label { color: #555; }
+        .cabinet-sidebar .info-row .value { color: #fff; font-weight: 500; }
+        .cabinet-sidebar .info-row .value.green { color: #22c55e; }
+        .cabinet-sidebar .info-row .value.red { color: #ef4444; }
 
         .cabinet-content {
             background: var(--surface);
@@ -991,18 +982,13 @@
             backdrop-filter: blur(8px);
             transition: all 0.4s ease;
         }
-
-        .cabinet-content:hover {
-            border-color: var(--border-hover);
-        }
-
+        .cabinet-content:hover { border-color: var(--border-hover); }
         .cabinet-content h3 {
             font-size: 1.1rem;
             font-weight: 600;
             color: #fff;
             margin-bottom: 0.8rem;
         }
-
         .cabinet-content .key-box {
             background: rgba(255, 255, 255, 0.03);
             padding: 0.8rem 1rem;
@@ -1018,11 +1004,7 @@
             align-items: center;
             transition: all 0.3s ease;
         }
-
-        .cabinet-content .key-box:hover {
-            border-color: var(--border-hover);
-        }
-
+        .cabinet-content .key-box:hover { border-color: var(--border-hover); }
         .cabinet-content .key-box .copy-btn {
             background: none;
             border: none;
@@ -1034,27 +1016,21 @@
             padding: 0.2rem 0.6rem;
             border-radius: 4px;
         }
-
         .cabinet-content .key-box .copy-btn:hover {
             color: #fff;
             background: rgba(255, 255, 255, 0.04);
         }
-
         .cabinet-content .instruction-text {
             color: #888;
             font-size: 0.9rem;
             line-height: 1.9;
         }
-
-        .cabinet-content .instruction-text .highlight {
-            color: #fff;
-            font-weight: 600;
-        }
+        .cabinet-content .instruction-text .highlight { color: #fff; font-weight: 600; }
 
         /* ============================================================
-           МОДАЛКА ОПЛАТЫ
+           МОДАЛКИ
            ============================================================ */
-        .payment-overlay {
+        .payment-overlay, .auth-overlay {
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.92);
@@ -1066,8 +1042,7 @@
             padding: 1.5rem;
             animation: fadeIn 0.3s ease-out;
         }
-
-        .payment-modal {
+        .payment-modal, .auth-modal {
             background: #111;
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
@@ -1077,13 +1052,12 @@
             animation: slideUp 0.4s ease-out;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
         }
-
+        .auth-modal { max-width: 400px; }
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(40px) scale(0.96); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-
-        .payment-modal h2 {
+        .payment-modal h2, .auth-modal h2 {
             font-size: 1.6rem;
             font-weight: 300;
             letter-spacing: 4px;
@@ -1091,21 +1065,18 @@
             text-align: center;
             margin-bottom: 0.3rem;
         }
-
-        .payment-modal .sub {
+        .payment-modal .sub, .auth-modal .sub {
             color: #666;
             font-size: 0.85rem;
             text-align: center;
             margin-bottom: 1.8rem;
         }
-
         .payment-methods {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 0.8rem;
             margin-bottom: 1.5rem;
         }
-
         .payment-method {
             background: var(--surface);
             border: 2px solid var(--border);
@@ -1119,18 +1090,15 @@
             font-size: 0.75rem;
             color: #888;
         }
-
         .payment-method:hover {
             border-color: var(--border-hover);
             background: var(--surface-hover);
         }
-
         .payment-method.selected {
             border-color: #fff;
             color: #fff;
             background: rgba(255, 255, 255, 0.05);
         }
-
         .payment-method .sub-text {
             display: block;
             font-weight: 400;
@@ -1138,7 +1106,6 @@
             color: #444;
             margin-top: 0.2rem;
         }
-
         .payment-details {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
@@ -1146,30 +1113,20 @@
             padding: 1rem 1.2rem;
             margin-bottom: 1.5rem;
         }
-
         .payment-details .row {
             display: flex;
             justify-content: space-between;
             padding: 0.3rem 0;
             font-size: 0.85rem;
         }
-
-        .payment-details .row .label {
-            color: #666;
-        }
-
-        .payment-details .row .value {
-            color: #fff;
-            font-weight: 500;
-        }
-
+        .payment-details .row .label { color: #666; }
+        .payment-details .row .value { color: #fff; font-weight: 500; }
         .payment-details .row .value.mono {
             font-family: monospace;
             font-weight: 400;
             font-size: 0.75rem;
             color: #888;
         }
-
         .btn-pay {
             width: 100%;
             padding: 0.75rem;
@@ -1185,19 +1142,11 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .btn-pay:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
         }
-
-        .btn-pay:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-close-payment {
+        .btn-close-payment, .auth-modal .close-auth {
             display: block;
             margin-top: 0.8rem;
             background: transparent;
@@ -1213,58 +1162,9 @@
             padding: 0.4rem;
             transition: color 0.3s ease;
         }
+        .btn-close-payment:hover, .auth-modal .close-auth:hover { color: #fff; }
 
-        .btn-close-payment:hover {
-            color: #fff;
-        }
-
-        /* ============================================================
-           АВТОРИЗАЦИЯ
-           ============================================================ */
-        .auth-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(12px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            padding: 1.5rem;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .auth-modal {
-            background: #111;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 2.8rem 3rem;
-            max-width: 400px;
-            width: 100%;
-            animation: slideUp 0.4s ease-out;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-        }
-
-        .auth-modal h2 {
-            font-size: 1.6rem;
-            font-weight: 300;
-            letter-spacing: 4px;
-            color: #fff;
-            text-align: center;
-            margin-bottom: 0.3rem;
-        }
-
-        .auth-modal .sub {
-            color: #666;
-            font-size: 0.85rem;
-            text-align: center;
-            margin-bottom: 1.8rem;
-        }
-
-        .auth-modal .field {
-            margin-bottom: 1rem;
-        }
-
+        .auth-modal .field { margin-bottom: 1rem; }
         .auth-modal .field label {
             display: block;
             font-size: 0.6rem;
@@ -1274,7 +1174,6 @@
             letter-spacing: 1.5px;
             margin-bottom: 0.2rem;
         }
-
         .auth-modal .field input {
             width: 100%;
             padding: 0.6rem 0.8rem;
@@ -1287,15 +1186,8 @@
             outline: none;
             transition: border-color 0.3s ease;
         }
-
-        .auth-modal .field input:focus {
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .auth-modal .field input::placeholder {
-            color: #333;
-        }
-
+        .auth-modal .field input:focus { border-color: rgba(255, 255, 255, 0.15); }
+        .auth-modal .field input::placeholder { color: #333; }
         .auth-modal .auth-submit {
             width: 100%;
             padding: 0.75rem;
@@ -1311,55 +1203,23 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .auth-modal .auth-submit:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
         }
-
-        .auth-modal .auth-submit:active {
-            transform: scale(0.96);
-        }
-
         .auth-modal .toggle-auth {
             text-align: center;
             margin-top: 1rem;
             font-size: 0.75rem;
             color: #444;
         }
-
         .auth-modal .toggle-auth span {
             color: #fff;
             cursor: pointer;
             font-weight: 600;
             transition: color 0.3s ease;
         }
-
-        .auth-modal .toggle-auth span:hover {
-            color: #888;
-        }
-
-        .auth-modal .close-auth {
-            display: block;
-            margin-top: 0.8rem;
-            background: transparent;
-            border: none;
-            color: #333;
-            font-size: 0.65rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-family: 'Inter', sans-serif;
-            width: 100%;
-            padding: 0.4rem;
-            transition: color 0.3s ease;
-        }
-
-        .auth-modal .close-auth:hover {
-            color: #fff;
-        }
-
+        .auth-modal .toggle-auth span:hover { color: #888; }
         .auth-error {
             color: #ef4444;
             font-size: 0.7rem;
@@ -1367,11 +1227,7 @@
             margin-bottom: 0.8rem;
             display: none;
         }
-
-        .auth-error.show {
-            display: block;
-            animation: fadeIn 0.3s ease-out;
-        }
+        .auth-error.show { display: block; animation: fadeIn 0.3s ease-out; }
 
         /* ============================================================
            FOOTER
@@ -1389,130 +1245,51 @@
             flex-wrap: wrap;
             gap: 1rem;
         }
-
-        .footer a {
-            color: #333;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer a:hover {
-            color: #888;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-        }
+        .footer a { color: #333; text-decoration: none; transition: color 0.3s ease; }
+        .footer a:hover { color: #888; }
+        .footer-links { display: flex; gap: 2rem; }
 
         /* ============================================================
            АДАПТИВ
            ============================================================ */
         @media (max-width: 1024px) {
-            .hero h1 {
-                font-size: 3.5rem;
-            }
-            .cabinet-grid {
-                grid-template-columns: 1fr;
-            }
-            .payment-methods {
-                grid-template-columns: 1fr;
-            }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero h1 { font-size: 3.5rem; }
+            .cabinet-grid { grid-template-columns: 1fr; }
+            .payment-methods { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 1rem 1.2rem 2rem;
-            }
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .header-right {
-                width: 100%;
-                flex-wrap: wrap;
-                justify-content: flex-start;
-            }
-            .nav {
-                gap: 1.2rem;
-                font-size: 0.7rem;
-                flex-wrap: wrap;
-            }
-            .hero h1 {
-                font-size: 2.8rem;
-                letter-spacing: 2px;
-            }
-            .hero h1 small {
-                font-size: 1rem;
-                letter-spacing: 4px;
-            }
-            .hero p {
-                font-size: 1rem;
-            }
-            .btn {
-                padding: 0.7rem 1.8rem;
-                font-size: 0.7rem;
-            }
-            .section-title {
-                font-size: 1.4rem;
-            }
-            .features-grid,
-            .pricing-grid {
-                grid-template-columns: 1fr;
-            }
-            .auth-modal,
-            .payment-modal {
-                padding: 2rem 1.5rem;
-            }
-            .footer {
-                flex-direction: column;
-                text-align: center;
-            }
-            .footer-links {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1rem;
-            }
-            .cabinet-sidebar {
-                padding: 1.5rem;
-            }
-            .cabinet-content {
-                padding: 1.5rem;
-            }
-            .hwid-section {
-                padding: 1.5rem;
-            }
-            .hwid-section .hwid-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            .container { padding: 1rem 1.2rem 2rem; }
+            .header { flex-direction: column; align-items: flex-start; }
+            .header-right { width: 100%; flex-wrap: wrap; justify-content: flex-start; }
+            .nav { gap: 1.2rem; font-size: 0.7rem; flex-wrap: wrap; }
+            .hero h1 { font-size: 2.8rem; letter-spacing: 2px; }
+            .hero h1 small { font-size: 1rem; letter-spacing: 4px; }
+            .hero p { font-size: 1rem; }
+            .btn { padding: 0.7rem 1.8rem; font-size: 0.7rem; }
+            .section-title { font-size: 1.4rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .auth-modal, .payment-modal { padding: 2rem 1.5rem; }
+            .footer { flex-direction: column; text-align: center; }
+            .footer-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .cabinet-sidebar { padding: 1.5rem; }
+            .cabinet-content { padding: 1.5rem; }
+            .hwid-section { padding: 1.5rem; }
+            .hwid-section .hwid-header { flex-direction: column; align-items: flex-start; }
+            .feature-item { min-height: 200px; padding: 1.8rem 1.5rem; }
+            .feature-item h3 { font-size: 1.2rem; }
         }
 
         @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2rem;
-                letter-spacing: 1px;
-            }
-            .hero h1 small {
-                font-size: 0.8rem;
-                letter-spacing: 2px;
-            }
-            .btn-sm {
-                padding: 0.2rem 0.8rem;
-                font-size: 0.5rem;
-            }
-            .lang-btn,
-            .currency-btn {
-                padding: 0.15rem 0.5rem;
-                font-size: 0.5rem;
-            }
-            .btn {
-                padding: 0.6rem 1.4rem;
-                font-size: 0.65rem;
-            }
-            .price-card .amount {
-                font-size: 2.4rem;
-            }
+            .hero h1 { font-size: 2rem; letter-spacing: 1px; }
+            .hero h1 small { font-size: 0.8rem; letter-spacing: 2px; }
+            .btn-sm { padding: 0.2rem 0.8rem; font-size: 0.5rem; }
+            .lang-btn, .currency-btn { padding: 0.15rem 0.5rem; font-size: 0.5rem; }
+            .btn { padding: 0.6rem 1.4rem; font-size: 0.65rem; }
+            .price-card .amount { font-size: 2.4rem; }
+            .feature-item .shape, .feature-item .shape2 { display: none; }
         }
     </style>
 </head>
@@ -1578,7 +1355,7 @@
                 </div>
             </section>
 
-            <!-- ВОЗМОЖНОСТИ (только на главной) -->
+            <!-- ===== ВОЗМОЖНОСТИ — КРАСИВЫЕ БАННЕРЫ ===== -->
             <section class="section">
                 <div class="section-header">
                     <h2 class="section-title">Возможности</h2>
@@ -1586,29 +1363,63 @@
                 </div>
                 <div class="features-grid">
                     <div class="feature-item">
-                        <span class="icon">⚡</span>
-                        <h3>Combat</h3>
+                        <span class="index">01</span>
+                        <div class="shape"></div>
+                        <div class="shape2"></div>
+                        <div class="accent-line"></div>
+                        <div class="category"><span class="dot"></span>Combat</div>
+                        <h3>Боевая система</h3>
                         <p>Молниеносное наведение, приоритет целей, автоматическая реакция — максимальная эффективность в бою.</p>
                     </div>
+
                     <div class="feature-item">
+                        <span class="index">02</span>
+                        <div class="shape"></div>
+                        <div class="shape2"></div>
+                        <div class="accent-line"></div>
+                        <div class="category"><span class="dot"></span>Security</div>
                         <h3>Анти-детект</h3>
-                        <p>Обход большинства античитов, маскировка процессов, автоматическая очистка следов.</p>
+                        <p>Обход большинства античитов, маскировка процессов, автоматическая очистка следов — полная невидимость.</p>
                     </div>
+
                     <div class="feature-item">
-                        <h3>Visual</h3>
-                        <p>Настраиваемый ESP, скелеты, дистанция, здоровье, предметы — полная картина боя.</p>
+                        <span class="index">03</span>
+                        <div class="shape"></div>
+                        <div class="shape2"></div>
+                        <div class="accent-line"></div>
+                        <div class="category"><span class="dot"></span>Visual</div>
+                        <h3>Визуальный контроль</h3>
+                        <p>Настраиваемый ESP, скелеты, дистанция, здоровье, предметы — полная картина боя в реальном времени.</p>
                     </div>
+
                     <div class="feature-item">
-                        <h3>Misc</h3>
-                        <p>Быстрая смена оружия, отключение отдачи, авто-присед, триггербот и многое другое.</p>
+                        <span class="index">04</span>
+                        <div class="shape"></div>
+                        <div class="shape2"></div>
+                        <div class="accent-line"></div>
+                        <div class="category"><span class="dot"></span>Misc</div>
+                        <h3>Дополнительные функции</h3>
+                        <p>Быстрая смена оружия, отключение отдачи, авто-присед, триггербот и многое другое для комфортной игры.</p>
                     </div>
+
                     <div class="feature-item">
+                        <span class="index">05</span>
+                        <div class="shape"></div>
+                        <div class="shape2"></div>
+                        <div class="accent-line"></div>
+                        <div class="category"><span class="dot"></span>Analytics</div>
                         <h3>Статистика</h3>
-                        <p>Отслеживание K/D, точности, времени в игре — анализируйте свою эффективность.</p>
+                        <p>Отслеживание K/D, точности, времени в игре — анализируйте свою эффективность и прогресс.</p>
                     </div>
+
                     <div class="feature-item">
-                        <h3>ЖОПА</h3>
-                        <p>Автоматические обновления после патчей игры. Вы всегда на шаг впереди.</p>
+                        <span class="index">06</span>
+                        <div class="shape"></div>
+                        <div class="shape2"></div>
+                        <div class="accent-line"></div>
+                        <div class="category"><span class="dot"></span>Updates</div>
+                        <h3>Автообновления</h3>
+                        <p>Автоматические обновления после патчей игры. Вы всегда на шаг впереди — без задержек и простоев.</p>
                     </div>
                 </div>
             </section>
@@ -1635,7 +1446,6 @@
                     <!-- JS заполнение -->
                 </div>
 
-                <!-- СБРОС HWID -->
                 <div class="hwid-section" style="margin-top:2rem;">
                     <div class="hwid-header">
                         <h3>Сброс HWID</h3>
@@ -1733,9 +1543,6 @@
                     after_activation: 'После активации лоадер автоматически обновляется.',
                     download_loader: 'Скачать загрузчик',
                     add_to_cart: 'Купить',
-                    total: 'Итого',
-                    empty_cart: 'Корзина пуста',
-                    checkout: 'Оформить заказ',
                     popular: 'Популярный',
                     full_access: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
                     lifetime_license: 'Пожизненная лицензия. Все будущие обновления включены.',
@@ -1795,9 +1602,6 @@
                     after_activation: 'After activation, the loader updates automatically.',
                     download_loader: 'Download loader',
                     add_to_cart: 'Buy',
-                    total: 'Total',
-                    empty_cart: 'Cart is empty',
-                    checkout: 'Checkout',
                     popular: 'Popular',
                     full_access: 'Full access. Priority support. Auto-updates.',
                     lifetime_license: 'Lifetime license. All future updates included.',
@@ -2339,6 +2143,19 @@
                     el.addEventListener('click', function() { navigateTo(this.dataset.page); });
                 });
             }
+
+            // ============================================================
+            // ЭФФЕКТ СЛЕДОВАНИЯ ЗА МЫШЬЮ ДЛЯ БАННЕРОВ
+            // ============================================================
+            document.querySelectorAll('.feature-item').forEach(item => {
+                item.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+                    this.style.setProperty('--mouse-x', x + '%');
+                    this.style.setProperty('--mouse-y', y + '%');
+                });
+            });
 
             // ============================================================
             // ЧАСТИЦЫ
