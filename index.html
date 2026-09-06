@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lethal DLC — Premium Cheat</title>
     <style>
-        /* ============================================================
-           ГЛОБАЛЬНЫЙ СБРОС
-           ============================================================ */
+        /* ===== ГЛОБАЛЬНЫЙ СБРОС ===== */
         * {
             margin: 0;
             padding: 0;
@@ -29,6 +27,8 @@
             --radius: 12px;
             --radius-lg: 20px;
             --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --gold: #f5c842;
+            --gold-dim: rgba(245, 200, 66, 0.08);
         }
 
         html {
@@ -45,9 +45,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ============================================================
-           ФОН
-           ============================================================ */
+        /* ===== ФОН ===== */
         .bg-container {
             position: fixed;
             top: 0;
@@ -155,9 +153,7 @@
             100% { transform: translate(50px, 35px) scale(1.05); }
         }
 
-        /* ============================================================
-           ЧАСТИЦЫ
-           ============================================================ */
+        /* ===== ЧАСТИЦЫ ===== */
         #particles-canvas {
             position: fixed;
             top: 0;
@@ -170,9 +166,7 @@
             opacity: 0.6;
         }
 
-        /* ============================================================
-           КОНТЕЙНЕР
-           ============================================================ */
+        /* ===== КОНТЕЙНЕР ===== */
         .container {
             position: relative;
             z-index: 1;
@@ -184,9 +178,7 @@
             flex-direction: column;
         }
 
-        /* ============================================================
-           HEADER (сокращён для экономии места)
-           ============================================================ */
+        /* ===== HEADER ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -468,7 +460,7 @@
         .btn-outline:hover { color: #fff; border-color: #fff; }
 
         /* ============================================================
-           СЕКЦИЯ ВОЗМОЖНОСТЕЙ — КРАСИВЫЕ ДИНАМИЧНЫЕ БАННЕРЫ
+           СЕКЦИЯ ВОЗМОЖНОСТЕЙ
            ============================================================ */
         .section {
             padding: 3rem 0 2rem;
@@ -510,7 +502,6 @@
             text-transform: uppercase;
         }
 
-        /* ===== КРАСИВЫЕ БАННЕРЫ ===== */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -533,7 +524,6 @@
             justify-content: flex-end;
         }
 
-        /* Анимированный фон баннера */
         .feature-item::before {
             content: '';
             position: absolute;
@@ -550,7 +540,6 @@
             opacity: 1;
         }
 
-        /* Светящаяся линия сверху */
         .feature-item::after {
             content: '';
             position: absolute;
@@ -567,7 +556,6 @@
             left: 100%;
         }
 
-        /* Номер / индекс */
         .feature-item .index {
             position: absolute;
             top: 1.2rem;
@@ -585,7 +573,6 @@
             transform: translateX(-4px);
         }
 
-        /* Категория */
         .feature-item .category {
             font-size: 0.55rem;
             font-weight: 700;
@@ -602,7 +589,6 @@
             color: #888;
         }
 
-        /* Заголовок */
         .feature-item h3 {
             font-size: 1.4rem;
             font-weight: 700;
@@ -618,7 +604,6 @@
             transform: translateX(4px);
         }
 
-        /* Описание */
         .feature-item p {
             color: #888;
             font-size: 0.9rem;
@@ -633,7 +618,6 @@
             color: #aaa;
         }
 
-        /* Декоративный элемент — геометрическая фигура */
         .feature-item .shape {
             position: absolute;
             bottom: -30px;
@@ -674,7 +658,6 @@
             left: -60px;
         }
 
-        /* Линия-акцент слева */
         .feature-item .accent-line {
             position: absolute;
             left: 0;
@@ -690,7 +673,6 @@
             height: 60%;
         }
 
-        /* Анимация при загрузке */
         .feature-item {
             opacity: 0;
             animation: featureAppear 0.8s ease-out forwards;
@@ -714,7 +696,6 @@
             }
         }
 
-        /* Мигающая точка-индикатор */
         .feature-item .dot {
             display: inline-block;
             width: 6px;
@@ -738,7 +719,7 @@
         }
 
         /* ============================================================
-           ОСТАЛЬНЫЕ СТИЛИ (сокращены)
+           ТАРИФЫ
            ============================================================ */
         .pricing-controls {
             display: flex;
@@ -780,7 +761,7 @@
 
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
         }
 
@@ -793,6 +774,7 @@
             border-radius: var(--radius-lg);
             backdrop-filter: blur(8px);
             position: relative;
+            overflow: hidden;
         }
         .price-card:hover {
             border-color: var(--border-hover);
@@ -800,6 +782,21 @@
             transform: translateY(-6px);
             box-shadow: var(--shadow);
         }
+
+        .price-card .preorder-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--gold);
+            color: #000;
+            font-size: 0.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 0.2rem 1rem;
+            border-bottom-left-radius: var(--radius);
+        }
+
         .price-card .popular-badge {
             position: absolute;
             top: -0.6rem;
@@ -814,12 +811,23 @@
             padding: 0.15rem 1.2rem;
             border-radius: 30px;
         }
+
         .price-card .amount {
             font-size: 3rem;
             font-weight: 800;
             color: #fff;
             letter-spacing: 2px;
         }
+
+        .price-card .old-amount {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #555;
+            text-decoration: line-through;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
         .price-card .period {
             color: #777;
             font-size: 0.8rem;
@@ -827,12 +835,14 @@
             letter-spacing: 2px;
             margin-top: 0.1rem;
         }
+
         .price-card .desc {
             color: #999;
             margin: 1.5rem 0 2rem;
             font-size: 0.9rem;
             line-height: 1.7;
         }
+
         .btn-buy {
             padding: 0.6rem 2.2rem;
             font-family: 'Inter', sans-serif;
@@ -912,6 +922,9 @@
             transform: translateY(-2px);
         }
 
+        /* ============================================================
+           КАБИНЕТ
+           ============================================================ */
         .cabinet-grid {
             display: grid;
             grid-template-columns: 1fr 2.2fr;
@@ -947,6 +960,7 @@
         }
         .cabinet-sidebar .name { font-size: 1.1rem; font-weight: 600; color: #fff; }
         .cabinet-sidebar .email { color: #666; font-size: 0.8rem; }
+
         .cabinet-sidebar .status-badge {
             margin-top: 0.8rem;
             display: inline-block;
@@ -962,6 +976,12 @@
         }
         .cabinet-sidebar .status-badge.active { border-color: #22c55e; color: #22c55e; }
         .cabinet-sidebar .status-badge.inactive { border-color: #ef4444; color: #ef4444; }
+        .cabinet-sidebar .status-badge.preorder {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: var(--gold-dim);
+        }
+
         .cabinet-sidebar .divider { margin: 1.2rem 0; border-top: 1px solid var(--border); }
         .cabinet-sidebar .info-row {
             display: flex;
@@ -973,6 +993,7 @@
         .cabinet-sidebar .info-row .value { color: #fff; font-weight: 500; }
         .cabinet-sidebar .info-row .value.green { color: #22c55e; }
         .cabinet-sidebar .info-row .value.red { color: #ef4444; }
+        .cabinet-sidebar .info-row .value.gold { color: var(--gold); }
 
         .cabinet-content {
             background: var(--surface);
@@ -1071,12 +1092,14 @@
             text-align: center;
             margin-bottom: 1.8rem;
         }
+
         .payment-methods {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 0.8rem;
             margin-bottom: 1.5rem;
         }
+
         .payment-method {
             background: var(--surface);
             border: 2px solid var(--border);
@@ -1106,6 +1129,7 @@
             color: #444;
             margin-top: 0.2rem;
         }
+
         .payment-details {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
@@ -1127,6 +1151,7 @@
             font-size: 0.75rem;
             color: #888;
         }
+
         .btn-pay {
             width: 100%;
             padding: 0.75rem;
@@ -1230,6 +1255,57 @@
         .auth-error.show { display: block; animation: fadeIn 0.3s ease-out; }
 
         /* ============================================================
+           УВЕДОМЛЕНИЯ
+           ============================================================ */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .notification {
+            background: #111;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.5rem;
+            animation: notifSlideIn 0.5s ease-out;
+            pointer-events: auto;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            border-left: 3px solid var(--gold);
+        }
+
+        .notification .notif-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .notification .notif-body {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 0.2rem;
+        }
+
+        .notification .notif-time {
+            font-size: 0.55rem;
+            color: #444;
+            margin-top: 0.3rem;
+        }
+
+        @keyframes notifSlideIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ============================================================
            FOOTER
            ============================================================ */
         .footer {
@@ -1256,7 +1332,6 @@
             .features-grid { grid-template-columns: repeat(2, 1fr); }
             .hero h1 { font-size: 3.5rem; }
             .cabinet-grid { grid-template-columns: 1fr; }
-            .payment-methods { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 768px) {
@@ -1280,6 +1355,7 @@
             .hwid-section .hwid-header { flex-direction: column; align-items: flex-start; }
             .feature-item { min-height: 200px; padding: 1.8rem 1.5rem; }
             .feature-item h3 { font-size: 1.2rem; }
+            .notification-container { max-width: 300px; right: 10px; }
         }
 
         @media (max-width: 480px) {
@@ -1309,12 +1385,18 @@
     <canvas id="particles-canvas"></canvas>
 
     <!-- ============================================================
+    УВЕДОМЛЕНИЯ
+    ============================================================ -->
+    <div class="notification-container" id="notifications"></div>
+
+    <!-- ============================================================
     КОНТЕЙНЕР
     ============================================================ -->
     <div class="container">
 
         <!-- ===== HEADER ===== -->
         <header class="header">
+            <div class="logo">Lethal <span>DLC</span></div>
             <div class="header-right">
                 <div class="language-selector">
                     <button class="lang-btn active" data-lang="ru">Ru</button>
@@ -1354,7 +1436,7 @@
                 </div>
             </section>
 
-            <!-- ===== ВОЗМОЖНОСТИ — КРАСИВЫЕ БАННЕРЫ ===== -->
+            <!-- ===== ВОЗМОЖНОСТИ ===== -->
             <section class="section">
                 <div class="section-header">
                     <h2 class="section-title">Возможности</h2>
@@ -1492,14 +1574,20 @@
             // ============================================================
             // ДАННЫЕ
             // ============================================================
+            // Цены снижены вдвое, добавлены старые цены для скидки
             const PRICES = [
-                { id: 'month', label: '1 месяц', labelEn: '1 Month', price: 5, period: 'месяц', periodEn: 'month',
-                    desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.', descEn: 'Full access. Priority support. Auto-updates.' },
-                { id: 'quarter', label: '3 месяца', labelEn: '3 Months', price: 8, period: '3 месяца', periodEn: '3 months',
+                { id: 'month', label: '1 месяц', labelEn: '1 Month', price: 2.5, oldPrice: 5, period: 'месяц',
+                    periodEn: 'month',
                     desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.', descEn: 'Full access. Priority support. Auto-updates.',
-                    popular: true },
-                { id: 'lifetime', label: 'Навсегда', labelEn: 'Lifetime', price: 12, period: 'навсегда', periodEn: 'lifetime',
-                    desc: 'Пожизненная лицензия. Все будущие обновления включены.', descEn: 'Lifetime license. All future updates included.' }
+                    preorder: true },
+                { id: 'quarter', label: '3 месяца', labelEn: '3 Months', price: 4, oldPrice: 8, period: '3 месяца',
+                    periodEn: '3 months',
+                    desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.', descEn: 'Full access. Priority support. Auto-updates.',
+                    popular: true, preorder: true },
+                { id: 'lifetime', label: 'Навсегда', labelEn: 'Lifetime', price: 6, oldPrice: 12, period: 'навсегда',
+                    periodEn: 'lifetime',
+                    desc: 'Пожизненная лицензия. Все будущие обновления включены.', descEn: 'Lifetime license. All future updates included.',
+                    preorder: true }
             ];
 
             const RATES = {
@@ -1517,13 +1605,16 @@
                     login_sub: 'Войдите в свой аккаунт',
                     register_sub: 'Создайте новый аккаунт',
                     email: 'Email',
+                    password: 'Пароль',
                     name: 'Имя',
                     no_account: 'Нет аккаунта? Зарегистрироваться',
                     has_account: 'Уже есть аккаунт? Войти',
                     close: 'Закрыть',
                     error_email: 'Введите корректный email',
+                    error_password: 'Пароль должен быть не менее 6 символов',
                     error_user_exists: 'Пользователь уже существует',
                     error_user_not_found: 'Пользователь не найден',
+                    error_wrong_password: 'Неверный пароль',
                     log_out: 'Выйти',
                     subscription: 'Подписка',
                     ends: 'Заканчивается',
@@ -1543,20 +1634,18 @@
                     download_loader: 'Скачать загрузчик',
                     add_to_cart: 'Купить',
                     popular: 'Популярный',
+                    preorder: 'Предзаказ',
                     full_access: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
                     lifetime_license: 'Пожизненная лицензия. Все будущие обновления включены.',
                     status_active: 'Активна',
                     status_inactive: 'Неактивна',
+                    status_preorder: 'Предзаказ',
                     key_count: 'Ключей',
                     loader_install: 'Установка лоадера',
                     buy_to_access: 'Приобретите подписку',
-                    select_payment: 'Выберите способ оплаты',
-                    crypto: 'Криптовалюта',
-                    card: 'Банковская карта',
-                    sbp: 'СБП',
-                    crypto_sub: 'BTC, USDT, ETH',
-                    card_sub: 'Visa, Mastercard, МИР',
-                    sbp_sub: 'Быстрые платежи',
+                    select_payment: 'Оплата через DonationAlerts',
+                    crypto: 'DonationAlerts',
+                    crypto_sub: 'Безопасная оплата',
                     amount: 'Сумма',
                     method: 'Способ',
                     details: 'Реквизиты',
@@ -1566,7 +1655,9 @@
                     hwid_reset: 'Сброс HWID',
                     hwid_reset_success: 'HWID успешно сброшен!',
                     hwid_reset_desc: 'Перенесите лицензию на другой компьютер. После оплаты вы сможете сбросить привязку к текущему устройству.',
-                    hwid_price: '400 ₽'
+                    hwid_price: '400 ₽',
+                    payment_redirect: 'Перенаправление на DonationAlerts...',
+                    new_purchase: 'Новая покупка!'
                 },
                 en: {
                     login: 'Login',
@@ -1576,13 +1667,16 @@
                     login_sub: 'Login to your account',
                     register_sub: 'Create a new account',
                     email: 'Email',
+                    password: 'Password',
                     name: 'Name',
                     no_account: 'No account? Register',
                     has_account: 'Already have an account? Login',
                     close: 'Close',
                     error_email: 'Enter a valid email',
+                    error_password: 'Password must be at least 6 characters',
                     error_user_exists: 'User already exists',
                     error_user_not_found: 'User not found',
+                    error_wrong_password: 'Wrong password',
                     log_out: 'Log out',
                     subscription: 'Subscription',
                     ends: 'Ends',
@@ -1602,20 +1696,18 @@
                     download_loader: 'Download loader',
                     add_to_cart: 'Buy',
                     popular: 'Popular',
+                    preorder: 'Pre-order',
                     full_access: 'Full access. Priority support. Auto-updates.',
                     lifetime_license: 'Lifetime license. All future updates included.',
                     status_active: 'Active',
                     status_inactive: 'Inactive',
+                    status_preorder: 'Pre-order',
                     key_count: 'Keys',
                     loader_install: 'Loader installation',
                     buy_to_access: 'Buy subscription to access',
-                    select_payment: 'Select payment method',
-                    crypto: 'Cryptocurrency',
-                    card: 'Bank card',
-                    sbp: 'SBP',
-                    crypto_sub: 'BTC, USDT, ETH',
-                    card_sub: 'Visa, Mastercard, MIR',
-                    sbp_sub: 'Fast payments',
+                    select_payment: 'Payment via DonationAlerts',
+                    crypto: 'DonationAlerts',
+                    crypto_sub: 'Secure payment',
                     amount: 'Amount',
                     method: 'Method',
                     details: 'Details',
@@ -1625,7 +1717,9 @@
                     hwid_reset: 'HWID Reset',
                     hwid_reset_success: 'HWID successfully reset!',
                     hwid_reset_desc: 'Move your license to another PC. After payment you can reset the binding to the current device.',
-                    hwid_price: '400 ₽'
+                    hwid_price: '400 ₽',
+                    payment_redirect: 'Redirecting to DonationAlerts...',
+                    new_purchase: 'New purchase!'
                 }
             };
 
@@ -1637,6 +1731,7 @@
             let users = JSON.parse(localStorage.getItem('lethal_users') || '{}');
             let currentUser = null;
             let currentUserEmail = null;
+            let purchases = JSON.parse(localStorage.getItem('lethal_purchases') || '[]');
 
             // ============================================================
             // ФУНКЦИИ
@@ -1668,6 +1763,10 @@
                 localStorage.setItem('lethal_users', JSON.stringify(users));
             }
 
+            function savePurchases() {
+                localStorage.setItem('lethal_purchases', JSON.stringify(purchases));
+            }
+
             function getSession() {
                 const email = localStorage.getItem('lethal_session');
                 if (email && users[email]) {
@@ -1688,6 +1787,60 @@
                 localStorage.removeItem('lethal_session');
                 currentUserEmail = null;
                 currentUser = null;
+            }
+
+            // ============================================================
+            // TELEGRAM PING
+            // ============================================================
+            function sendTelegramPing(userName, userEmail, plan, amount, currency, key) {
+                // === НАСТРОЙТЕ ЭТИ ПАРАМЕТРЫ ===
+                const BOT_TOKEN = 'YOUR_BOT_TOKEN'; // Замените на токен вашего бота
+                const CHAT_ID = 'YOUR_CHAT_ID'; // Замените на ваш chat_id
+
+                const message =
+                    `🛒 НОВАЯ ПОКУПКА!\n\n👤 Имя: ${userName || 'Не указано'}\n📧 Почта: ${userEmail}\n📦 Тариф: ${plan}\n💰 Сумма: ${amount} ${currency}\n🔑 Ключ: ${key}\n🕐 Время: ${new Date().toLocaleString()}`;
+
+                const url =
+                    `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Telegram ping sent:', data);
+                    })
+                    .catch(err => {
+                        console.error('Telegram ping error:', err);
+                    });
+            }
+
+            // ============================================================
+            // УВЕДОМЛЕНИЯ
+            // ============================================================
+            function addNotification(title, body) {
+                const container = document.getElementById('notifications');
+                const notif = document.createElement('div');
+                notif.className = 'notification';
+                const time = new Date().toLocaleTimeString();
+                notif.innerHTML = `
+                    <div class="notif-title">${title}</div>
+                    <div class="notif-body">${body}</div>
+                    <div class="notif-time">${time}</div>
+                `;
+                container.prepend(notif);
+
+                while (container.children.length > 5) {
+                    container.removeChild(container.lastChild);
+                }
+
+                setTimeout(() => {
+                    if (notif.parentNode) {
+                        notif.style.opacity = '0';
+                        notif.style.transition = 'opacity 0.5s';
+                        setTimeout(() => {
+                            if (notif.parentNode) notif.remove();
+                        }, 500);
+                    }
+                }, 10000);
             }
 
             // ============================================================
@@ -1714,7 +1867,7 @@
             });
 
             // ============================================================
-            // АВТОРИЗАЦИЯ
+            // АВТОРИЗАЦИЯ (с паролем)
             // ============================================================
             function showAuthModal(mode) {
                 const overlay = document.createElement('div');
@@ -1726,6 +1879,7 @@
                         <div class="sub">${isLogin ? t('login_sub') : t('register_sub')}</div>
                         <div class="auth-error" id="authError"></div>
                         <div class="field"><label>${t('email')}</label><input type="email" id="authEmail" placeholder="your@email.com"></div>
+                        <div class="field"><label>${t('password')}</label><input type="password" id="authPassword" placeholder="••••••••"></div>
                         ${!isLogin ? `<div class="field"><label>${t('name')}</label><input type="text" id="authName" placeholder="Your name"></div>` : ''}
                         <button class="auth-submit" id="authSubmitBtn">${isLogin ? t('login') : t('register')}</button>
                         <div class="toggle-auth">${isLogin ? t('no_account') : t('has_account')}</div>
@@ -1747,24 +1901,37 @@
 
                 overlay.querySelector('#authSubmitBtn').addEventListener('click', function() {
                     const email = overlay.querySelector('#authEmail').value.trim();
+                    const password = overlay.querySelector('#authPassword').value;
+
                     if (!email || !email.includes('@')) {
                         errorEl.textContent = t('error_email');
                         errorEl.classList.add('show');
                         return;
                     }
+
                     if (isLogin) {
-                        if (users[email]) {
-                            setSession(email);
-                            overlay.remove();
-                            updateUI();
-                            navigateTo('cabinet');
-                        } else {
+                        if (!users[email]) {
                             errorEl.textContent = t('error_user_not_found');
                             errorEl.classList.add('show');
+                            return;
                         }
+                        if (users[email].password !== password) {
+                            errorEl.textContent = t('error_wrong_password');
+                            errorEl.classList.add('show');
+                            return;
+                        }
+                        setSession(email);
+                        overlay.remove();
+                        updateUI();
+                        navigateTo('cabinet');
                     } else {
                         if (users[email]) {
                             errorEl.textContent = t('error_user_exists');
+                            errorEl.classList.add('show');
+                            return;
+                        }
+                        if (password.length < 6) {
+                            errorEl.textContent = t('error_password');
                             errorEl.classList.add('show');
                             return;
                         }
@@ -1772,8 +1939,8 @@
                         users[email] = {
                             name,
                             email,
-                            key: null,
-                            subscription: { active: false, expires: null, plan: null },
+                            password,
+                            subscription: { active: false, expires: null, plan: null, preorder: false },
                             keys: [],
                             hwid: null
                         };
@@ -1863,15 +2030,21 @@
                 const isRu = currentLang === 'ru';
                 grid.innerHTML = PRICES.map(item => {
                     const val = getPriceInCurrency(item.price);
+                    const oldVal = getPriceInCurrency(item.oldPrice);
                     const str = Number.isInteger(val) ? val.toString() : val.toFixed(2);
+                    const oldStr = Number.isInteger(oldVal) ? oldVal.toString() : oldVal.toFixed(2);
                     const sym = RATES[currentCurrency].symbol;
                     const label = isRu ? item.label : item.labelEn;
                     const period = isRu ? item.period : item.periodEn;
                     const desc = isRu ? item.desc : item.descEn;
                     const pop = item.popular ? `<div class="popular-badge">${t('popular')}</div>` : '';
+                    const preorderBadge = item.preorder ?
+                        `<div class="preorder-badge">${t('preorder')}</div>` : '';
                     return `
                         <div class="price-card">
+                            ${preorderBadge}
                             ${pop}
+                            <div class="old-amount">${sym}${oldStr}</div>
                             <div class="amount">${sym}${str}</div>
                             <div class="period">${period}</div>
                             <div class="desc">${desc}</div>
@@ -1891,31 +2064,21 @@
             }
 
             // ============================================================
-            // МОДАЛКА ОПЛАТЫ
+            // МОДАЛКА ОПЛАТЫ (DonationAlerts)
             // ============================================================
             function openPaymentModal(plan) {
-                let selectedMethod = 'crypto';
                 const price = getPriceInCurrency(plan.price);
                 const priceStr = Number.isInteger(price) ? price.toString() : price.toFixed(2);
                 const sym = RATES[currentCurrency].symbol;
+                const isRu = currentLang === 'ru';
+                const planLabel = isRu ? plan.label : plan.labelEn;
 
-                const methods = {
-                    crypto: {
-                        label: t('crypto'),
-                        sub: t('crypto_sub'),
-                        details: 'BTC: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa\nUSDT (TRC20): TKn5...9zX'
-                    },
-                    card: {
-                        label: t('card'),
-                        sub: t('card_sub'),
-                        details: 'Visa: 2200 1234 5678 9012\nMastercard: 5200 1234 5678 9012'
-                    },
-                    sbp: {
-                        label: t('sbp'),
-                        sub: t('sbp_sub'),
-                        details: 'СБП: +7 999 123-45-67\nПо номеру телефона'
-                    }
-                };
+                // Формируем сумму для DonationAlerts (без округления для криптовалют)
+                const amount = Math.round(price * 100) / 100;
+
+                // Ссылка с указанием валюты
+                const daUrl =
+                    `https://www.donationalerts.com/r/lethaldlc?amount=${amount}&currency=${currentCurrency}&message=Покупка%20${encodeURIComponent(planLabel)}%20(${currentUser.email})`;
 
                 const overlay = document.createElement('div');
                 overlay.className = 'payment-overlay';
@@ -1923,27 +2086,19 @@
                 overlay.innerHTML = `
                     <div class="payment-modal">
                         <h2>${t('checkout')}</h2>
-                        <div class="sub">${plan.label} — ${sym}${priceStr}</div>
+                        <div class="sub">${planLabel} — ${sym}${priceStr}</div>
 
                         <div class="payment-methods">
-                            <div class="payment-method selected" data-method="crypto">
-                                ${t('crypto')}
+                            <div class="payment-method selected" data-method="da">
+                                DonationAlerts
                                 <span class="sub-text">${t('crypto_sub')}</span>
-                            </div>
-                            <div class="payment-method" data-method="card">
-                                ${t('card')}
-                                <span class="sub-text">${t('card_sub')}</span>
-                            </div>
-                            <div class="payment-method" data-method="sbp">
-                                ${t('sbp')}
-                                <span class="sub-text">${t('sbp_sub')}</span>
                             </div>
                         </div>
 
                         <div class="payment-details">
-                            <div class="row"><span class="label">${t('method')}</span><span class="value" id="payMethodLabel">${methods.crypto.label}</span></div>
+                            <div class="row"><span class="label">${t('method')}</span><span class="value">DonationAlerts</span></div>
                             <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${priceStr}</span></div>
-                            <div class="row"><span class="label">${t('details')}</span><span class="value mono" id="payDetails" style="white-space:pre-wrap;font-size:0.7rem;text-align:right;">${methods.crypto.details}</span></div>
+                            <div class="row"><span class="label">${t('details')}</span><span class="value mono" style="font-size:0.7rem;">Нажмите "Оплатить" для перехода</span></div>
                         </div>
 
                         <button class="btn-pay" id="payBtn">${t('pay')}</button>
@@ -1953,50 +2108,80 @@
 
                 document.body.appendChild(overlay);
 
-                overlay.querySelectorAll('.payment-method').forEach(el => {
-                    el.addEventListener('click', function() {
-                        overlay.querySelectorAll('.payment-method').forEach(m => m.classList.remove(
-                        'selected'));
-                        this.classList.add('selected');
-                        selectedMethod = this.dataset.method;
-                        overlay.querySelector('#payMethodLabel').textContent = methods[selectedMethod]
-                        .label;
-                        overlay.querySelector('#payDetails').textContent = methods[selectedMethod].details;
-                    });
-                });
-
                 overlay.querySelector('#closePaymentBtn').addEventListener('click', () => overlay.remove());
                 overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 
                 overlay.querySelector('#payBtn').addEventListener('click', function() {
-                    const key = generateKey();
-                    const planLabel = currentLang === 'ru' ? plan.label : plan.labelEn;
-
-                    if (!currentUser.keys) currentUser.keys = [];
-                    currentUser.keys.push({ key, plan: planLabel, purchased: new Date().toISOString() });
-                    currentUser.subscription = {
-                        active: true,
-                        expires: new Date(Date.now() + (plan.id === 'lifetime' ? 365 * 24 * 60 * 60 * 1000 :
-                            30 * 24 * 60 * 60 * 1000)).toISOString(),
-                        plan: planLabel
-                    };
-                    saveUsers();
+                    // Открываем DonationAlerts с заполненной суммой и валютой
+                    window.open(daUrl, '_blank');
 
                     overlay.innerHTML = `
                         <div class="payment-modal" style="text-align:center;">
-                            <div style="font-size:3rem;color:#fff;font-weight:300;margin-bottom:0.5rem;">◆</div>
-                            <h2>${t('payment_success')}</h2>
-                            <div class="sub">${t('key_issued')}</div>
-                            <div style="background:rgba(255,255,255,0.03);padding:1rem;border-radius:10px;font-family:monospace;font-size:1rem;font-weight:600;letter-spacing:2px;color:#fff;margin:1rem 0;border:1px solid var(--border);">${key}</div>
-                            <div style="color:#555;font-size:0.75rem;margin-bottom:1rem;">${t('your_key')}</div>
-                            <button class="btn-pay" id="successCloseBtn">${t('close')}</button>
+                            <div style="font-size:2rem;color:#fff;font-weight:300;margin-bottom:0.5rem;">⏳</div>
+                            <h2>${t('payment_redirect')}</h2>
+                            <div class="sub">${t('select_payment')}</div>
+                            <div style="margin:1.5rem 0;color:#666;font-size:0.8rem;">Ожидание подтверждения оплаты...</div>
+                            <button class="btn-close-payment" id="cancelBtn">${t('close')}</button>
                         </div>
                     `;
-                    overlay.querySelector('#successCloseBtn').addEventListener('click', function() {
-                        overlay.remove();
-                        navigateTo('cabinet');
-                        renderCabinet();
-                    });
+
+                    overlay.querySelector('#cancelBtn').addEventListener('click', () => overlay.remove());
+
+                    // Имитация подтверждения оплаты (в реальности нужно использовать Webhook)
+                    setTimeout(() => {
+                        const key = generateKey();
+                        const planLabelLocal = currentLang === 'ru' ? plan.label : plan.labelEn;
+                        const priceDisplay = `${sym}${priceStr}`;
+
+                        if (!currentUser.keys) currentUser.keys = [];
+                        currentUser.keys.push({ key, plan: planLabelLocal, purchased: new Date().toISOString() });
+
+                        // Статус предзаказа
+                        currentUser.subscription = {
+                            active: true,
+                            preorder: true,
+                            expires: new Date(Date.now() + (plan.id === 'lifetime' ? 365 * 24 * 60 * 60 * 1000 :
+                                30 * 24 * 60 * 60 * 1000)).toISOString(),
+                            plan: planLabelLocal
+                        };
+                        saveUsers();
+
+                        purchases.push({
+                            email: currentUser.email,
+                            name: currentUser.name,
+                            plan: planLabelLocal,
+                            amount: price,
+                            currency: currentCurrency,
+                            key: key,
+                            date: new Date().toISOString()
+                        });
+                        savePurchases();
+
+                        // Отправляем пинг в Telegram
+                        sendTelegramPing(currentUser.name, currentUser.email, planLabelLocal, priceDisplay,
+                            currentCurrency, key);
+
+                        addNotification(
+                            t('new_purchase'),
+                            `${currentUser.name || currentUser.email} купил(а) "${planLabelLocal}" за ${priceDisplay}`
+                        );
+
+                        overlay.innerHTML = `
+                            <div class="payment-modal" style="text-align:center;">
+                                <div style="font-size:3rem;color:#22c55e;margin-bottom:0.5rem;">✓</div>
+                                <h2>${t('payment_success')}</h2>
+                                <div class="sub">${t('key_issued')}</div>
+                                <div style="background:rgba(255,255,255,0.03);padding:1rem;border-radius:10px;font-family:monospace;font-size:1rem;font-weight:600;letter-spacing:2px;color:#fff;margin:1rem 0;border:1px solid var(--border);">${key}</div>
+                                <div style="color:#555;font-size:0.75rem;margin-bottom:1rem;">${t('your_key')}</div>
+                                <button class="btn-pay" id="successCloseBtn">${t('close')}</button>
+                            </div>
+                        `;
+                        overlay.querySelector('#successCloseBtn').addEventListener('click', function() {
+                            overlay.remove();
+                            navigateTo('cabinet');
+                            renderCabinet();
+                        });
+                    }, 3000);
                 });
             }
 
@@ -2029,23 +2214,40 @@
                 overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 
                 overlay.querySelector('#hwidPayBtn').addEventListener('click', function() {
-                    currentUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
-                    saveUsers();
+                    window.open(
+                        `https://www.donationalerts.com/r/lethaldlc?amount=400&currency=RUB&message=Сброс%20HWID%20(${currentUser.email})`,
+                        '_blank');
+
                     overlay.innerHTML = `
                         <div class="payment-modal" style="text-align:center;">
-                            <div style="font-size:3rem;color:#22c55e;margin-bottom:0.5rem;">✓</div>
-                            <h2>${t('hwid_reset_success')}</h2>
+                            <div style="font-size:2rem;color:#fff;font-weight:300;margin-bottom:0.5rem;">⏳</div>
+                            <h2>${t('payment_redirect')}</h2>
                             <div class="sub">${t('hwid_reset_desc')}</div>
-                            <div style="background:rgba(255,255,255,0.03);padding:0.8rem;border-radius:10px;margin:1rem 0;border:1px solid var(--border);font-family:monospace;font-size:0.8rem;color:#888;">
-                                Новый HWID: ${currentUser.hwid}
-                            </div>
-                            <button class="btn-pay" id="hwidSuccessClose">${t('close')}</button>
+                            <button class="btn-close-payment" id="hwidCancelBtn">${t('close')}</button>
                         </div>
                     `;
-                    overlay.querySelector('#hwidSuccessClose').addEventListener('click', function() {
-                        overlay.remove();
-                        renderCabinet();
-                    });
+
+                    overlay.querySelector('#hwidCancelBtn').addEventListener('click', () => overlay.remove());
+
+                    setTimeout(() => {
+                        currentUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
+                        saveUsers();
+                        overlay.innerHTML = `
+                            <div class="payment-modal" style="text-align:center;">
+                                <div style="font-size:3rem;color:#22c55e;margin-bottom:0.5rem;">✓</div>
+                                <h2>${t('hwid_reset_success')}</h2>
+                                <div class="sub">${t('hwid_reset_desc')}</div>
+                                <div style="background:rgba(255,255,255,0.03);padding:0.8rem;border-radius:10px;margin:1rem 0;border:1px solid var(--border);font-family:monospace;font-size:0.8rem;color:#888;">
+                                    Новый HWID: ${currentUser.hwid}
+                                </div>
+                                <button class="btn-pay" id="hwidSuccessClose">${t('close')}</button>
+                            </div>
+                        `;
+                        overlay.querySelector('#hwidSuccessClose').addEventListener('click', function() {
+                            overlay.remove();
+                            renderCabinet();
+                        });
+                    }, 3000);
                 });
             });
 
@@ -2068,8 +2270,9 @@
                     return;
                 }
 
-                const sub = currentUser.subscription || { active: false, expires: null, plan: null };
+                const sub = currentUser.subscription || { active: false, expires: null, plan: null, preorder: false };
                 const isActive = sub.active;
+                const isPreorder = sub.preorder || false;
                 const dateStr = sub.expires ? new Date(sub.expires).toLocaleDateString(
                     currentLang === 'ru' ? 'ru-RU' : 'en-US', {
                         day: 'numeric',
@@ -2078,18 +2281,29 @@
                     }) : '—';
                 const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
 
+                let statusClass = 'inactive';
+                let statusText = t('status_inactive');
+                if (isActive && isPreorder) {
+                    statusClass = 'preorder';
+                    statusText = t('status_preorder');
+                } else if (isActive) {
+                    statusClass = 'active';
+                    statusText = t('status_active');
+                }
+
                 container.innerHTML = `
                     <div class="cabinet-grid">
                         <div class="cabinet-sidebar">
                             <div class="avatar">${currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}</div>
                             <div class="name">${currentUser.name || 'Пользователь'}</div>
                             <div class="email">${currentUser.email}</div>
-                            <div class="status-badge ${isActive ? 'active' : 'inactive'}">${isActive ? t('status_active') : t('status_inactive')}</div>
+                            <div class="status-badge ${statusClass}">${statusText}</div>
                             <div class="divider"></div>
-                            <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${isActive ? 'green' : 'red'}">${isActive ? t('status_active') : t('status_inactive')}</span></div>
+                            <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${statusClass === 'active' ? 'green' : statusClass === 'preorder' ? 'gold' : 'red'}">${statusText}</span></div>
                             ${isActive ? `
                             <div class="info-row"><span class="label">${t('ends')}</span><span class="value">${dateStr}</span></div>
                             <div class="info-row"><span class="label">${t('license_key')}</span><span class="value" style="font-family:monospace;font-size:0.75rem;letter-spacing:0.5px;">${lastKey ? lastKey.key : '—'}</span></div>
+                            ${isPreorder ? `<div class="info-row"><span class="label" style="color:var(--gold);">Статус</span><span class="value gold">${t('status_preorder')}</span></div>` : ''}
                             ` : `
                             <div class="info-row"><span class="label">${t('status')}</span><span class="value red">${t('no_subscription')}</span></div>
                             `}
@@ -2245,6 +2459,10 @@
             updateUI();
             renderPricing();
             navigateTo('main');
+
+            setTimeout(() => {
+                addNotification('Система готова', 'DonationAlerts интегрирован');
+            }, 1000);
 
         })();
     </script>
