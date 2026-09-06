@@ -31,6 +31,8 @@
             --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --gold: #f5c842;
             --gold-dim: rgba(245, 200, 66, 0.08);
+            --test: #22c55e;
+            --test-dim: rgba(34, 197, 94, 0.08);
         }
 
         html { scroll-behavior: smooth; }
@@ -692,6 +694,19 @@
             background: var(--surface-hover);
             transform: translateY(-6px);
             box-shadow: var(--shadow);
+        }
+        .price-card .test-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--test);
+            color: #000;
+            font-size: 0.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 0.2rem 1rem;
+            border-bottom-left-radius: var(--radius);
         }
         .price-card .preorder-badge {
             position: absolute;
@@ -1435,6 +1450,7 @@
             // ============================================================
             // НАСТРОЙКИ ЦЕН (в рублях)
             // ============================================================
+            const PRICE_TEST = 10; // ТЕСТОВАЯ ОПЛАТА 10₽
             const PRICE_MONTH_RUB = 250;
             const PRICE_QUARTER_RUB = 400;
             const PRICE_LIFETIME_RUB = 600;
@@ -1494,11 +1510,14 @@
                     add_to_cart: 'Купить',
                     popular: 'Популярный',
                     preorder: 'Предзаказ',
+                    test: 'ТЕСТ',
+                    test_desc: 'Тестовый доступ на 1 день (только для проверки)',
                     full_access: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
                     lifetime_license: 'Пожизненная лицензия. Все будущие обновления включены.',
                     status_active: 'Активна',
                     status_inactive: 'Неактивна',
                     status_preorder: 'Предзаказ',
+                    status_test: 'Тестовый доступ',
                     key_count: 'Ключей',
                     loader_install: 'Установка лоадера',
                     buy_to_access: 'Приобретите подписку',
@@ -1557,11 +1576,14 @@
                     add_to_cart: 'Buy',
                     popular: 'Popular',
                     preorder: 'Pre-order',
+                    test: 'TEST',
+                    test_desc: 'Test access for 1 day (for verification only)',
                     full_access: 'Full access. Priority support. Auto-updates.',
                     lifetime_license: 'Lifetime license. All future updates included.',
                     status_active: 'Active',
                     status_inactive: 'Inactive',
                     status_preorder: 'Pre-order',
+                    status_test: 'Test access',
                     key_count: 'Keys',
                     loader_install: 'Loader installation',
                     buy_to_access: 'Buy subscription to access',
@@ -1594,7 +1616,6 @@
             function getPriceInCurrency(rubPrice) {
                 const rate = CURRENCIES[currentCurrency]?.rate || 1;
                 const price = rubPrice * rate;
-                // Округляем до 2 знаков, если есть дробная часть
                 if (price % 1 === 0) return price;
                 return Math.round(price * 100) / 100;
             }
@@ -1642,6 +1663,7 @@
             // ЛОГИКА ПОДПИСКИ (с пересчётом в рубли)
             // ============================================================
             function getPlanByAmount(amountRub) {
+                if (amountRub === PRICE_TEST) return { id: 'test', label: 'Тест', days: 1, isTest: true };
                 if (amountRub >= PRICE_LIFETIME_RUB) return { id: 'lifetime', label: 'Навсегда', days: 365 * 10 };
                 if (amountRub >= PRICE_QUARTER_RUB) return { id: 'quarter', label: '3 месяца', days: 90 };
                 if (amountRub >= PRICE_MONTH_RUB) return { id: 'month', label: '1 месяц', days: 30 };
@@ -1658,7 +1680,8 @@
                     plan: plan.label,
                     amount: amountRub,
                     currency: 'RUB',
-                    purchased: new Date().toISOString()
+                    purchased: new Date().toISOString(),
+                    isTest: plan.isTest || false
                 });
 
                 const now = new Date();
@@ -1666,11 +1689,12 @@
                 expires.setDate(expires.getDate() + plan.days);
 
                 user.subscription = {
-                    active: SUBSCRIPTION_ACTIVE,
-                    preorder: !SUBSCRIPTION_ACTIVE,
+                    active: SUBSCRIPTION_ACTIVE || plan.isTest || false,
+                    preorder: !(SUBSCRIPTION_ACTIVE || plan.isTest),
                     expires: expires.toISOString(),
                     plan: plan.label,
-                    amount: amountRub
+                    amount: amountRub,
+                    isTest: plan.isTest || false
                 };
 
                 saveUsers();
@@ -1856,17 +1880,21 @@
             }
 
             // ============================================================
-            // РЕНДЕР ЦЕН (с пересчётом валют)
+            // РЕНДЕР ЦЕН (с тестовым тарифом)
             // ============================================================
             function renderPricing() {
                 const grid = document.getElementById('pricing-grid');
                 if (!grid) return;
 
                 const plans = [
-                    { id: 'month', label: '1 месяц', priceRub: PRICE_MONTH_RUB, period: 'месяц', desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.' },
-                    { id: 'quarter', label: '3 месяца', priceRub: PRICE_QUARTER_RUB, period: '3 месяца', desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
+                    { id: 'test', label: t('test'), priceRub: PRICE_TEST, period: '1 день', desc: t('test_desc'),
+                        isTest: true },
+                    { id: 'month', label: '1 месяц', priceRub: PRICE_MONTH_RUB, period: 'месяц', desc: t('full_access') },
+                    { id: 'quarter', label: '3 месяца', priceRub: PRICE_QUARTER_RUB, period: '3 месяца', desc: t(
+                            'full_access'),
                         popular: true },
-                    { id: 'lifetime', label: 'Навсегда', priceRub: PRICE_LIFETIME_RUB, period: 'навсегда', desc: 'Пожизненная лицензия. Все будущие обновления включены.' }
+                    { id: 'lifetime', label: 'Навсегда', priceRub: PRICE_LIFETIME_RUB, period: 'навсегда', desc: t(
+                            'lifetime_license') }
                 ];
 
                 grid.innerHTML = plans.map(item => {
@@ -1874,10 +1902,13 @@
                     const priceStr = Number.isInteger(price) ? price : price.toFixed(2);
                     const sym = getSymbol();
                     const pop = item.popular ? `<div class="popular-badge">${t('popular')}</div>` : '';
+                    const testBadge = item.isTest ? `<div class="test-badge">${t('test')}</div>` : '';
+                    const preorderBadge = !item.isTest ? `<div class="preorder-badge">${t('preorder')}</div>` : '';
                     return `
                         <div class="price-card">
+                            ${testBadge}
+                            ${preorderBadge}
                             ${pop}
-                            <div class="preorder-badge">${t('preorder')}</div>
                             <div class="amount">${sym}${priceStr}</div>
                             <div class="period">${item.period}</div>
                             <div class="desc">${item.desc}</div>
@@ -1895,12 +1926,11 @@
                     });
                 });
 
-                // Обновляем цену HWID
                 updateHwidPrice();
             }
 
             // ============================================================
-            // МОДАЛКА ОПЛАТЫ (с ID и пересчётом валют)
+            // МОДАЛКА ОПЛАТЫ (с ID)
             // ============================================================
             function openPaymentModal(priceRub, planId) {
                 const price = getPriceInCurrency(priceRub);
@@ -1908,6 +1938,7 @@
                 const sym = getSymbol();
 
                 const planLabels = {
+                    test: 'Тест',
                     month: '1 месяц',
                     quarter: '3 месяца',
                     lifetime: 'Навсегда'
@@ -1959,7 +1990,9 @@
                     const key = generateKey();
                     const success = activateSubscription(currentUser, priceRub, key);
                     if (success) {
-                        addNotification('✅ Оплата выполнена!', `Ваш ключ: ${key}`);
+                        const isTest = planId === 'test';
+                        addNotification('✅ Оплата выполнена!', isTest ? 'Тестовый доступ активирован на 1 день' :
+                            `Ваш ключ: ${key}`);
                         overlay.remove();
                         navigateTo('cabinet');
                         renderCabinet();
@@ -2010,9 +2043,11 @@
                     return;
                 }
 
-                const sub = currentUser.subscription || { active: false, expires: null, plan: null, preorder: true };
-                const isActive = sub.active;
-                const isPreorder = sub.preorder || !isActive;
+                const sub = currentUser.subscription || { active: false, expires: null, plan: null, preorder: true,
+                isTest: false };
+                const isActive = sub.active || sub.isTest;
+                const isTest = sub.isTest || false;
+                const isPreorder = !isActive && (sub.preorder || true);
 
                 const dateStr = sub.expires ? new Date(sub.expires).toLocaleDateString(
                     currentLang === 'ru' ? 'ru-RU' : 'en-US', {
@@ -2025,7 +2060,10 @@
 
                 let statusClass = 'inactive';
                 let statusText = t('status_inactive');
-                if (isActive) {
+                if (isTest) {
+                    statusClass = 'active';
+                    statusText = t('status_test');
+                } else if (isActive) {
                     statusClass = 'active';
                     statusText = t('status_active');
                 } else if (isPreorder) {
@@ -2051,7 +2089,7 @@
                             <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${statusClass === 'active' ? 'green' : statusClass === 'preorder' ? 'gold' : 'red'}">${statusText}</span></div>
                             ${isActive ? `
                             <div class="info-row"><span class="label">${t('ends')}</span><span class="value">${dateStr}</span></div>
-                            <div class="info-row"><span class="label">Тариф</span><span class="value">${sub.plan || '—'}</span></div>
+                            <div class="info-row"><span class="label">Тариф</span><span class="value">${sub.plan || '—'}${isTest ? ' (Тест)' : ''}</span></div>
                             <div class="info-row"><span class="label">${t('license_key')}</span><span class="value" style="font-family:monospace;font-size:0.7rem;letter-spacing:0.5px;">${lastKey ? lastKey.key : '—'}</span></div>
                             ` : `
                             <div class="info-row"><span class="label">${t('status')}</span><span class="value ${isPreorder ? 'gold' : 'red'}">${isPreorder ? t('status_preorder') : t('no_subscription')}</span></div>
@@ -2206,6 +2244,11 @@
             updateUI();
             renderPricing();
             navigateTo('main');
+
+            // Показываем тестовое уведомление при первом запуске
+            setTimeout(() => {
+                addNotification('🧪 Тестовый режим', 'Доступен тариф 10₽ для проверки оплаты');
+            }, 1500);
 
         })();
     </script>
