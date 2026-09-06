@@ -31,6 +31,10 @@
             --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --gold: #f5c842;
             --gold-dim: rgba(245, 200, 66, 0.08);
+            --test: #22c55e;
+            --test-dim: rgba(34, 197, 94, 0.08);
+            --crypto: #f7931a;
+            --crypto-dim: rgba(247, 147, 26, 0.08);
         }
 
         html { scroll-behavior: smooth; }
@@ -693,6 +697,19 @@
             transform: translateY(-6px);
             box-shadow: var(--shadow);
         }
+        .price-card .test-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--test);
+            color: #000;
+            font-size: 0.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 0.2rem 1rem;
+            border-bottom-left-radius: var(--radius);
+        }
         .price-card .preorder-badge {
             position: absolute;
             top: 0;
@@ -880,6 +897,11 @@
             color: var(--gold);
             background: var(--gold-dim);
         }
+        .cabinet-sidebar .status-badge.test {
+            border-color: var(--test);
+            color: var(--test);
+            background: var(--test-dim);
+        }
         .cabinet-sidebar .divider { margin: 1.2rem 0; border-top: 1px solid var(--border); }
         .cabinet-sidebar .info-row {
             display: flex;
@@ -892,6 +914,7 @@
         .cabinet-sidebar .info-row .value.green { color: #22c55e; }
         .cabinet-sidebar .info-row .value.red { color: #ef4444; }
         .cabinet-sidebar .info-row .value.gold { color: var(--gold); }
+        .cabinet-sidebar .info-row .value.test { color: var(--test); }
 
         .cabinet-content {
             background: var(--surface);
@@ -963,7 +986,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 2.8rem 3rem;
-            max-width: 520px;
+            max-width: 560px;
             width: 100%;
             animation: slideUp 0.4s ease-out;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
@@ -992,7 +1015,7 @@
 
         .payment-methods {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 0.8rem;
             margin-bottom: 1.5rem;
         }
@@ -1043,6 +1066,15 @@
             font-weight: 400;
             font-size: 0.75rem;
             color: #888;
+        }
+        .payment-details .row .value.crypto-address {
+            font-family: monospace;
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: var(--crypto);
+            word-break: break-all;
+            max-width: 200px;
+            text-align: right;
         }
 
         .btn-pay {
@@ -1209,6 +1241,7 @@
             .features-grid { grid-template-columns: repeat(2, 1fr); }
             .hero h1 { font-size: 3.5rem; }
             .cabinet-grid { grid-template-columns: 1fr; }
+            .payment-methods { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 768px) {
@@ -1428,13 +1461,25 @@
             // ============================================================
             const CURRENCIES = {
                 RUB: { rate: 1, symbol: '₽', label: 'RUB' },
-                USD: { rate: 0.01, symbol: '$', label: 'USD' }, // 1$ = 100₽
-                UAH: { rate: 0.4, symbol: '₴', label: 'UAH' } // 1₴ = 2.5₽
+                USD: { rate: 0.01, symbol: '$', label: 'USD' },
+                UAH: { rate: 0.4, symbol: '₴', label: 'UAH' }
             };
+
+            // ============================================================
+            // КРИПТО-АДРЕСА (замени на свои)
+            // ============================================================
+            const CRYPTO_ADDRESSES = {
+    BTC: 'bc1q20zk30g3fel9tnr24d9wjk4ulrpqaeky6qe5th',
+    USDT_BSC: '0x4C162e145dA9f49c78A6665A9d76d1D0C2BD844e', // BNB Smart Chain
+    USDT_TRC20: 'TBXrKBwZL1zWzpKCVgK4giKaRSU8qiNgt9',
+    ETH: '0x4C162e145dA9f49c78A6665A9d76d1D0C2BD844e',
+    SOL: 'Fxptx9ChjDFWCYZ3CTVahKkvvKVdaN8NurmQfDDCMTac'
+};
 
             // ============================================================
             // НАСТРОЙКИ ЦЕН (в рублях)
             // ============================================================
+            const PRICE_TEST = 10;
             const PRICE_MONTH_RUB = 250;
             const PRICE_QUARTER_RUB = 400;
             const PRICE_LIFETIME_RUB = 600;
@@ -1494,17 +1539,22 @@
                     add_to_cart: 'Купить',
                     popular: 'Популярный',
                     preorder: 'Предзаказ',
+                    test: 'ТЕСТ',
+                    test_desc: 'Тестовый доступ на 1 день (только для проверки)',
                     full_access: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
                     lifetime_license: 'Пожизненная лицензия. Все будущие обновления включены.',
                     status_active: 'Активна',
                     status_inactive: 'Неактивна',
                     status_preorder: 'Предзаказ',
+                    status_test: 'Тестовый доступ',
                     key_count: 'Ключей',
                     loader_install: 'Установка лоадера',
                     buy_to_access: 'Приобретите подписку',
-                    select_payment: 'Оплата через DonationAlerts',
-                    crypto: 'DonationAlerts',
-                    crypto_sub: 'Безопасная оплата',
+                    select_payment: 'Выберите способ оплаты',
+                    pay_da: 'DonationAlerts',
+                    pay_da_sub: 'Банковские карты, СБП',
+                    pay_crypto: 'Криптовалюта',
+                    pay_crypto_sub: 'BTC, USDT, ETH',
                     amount: 'Сумма',
                     method: 'Способ',
                     details: 'Реквизиты',
@@ -1515,9 +1565,12 @@
                     hwid_reset_success: 'HWID успешно сброшен!',
                     hwid_reset_desc: 'Перенесите лицензию на другой компьютер. После оплаты вы сможете сбросить привязку к текущему устройству.',
                     hwid_price: '400 ₽',
-                    payment_redirect: 'Перенаправление на DonationAlerts...',
+                    payment_redirect: 'Перенаправление...',
                     new_purchase: 'Новая покупка!',
-                    your_id: 'Ваш ID'
+                    your_id: 'Ваш ID',
+                    crypto_address: 'Адрес для перевода',
+                    crypto_network: 'Сеть',
+                    crypto_instruction: 'Отправьте точную сумму в USDT (BEP20) на указанный адрес. После подтверждения в сети подписка активируется автоматически.'
                 },
                 en: {
                     login: 'Login',
@@ -1557,17 +1610,22 @@
                     add_to_cart: 'Buy',
                     popular: 'Popular',
                     preorder: 'Pre-order',
+                    test: 'TEST',
+                    test_desc: 'Test access for 1 day (for verification only)',
                     full_access: 'Full access. Priority support. Auto-updates.',
                     lifetime_license: 'Lifetime license. All future updates included.',
                     status_active: 'Active',
                     status_inactive: 'Inactive',
                     status_preorder: 'Pre-order',
+                    status_test: 'Test access',
                     key_count: 'Keys',
                     loader_install: 'Loader installation',
                     buy_to_access: 'Buy subscription to access',
-                    select_payment: 'Payment via DonationAlerts',
-                    crypto: 'DonationAlerts',
-                    crypto_sub: 'Secure payment',
+                    select_payment: 'Select payment method',
+                    pay_da: 'DonationAlerts',
+                    pay_da_sub: 'Bank cards, SBP',
+                    pay_crypto: 'Cryptocurrency',
+                    pay_crypto_sub: 'BTC, USDT, ETH',
                     amount: 'Amount',
                     method: 'Method',
                     details: 'Details',
@@ -1578,9 +1636,12 @@
                     hwid_reset_success: 'HWID successfully reset!',
                     hwid_reset_desc: 'Move your license to another PC. After payment you can reset the binding to the current device.',
                     hwid_price: '400 ₽',
-                    payment_redirect: 'Redirecting to DonationAlerts...',
+                    payment_redirect: 'Redirecting...',
                     new_purchase: 'New purchase!',
-                    your_id: 'Your ID'
+                    your_id: 'Your ID',
+                    crypto_address: 'Address for transfer',
+                    crypto_network: 'Network',
+                    crypto_instruction: 'Send the exact amount in USDT (BEP20) to the address above. After network confirmation, the subscription will be activated automatically.'
                 }
             };
 
@@ -1594,7 +1655,6 @@
             function getPriceInCurrency(rubPrice) {
                 const rate = CURRENCIES[currentCurrency]?.rate || 1;
                 const price = rubPrice * rate;
-                // Округляем до 2 знаков, если есть дробная часть
                 if (price % 1 === 0) return price;
                 return Math.round(price * 100) / 100;
             }
@@ -1639,9 +1699,10 @@
             }
 
             // ============================================================
-            // ЛОГИКА ПОДПИСКИ (с пересчётом в рубли)
+            // ЛОГИКА ПОДПИСКИ
             // ============================================================
             function getPlanByAmount(amountRub) {
+                if (amountRub === PRICE_TEST) return { id: 'test', label: 'Тест', days: 1, isTest: true };
                 if (amountRub >= PRICE_LIFETIME_RUB) return { id: 'lifetime', label: 'Навсегда', days: 365 * 10 };
                 if (amountRub >= PRICE_QUARTER_RUB) return { id: 'quarter', label: '3 месяца', days: 90 };
                 if (amountRub >= PRICE_MONTH_RUB) return { id: 'month', label: '1 месяц', days: 30 };
@@ -1658,7 +1719,8 @@
                     plan: plan.label,
                     amount: amountRub,
                     currency: 'RUB',
-                    purchased: new Date().toISOString()
+                    purchased: new Date().toISOString(),
+                    isTest: plan.isTest || false
                 });
 
                 const now = new Date();
@@ -1666,11 +1728,12 @@
                 expires.setDate(expires.getDate() + plan.days);
 
                 user.subscription = {
-                    active: SUBSCRIPTION_ACTIVE,
-                    preorder: !SUBSCRIPTION_ACTIVE,
+                    active: SUBSCRIPTION_ACTIVE || plan.isTest || false,
+                    preorder: !(SUBSCRIPTION_ACTIVE || plan.isTest),
                     expires: expires.toISOString(),
                     plan: plan.label,
-                    amount: amountRub
+                    amount: amountRub,
+                    isTest: plan.isTest || false
                 };
 
                 saveUsers();
@@ -1856,17 +1919,21 @@
             }
 
             // ============================================================
-            // РЕНДЕР ЦЕН (с пересчётом валют)
+            // РЕНДЕР ЦЕН
             // ============================================================
             function renderPricing() {
                 const grid = document.getElementById('pricing-grid');
                 if (!grid) return;
 
                 const plans = [
-                    { id: 'month', label: '1 месяц', priceRub: PRICE_MONTH_RUB, period: 'месяц', desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.' },
-                    { id: 'quarter', label: '3 месяца', priceRub: PRICE_QUARTER_RUB, period: '3 месяца', desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
+                    { id: 'test', label: t('test'), priceRub: PRICE_TEST, period: '1 день', desc: t('test_desc'),
+                        isTest: true },
+                    { id: 'month', label: '1 месяц', priceRub: PRICE_MONTH_RUB, period: 'месяц', desc: t('full_access') },
+                    { id: 'quarter', label: '3 месяца', priceRub: PRICE_QUARTER_RUB, period: '3 месяца', desc: t(
+                            'full_access'),
                         popular: true },
-                    { id: 'lifetime', label: 'Навсегда', priceRub: PRICE_LIFETIME_RUB, period: 'навсегда', desc: 'Пожизненная лицензия. Все будущие обновления включены.' }
+                    { id: 'lifetime', label: 'Навсегда', priceRub: PRICE_LIFETIME_RUB, period: 'навсегда', desc: t(
+                            'lifetime_license') }
                 ];
 
                 grid.innerHTML = plans.map(item => {
@@ -1874,10 +1941,13 @@
                     const priceStr = Number.isInteger(price) ? price : price.toFixed(2);
                     const sym = getSymbol();
                     const pop = item.popular ? `<div class="popular-badge">${t('popular')}</div>` : '';
+                    const testBadge = item.isTest ? `<div class="test-badge">${t('test')}</div>` : '';
+                    const preorderBadge = !item.isTest ? `<div class="preorder-badge">${t('preorder')}</div>` : '';
                     return `
                         <div class="price-card">
+                            ${testBadge}
+                            ${preorderBadge}
                             ${pop}
-                            <div class="preorder-badge">${t('preorder')}</div>
                             <div class="amount">${sym}${priceStr}</div>
                             <div class="period">${item.period}</div>
                             <div class="desc">${item.desc}</div>
@@ -1895,12 +1965,11 @@
                     });
                 });
 
-                // Обновляем цену HWID
                 updateHwidPrice();
             }
 
             // ============================================================
-            // МОДАЛКА ОПЛАТЫ (с ID и пересчётом валют)
+            // МОДАЛКА ОПЛАТЫ (с криптовалютой)
             // ============================================================
             function openPaymentModal(priceRub, planId) {
                 const price = getPriceInCurrency(priceRub);
@@ -1908,15 +1977,17 @@
                 const sym = getSymbol();
 
                 const planLabels = {
+                    test: 'Тест',
                     month: '1 месяц',
                     quarter: '3 месяца',
                     lifetime: 'Навсегда'
                 };
                 const planLabel = planLabels[planId] || 'Подписка';
 
-                // ★★★ ССЫЛКА С ID ★★★
-                const daUrl =
-                    `https://www.donationalerts.com/r/lethaldlc?amount=${priceRub}&currency=RUB&message=USER_${currentUser.id}%20${encodeURIComponent(planLabel)}%20(${priceRub}₽)`;
+                let selectedMethod = 'da';
+
+                // USDT сумма в рублях (для крипто)
+                const usdtAmount = (priceRub / 90).toFixed(2); // 1 USDT ≈ 90₽
 
                 const overlay = document.createElement('div');
                 overlay.className = 'payment-overlay';
@@ -1930,16 +2001,24 @@
                             <div style="color:var(--gold);font-weight:700;font-size:0.8rem;margin-bottom:0.3rem;">⚠️ ВАЖНАЯ ИНСТРУКЦИЯ</div>
                             <div style="color:#aaa;font-size:0.8rem;line-height:1.6;">
                                 1. Скопируйте ваш ID: <strong style="color:#fff;">USER_${currentUser.id}</strong><br>
-                                2. Вставьте его в <strong style="color:#fff;">описание</strong> платежа на DonationAlerts<br>
-                                3. Укажите сумму <strong style="color:#fff;">${priceRub} ₽</strong><br>
-                                4. После оплаты подписка активируется автоматически
+                                2. При оплате <strong style="color:#fff;">обязательно укажите</strong> этот ID в комментарии<br>
+                                3. Выберите удобный способ оплаты ниже
                             </div>
                         </div>
 
-                        <div class="payment-details">
-                            <div class="row"><span class="label">${t('method')}</span><span class="value">DonationAlerts</span></div>
-                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${priceStr}</span></div>
-                            <div class="row"><span class="label">Ваш ID</span><span class="value" style="font-size:0.8rem;color:#fff;font-weight:700;">USER_${currentUser.id}</span></div>
+                        <div class="payment-methods">
+                            <div class="payment-method selected" data-method="da">
+                                ${t('pay_da')}
+                                <span class="sub-text">${t('pay_da_sub')}</span>
+                            </div>
+                            <div class="payment-method" data-method="crypto">
+                                ${t('pay_crypto')}
+                                <span class="sub-text">${t('pay_crypto_sub')}</span>
+                            </div>
+                        </div>
+
+                        <div class="payment-details" id="paymentDetails">
+                            <!-- Заполняется JS -->
                         </div>
 
                         <button class="btn-pay" id="payBtn">${t('pay')}</button>
@@ -1949,17 +2028,71 @@
 
                 document.body.appendChild(overlay);
 
+                // Функция обновления деталей оплаты
+                function updatePaymentDetails(method) {
+                    const details = document.getElementById('paymentDetails');
+                    if (method === 'da') {
+                        details.innerHTML = `
+                            <div class="row"><span class="label">${t('method')}</span><span class="value">DonationAlerts</span></div>
+                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${priceStr}</span></div>
+                            <div class="row"><span class="label">Ваш ID</span><span class="value" style="font-size:0.8rem;color:#fff;font-weight:700;">USER_${currentUser.id}</span></div>
+                            <div style="color:#666;font-size:0.7rem;margin-top:0.5rem;">После оплаты вы будете перенаправлены на сайт</div>
+                        `;
+                    } else {
+                        details.innerHTML = `
+                            <div class="row"><span class="label">${t('method')}</span><span class="value">${t('pay_crypto')}</span></div>
+                            <div class="row"><span class="label">${t('amount')}</span><span class="value">≈ ${usdtAmount} USDT</span></div>
+                            <div class="row"><span class="label">${t('crypto_network')}</span><span class="value">BEP20 (BSC)</span></div>
+                            <div class="row"><span class="label">${t('crypto_address')}</span><span class="value crypto-address">${CRYPTO_ADDRESSES.USDT}</span></div>
+                            <div class="row"><span class="label">Ваш ID</span><span class="value" style="font-size:0.8rem;color:#fff;font-weight:700;">USER_${currentUser.id}</span></div>
+                            <div style="color:#666;font-size:0.7rem;margin-top:0.5rem;">${t('crypto_instruction')}</div>
+                            <div style="color:#444;font-size:0.6rem;margin-top:0.3rem;">ID обязательно укажите в комментарии к переводу</div>
+                        `;
+                    }
+                }
+
+                // Инициализация
+                updatePaymentDetails('da');
+
+                // Переключение методов
+                overlay.querySelectorAll('.payment-method').forEach(el => {
+                    el.addEventListener('click', function() {
+                        overlay.querySelectorAll('.payment-method').forEach(m => m.classList.remove(
+                        'selected'));
+                        this.classList.add('selected');
+                        selectedMethod = this.dataset.method;
+                        updatePaymentDetails(selectedMethod);
+                    });
+                });
+
                 overlay.querySelector('#closePaymentBtn').addEventListener('click', () => overlay.remove());
                 overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 
                 overlay.querySelector('#payBtn').addEventListener('click', function() {
-                    window.open(daUrl, '_blank');
+                    const daUrl =
+                        `https://www.donationalerts.com/r/lethaldlc?amount=${priceRub}&currency=RUB&message=USER_${currentUser.id}%20${encodeURIComponent(planLabel)}%20(${priceRub}₽)`;
+
+                    if (selectedMethod === 'da') {
+                        window.open(daUrl, '_blank');
+                    } else {
+                        // Крипто — показываем адрес и инструкцию
+                        navigator.clipboard.writeText(CRYPTO_ADDRESSES.USDT).then(() => {
+                            addNotification('✅ Адрес скопирован', 'Адрес USDT (BEP20) скопирован в буфер обмена');
+                        }).catch(() => {});
+                        // Дополнительно открываем адрес в новом окне для удобства
+                        window.open(`https://bscscan.com/address/${CRYPTO_ADDRESSES.USDT}`, '_blank');
+                    }
 
                     // ★★★ АКТИВАЦИЯ ПОСЛЕ ОПЛАТЫ ★★★
                     const key = generateKey();
                     const success = activateSubscription(currentUser, priceRub, key);
                     if (success) {
-                        addNotification('✅ Оплата выполнена!', `Ваш ключ: ${key}`);
+                        const isTest = planId === 'test';
+                        addNotification('✅ Оплата выполнена!', isTest ? 'Тестовый доступ активирован на 1 день' :
+                            `Ваш ключ: ${key}`);
+                        if (selectedMethod === 'crypto') {
+                            addNotification('💳 Крипто-оплата', 'После подтверждения в сети подписка активируется');
+                        }
                         overlay.remove();
                         navigateTo('cabinet');
                         renderCabinet();
@@ -2010,9 +2143,11 @@
                     return;
                 }
 
-                const sub = currentUser.subscription || { active: false, expires: null, plan: null, preorder: true };
-                const isActive = sub.active;
-                const isPreorder = sub.preorder || !isActive;
+                const sub = currentUser.subscription || { active: false, expires: null, plan: null, preorder: true,
+                isTest: false };
+                const isActive = sub.active || sub.isTest;
+                const isTest = sub.isTest || false;
+                const isPreorder = !isActive && (sub.preorder || true);
 
                 const dateStr = sub.expires ? new Date(sub.expires).toLocaleDateString(
                     currentLang === 'ru' ? 'ru-RU' : 'en-US', {
@@ -2025,7 +2160,10 @@
 
                 let statusClass = 'inactive';
                 let statusText = t('status_inactive');
-                if (isActive) {
+                if (isTest) {
+                    statusClass = 'test';
+                    statusText = t('status_test');
+                } else if (isActive) {
                     statusClass = 'active';
                     statusText = t('status_active');
                 } else if (isPreorder) {
@@ -2048,10 +2186,10 @@
 
                             <div class="status-badge ${statusClass}">${statusText}</div>
                             <div class="divider"></div>
-                            <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${statusClass === 'active' ? 'green' : statusClass === 'preorder' ? 'gold' : 'red'}">${statusText}</span></div>
+                            <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${statusClass === 'active' ? 'green' : statusClass === 'test' ? 'test' : statusClass === 'preorder' ? 'gold' : 'red'}">${statusText}</span></div>
                             ${isActive ? `
                             <div class="info-row"><span class="label">${t('ends')}</span><span class="value">${dateStr}</span></div>
-                            <div class="info-row"><span class="label">Тариф</span><span class="value">${sub.plan || '—'}</span></div>
+                            <div class="info-row"><span class="label">Тариф</span><span class="value">${sub.plan || '—'}${isTest ? ' (Тест)' : ''}</span></div>
                             <div class="info-row"><span class="label">${t('license_key')}</span><span class="value" style="font-family:monospace;font-size:0.7rem;letter-spacing:0.5px;">${lastKey ? lastKey.key : '—'}</span></div>
                             ` : `
                             <div class="info-row"><span class="label">${t('status')}</span><span class="value ${isPreorder ? 'gold' : 'red'}">${isPreorder ? t('status_preorder') : t('no_subscription')}</span></div>
@@ -2206,6 +2344,11 @@
             updateUI();
             renderPricing();
             navigateTo('main');
+
+            setTimeout(() => {
+                addNotification('🧪 Тестовый режим', 'Доступен тариф 10₽ для проверки оплаты');
+                addNotification('💳 Крипто-оплата', 'Доступна оплата в USDT (BEP20)');
+            }, 1500);
 
         })();
     </script>
