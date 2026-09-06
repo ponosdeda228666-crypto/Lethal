@@ -697,19 +697,6 @@
             transform: translateY(-6px);
             box-shadow: var(--shadow);
         }
-        .price-card .test-badge {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: var(--test);
-            color: #000;
-            font-size: 0.5rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 0.2rem 1rem;
-            border-bottom-left-radius: var(--radius);
-        }
         .price-card .preorder-badge {
             position: absolute;
             top: 0;
@@ -897,11 +884,6 @@
             color: var(--gold);
             background: var(--gold-dim);
         }
-        .cabinet-sidebar .status-badge.test {
-            border-color: var(--test);
-            color: var(--test);
-            background: var(--test-dim);
-        }
         .cabinet-sidebar .divider { margin: 1.2rem 0; border-top: 1px solid var(--border); }
         .cabinet-sidebar .info-row {
             display: flex;
@@ -914,7 +896,6 @@
         .cabinet-sidebar .info-row .value.green { color: #22c55e; }
         .cabinet-sidebar .info-row .value.red { color: #ef4444; }
         .cabinet-sidebar .info-row .value.gold { color: var(--gold); }
-        .cabinet-sidebar .info-row .value.test { color: var(--test); }
 
         .cabinet-content {
             background: var(--surface);
@@ -1466,20 +1447,19 @@
             };
 
             // ============================================================
-            // КРИПТО-АДРЕСА (замени на свои)
+            // ТВОИ КРИПТО-АДРЕСА (ПОДСТАВЛЕНЫ)
             // ============================================================
             const CRYPTO_ADDRESSES = {
-    BTC: 'bc1q20zk30g3fel9tnr24d9wjk4ulrpqaeky6qe5th',
-    USDT_BSC: '0x4C162e145dA9f49c78A6665A9d76d1D0C2BD844e', // BNB Smart Chain
-    USDT_TRC20: 'TBXrKBwZL1zWzpKCVgK4giKaRSU8qiNgt9',
-    ETH: '0x4C162e145dA9f49c78A6665A9d76d1D0C2BD844e',
-    SOL: 'Fxptx9ChjDFWCYZ3CTVahKkvvKVdaN8NurmQfDDCMTac'
-};
+                BTC: 'bc1q20zk30g3fel9tnr24d9wjk4ulrpqaeky6qe5th',
+                USDT_BSC: '0x4C162e145dA9f49c78A6665A9d76d1D0C2BD844e',
+                USDT_TRC20: 'TBXrKBwZL1zWzpKCVgK4giKaRSU8qiNgt9',
+                ETH: '0x4C162e145dA9f49c78A6665A9d76d1D0C2BD844e',
+                SOL: 'Fxptx9ChjDFWCYZ3CTVahKkvvKVdaN8NurmQfDDCMTac'
+            };
 
             // ============================================================
-            // НАСТРОЙКИ ЦЕН (в рублях)
+            // НАСТРОЙКИ ЦЕН (в рублях) — БЕЗ ТЕСТОВОГО ТАРИФА
             // ============================================================
-            const PRICE_TEST = 10;
             const PRICE_MONTH_RUB = 250;
             const PRICE_QUARTER_RUB = 400;
             const PRICE_LIFETIME_RUB = 600;
@@ -1539,14 +1519,11 @@
                     add_to_cart: 'Купить',
                     popular: 'Популярный',
                     preorder: 'Предзаказ',
-                    test: 'ТЕСТ',
-                    test_desc: 'Тестовый доступ на 1 день (только для проверки)',
                     full_access: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
                     lifetime_license: 'Пожизненная лицензия. Все будущие обновления включены.',
                     status_active: 'Активна',
                     status_inactive: 'Неактивна',
                     status_preorder: 'Предзаказ',
-                    status_test: 'Тестовый доступ',
                     key_count: 'Ключей',
                     loader_install: 'Установка лоадера',
                     buy_to_access: 'Приобретите подписку',
@@ -1554,7 +1531,7 @@
                     pay_da: 'DonationAlerts',
                     pay_da_sub: 'Банковские карты, СБП',
                     pay_crypto: 'Криптовалюта',
-                    pay_crypto_sub: 'BTC, USDT, ETH',
+                    pay_crypto_sub: 'BTC, USDT, ETH, SOL, TRX',
                     amount: 'Сумма',
                     method: 'Способ',
                     details: 'Реквизиты',
@@ -1570,7 +1547,12 @@
                     your_id: 'Ваш ID',
                     crypto_address: 'Адрес для перевода',
                     crypto_network: 'Сеть',
-                    crypto_instruction: 'Отправьте точную сумму в USDT (BEP20) на указанный адрес. После подтверждения в сети подписка активируется автоматически.'
+                    crypto_instruction: 'Отправьте точную сумму в USDT (BEP20) на указанный адрес. После подтверждения в сети подписка активируется автоматически.',
+                    btc: 'Bitcoin (BTC)',
+                    usdt_bsc: 'USDT (BEP20 / BSC)',
+                    usdt_trc20: 'USDT (TRC20)',
+                    eth: 'Ethereum (ETH)',
+                    sol: 'Solana (SOL)'
                 },
                 en: {
                     login: 'Login',
@@ -1610,14 +1592,11 @@
                     add_to_cart: 'Buy',
                     popular: 'Popular',
                     preorder: 'Pre-order',
-                    test: 'TEST',
-                    test_desc: 'Test access for 1 day (for verification only)',
                     full_access: 'Full access. Priority support. Auto-updates.',
                     lifetime_license: 'Lifetime license. All future updates included.',
                     status_active: 'Active',
                     status_inactive: 'Inactive',
                     status_preorder: 'Pre-order',
-                    status_test: 'Test access',
                     key_count: 'Keys',
                     loader_install: 'Loader installation',
                     buy_to_access: 'Buy subscription to access',
@@ -1625,7 +1604,7 @@
                     pay_da: 'DonationAlerts',
                     pay_da_sub: 'Bank cards, SBP',
                     pay_crypto: 'Cryptocurrency',
-                    pay_crypto_sub: 'BTC, USDT, ETH',
+                    pay_crypto_sub: 'BTC, USDT, ETH, SOL, TRX',
                     amount: 'Amount',
                     method: 'Method',
                     details: 'Details',
@@ -1641,7 +1620,12 @@
                     your_id: 'Your ID',
                     crypto_address: 'Address for transfer',
                     crypto_network: 'Network',
-                    crypto_instruction: 'Send the exact amount in USDT (BEP20) to the address above. After network confirmation, the subscription will be activated automatically.'
+                    crypto_instruction: 'Send the exact amount in USDT (BEP20) to the address above. After network confirmation, the subscription will be activated automatically.',
+                    btc: 'Bitcoin (BTC)',
+                    usdt_bsc: 'USDT (BEP20 / BSC)',
+                    usdt_trc20: 'USDT (TRC20)',
+                    eth: 'Ethereum (ETH)',
+                    sol: 'Solana (SOL)'
                 }
             };
 
@@ -1699,10 +1683,9 @@
             }
 
             // ============================================================
-            // ЛОГИКА ПОДПИСКИ
+            // ЛОГИКА ПОДПИСКИ (без тестового тарифа)
             // ============================================================
             function getPlanByAmount(amountRub) {
-                if (amountRub === PRICE_TEST) return { id: 'test', label: 'Тест', days: 1, isTest: true };
                 if (amountRub >= PRICE_LIFETIME_RUB) return { id: 'lifetime', label: 'Навсегда', days: 365 * 10 };
                 if (amountRub >= PRICE_QUARTER_RUB) return { id: 'quarter', label: '3 месяца', days: 90 };
                 if (amountRub >= PRICE_MONTH_RUB) return { id: 'month', label: '1 месяц', days: 30 };
@@ -1719,8 +1702,7 @@
                     plan: plan.label,
                     amount: amountRub,
                     currency: 'RUB',
-                    purchased: new Date().toISOString(),
-                    isTest: plan.isTest || false
+                    purchased: new Date().toISOString()
                 });
 
                 const now = new Date();
@@ -1728,12 +1710,11 @@
                 expires.setDate(expires.getDate() + plan.days);
 
                 user.subscription = {
-                    active: SUBSCRIPTION_ACTIVE || plan.isTest || false,
-                    preorder: !(SUBSCRIPTION_ACTIVE || plan.isTest),
+                    active: SUBSCRIPTION_ACTIVE,
+                    preorder: !SUBSCRIPTION_ACTIVE,
                     expires: expires.toISOString(),
                     plan: plan.label,
-                    amount: amountRub,
-                    isTest: plan.isTest || false
+                    amount: amountRub
                 };
 
                 saveUsers();
@@ -1919,15 +1900,13 @@
             }
 
             // ============================================================
-            // РЕНДЕР ЦЕН
+            // РЕНДЕР ЦЕН (без тестового тарифа)
             // ============================================================
             function renderPricing() {
                 const grid = document.getElementById('pricing-grid');
                 if (!grid) return;
 
                 const plans = [
-                    { id: 'test', label: t('test'), priceRub: PRICE_TEST, period: '1 день', desc: t('test_desc'),
-                        isTest: true },
                     { id: 'month', label: '1 месяц', priceRub: PRICE_MONTH_RUB, period: 'месяц', desc: t('full_access') },
                     { id: 'quarter', label: '3 месяца', priceRub: PRICE_QUARTER_RUB, period: '3 месяца', desc: t(
                             'full_access'),
@@ -1941,11 +1920,9 @@
                     const priceStr = Number.isInteger(price) ? price : price.toFixed(2);
                     const sym = getSymbol();
                     const pop = item.popular ? `<div class="popular-badge">${t('popular')}</div>` : '';
-                    const testBadge = item.isTest ? `<div class="test-badge">${t('test')}</div>` : '';
-                    const preorderBadge = !item.isTest ? `<div class="preorder-badge">${t('preorder')}</div>` : '';
+                    const preorderBadge = `<div class="preorder-badge">${t('preorder')}</div>`;
                     return `
                         <div class="price-card">
-                            ${testBadge}
                             ${preorderBadge}
                             ${pop}
                             <div class="amount">${sym}${priceStr}</div>
@@ -1969,7 +1946,7 @@
             }
 
             // ============================================================
-            // МОДАЛКА ОПЛАТЫ (с криптовалютой)
+            // МОДАЛКА ОПЛАТЫ (с криптовалютой, без теста)
             // ============================================================
             function openPaymentModal(priceRub, planId) {
                 const price = getPriceInCurrency(priceRub);
@@ -1977,7 +1954,6 @@
                 const sym = getSymbol();
 
                 const planLabels = {
-                    test: 'Тест',
                     month: '1 месяц',
                     quarter: '3 месяца',
                     lifetime: 'Навсегда'
@@ -1987,7 +1963,7 @@
                 let selectedMethod = 'da';
 
                 // USDT сумма в рублях (для крипто)
-                const usdtAmount = (priceRub / 90).toFixed(2); // 1 USDT ≈ 90₽
+                const usdtAmount = (priceRub / 90).toFixed(2);
 
                 const overlay = document.createElement('div');
                 overlay.className = 'payment-overlay';
@@ -2028,7 +2004,6 @@
 
                 document.body.appendChild(overlay);
 
-                // Функция обновления деталей оплаты
                 function updatePaymentDetails(method) {
                     const details = document.getElementById('paymentDetails');
                     if (method === 'da') {
@@ -2042,19 +2017,26 @@
                         details.innerHTML = `
                             <div class="row"><span class="label">${t('method')}</span><span class="value">${t('pay_crypto')}</span></div>
                             <div class="row"><span class="label">${t('amount')}</span><span class="value">≈ ${usdtAmount} USDT</span></div>
-                            <div class="row"><span class="label">${t('crypto_network')}</span><span class="value">BEP20 (BSC)</span></div>
-                            <div class="row"><span class="label">${t('crypto_address')}</span><span class="value crypto-address">${CRYPTO_ADDRESSES.USDT}</span></div>
-                            <div class="row"><span class="label">Ваш ID</span><span class="value" style="font-size:0.8rem;color:#fff;font-weight:700;">USER_${currentUser.id}</span></div>
-                            <div style="color:#666;font-size:0.7rem;margin-top:0.5rem;">${t('crypto_instruction')}</div>
-                            <div style="color:#444;font-size:0.6rem;margin-top:0.3rem;">ID обязательно укажите в комментарии к переводу</div>
+                            <div style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border);">
+                                <div style="color:#666;font-size:0.7rem;margin-bottom:0.3rem;">${t('crypto_address')}:</div>
+                                <div style="font-size:0.7rem;color:var(--crypto);word-break:break-all;font-family:monospace;margin-bottom:0.5rem;">
+                                    <strong>BTC:</strong> ${CRYPTO_ADDRESSES.BTC}<br>
+                                    <strong>USDT (BEP20):</strong> ${CRYPTO_ADDRESSES.USDT_BSC}<br>
+                                    <strong>USDT (TRC20):</strong> ${CRYPTO_ADDRESSES.USDT_TRC20}<br>
+                                    <strong>ETH:</strong> ${CRYPTO_ADDRESSES.ETH}<br>
+                                    <strong>SOL:</strong> ${CRYPTO_ADDRESSES.SOL}
+                                </div>
+                                <div style="color:#666;font-size:0.65rem;margin-top:0.3rem;">
+                                    💡 ${t('crypto_instruction')}<br>
+                                    <span style="color:#444;">ID обязательно укажите в комментарии к переводу</span>
+                                </div>
+                            </div>
                         `;
                     }
                 }
 
-                // Инициализация
                 updatePaymentDetails('da');
 
-                // Переключение методов
                 overlay.querySelectorAll('.payment-method').forEach(el => {
                     el.addEventListener('click', function() {
                         overlay.querySelectorAll('.payment-method').forEach(m => m.classList.remove(
@@ -2075,21 +2057,18 @@
                     if (selectedMethod === 'da') {
                         window.open(daUrl, '_blank');
                     } else {
-                        // Крипто — показываем адрес и инструкцию
-                        navigator.clipboard.writeText(CRYPTO_ADDRESSES.USDT).then(() => {
-                            addNotification('✅ Адрес скопирован', 'Адрес USDT (BEP20) скопирован в буфер обмена');
+                        const allAddresses =
+                            `BTC: ${CRYPTO_ADDRESSES.BTC}\nUSDT (BEP20): ${CRYPTO_ADDRESSES.USDT_BSC}\nUSDT (TRC20): ${CRYPTO_ADDRESSES.USDT_TRC20}\nETH: ${CRYPTO_ADDRESSES.ETH}\nSOL: ${CRYPTO_ADDRESSES.SOL}`;
+                        navigator.clipboard.writeText(allAddresses).then(() => {
+                            addNotification('✅ Адреса скопированы', 'Все крипто-адреса скопированы в буфер обмена');
                         }).catch(() => {});
-                        // Дополнительно открываем адрес в новом окне для удобства
-                        window.open(`https://bscscan.com/address/${CRYPTO_ADDRESSES.USDT}`, '_blank');
+                        window.open(`https://bscscan.com/address/${CRYPTO_ADDRESSES.USDT_BSC}`, '_blank');
                     }
 
-                    // ★★★ АКТИВАЦИЯ ПОСЛЕ ОПЛАТЫ ★★★
                     const key = generateKey();
                     const success = activateSubscription(currentUser, priceRub, key);
                     if (success) {
-                        const isTest = planId === 'test';
-                        addNotification('✅ Оплата выполнена!', isTest ? 'Тестовый доступ активирован на 1 день' :
-                            `Ваш ключ: ${key}`);
+                        addNotification('✅ Оплата выполнена!', `Ваш ключ: ${key}`);
                         if (selectedMethod === 'crypto') {
                             addNotification('💳 Крипто-оплата', 'После подтверждения в сети подписка активируется');
                         }
@@ -2126,7 +2105,7 @@
             }
 
             // ============================================================
-            // ★★★ КАБИНЕТ (С ID) ★★★
+            // КАБИНЕТ (без тестового статуса)
             // ============================================================
             function renderCabinet() {
                 const container = document.getElementById('cabinetContent');
@@ -2143,10 +2122,8 @@
                     return;
                 }
 
-                const sub = currentUser.subscription || { active: false, expires: null, plan: null, preorder: true,
-                isTest: false };
-                const isActive = sub.active || sub.isTest;
-                const isTest = sub.isTest || false;
+                const sub = currentUser.subscription || { active: false, expires: null, plan: null, preorder: true };
+                const isActive = sub.active;
                 const isPreorder = !isActive && (sub.preorder || true);
 
                 const dateStr = sub.expires ? new Date(sub.expires).toLocaleDateString(
@@ -2160,10 +2137,7 @@
 
                 let statusClass = 'inactive';
                 let statusText = t('status_inactive');
-                if (isTest) {
-                    statusClass = 'test';
-                    statusText = t('status_test');
-                } else if (isActive) {
+                if (isActive) {
                     statusClass = 'active';
                     statusText = t('status_active');
                 } else if (isPreorder) {
@@ -2178,7 +2152,6 @@
                             <div class="name">${currentUser.name || 'Пользователь'}</div>
                             <div class="email">${currentUser.email}</div>
 
-                            <!-- ★★★ ID ПОКАЗАН ЗДЕСЬ ★★★ -->
                             <div style="margin-top:0.8rem;padding:0.5rem;background:rgba(255,200,50,0.05);border-radius:8px;border:1px solid var(--gold);text-align:center;">
                                 <div style="color:var(--gold);font-weight:700;font-size:0.7rem;">🔑 ${t('your_id')}</div>
                                 <div style="font-family:monospace;font-size:0.9rem;color:#fff;font-weight:700;letter-spacing:1px;word-break:break-all;">USER_${currentUser.id}</div>
@@ -2186,10 +2159,10 @@
 
                             <div class="status-badge ${statusClass}">${statusText}</div>
                             <div class="divider"></div>
-                            <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${statusClass === 'active' ? 'green' : statusClass === 'test' ? 'test' : statusClass === 'preorder' ? 'gold' : 'red'}">${statusText}</span></div>
+                            <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${statusClass === 'active' ? 'green' : 'preorder' ? 'gold' : 'red'}">${statusText}</span></div>
                             ${isActive ? `
                             <div class="info-row"><span class="label">${t('ends')}</span><span class="value">${dateStr}</span></div>
-                            <div class="info-row"><span class="label">Тариф</span><span class="value">${sub.plan || '—'}${isTest ? ' (Тест)' : ''}</span></div>
+                            <div class="info-row"><span class="label">Тариф</span><span class="value">${sub.plan || '—'}</span></div>
                             <div class="info-row"><span class="label">${t('license_key')}</span><span class="value" style="font-family:monospace;font-size:0.7rem;letter-spacing:0.5px;">${lastKey ? lastKey.key : '—'}</span></div>
                             ` : `
                             <div class="info-row"><span class="label">${t('status')}</span><span class="value ${isPreorder ? 'gold' : 'red'}">${isPreorder ? t('status_preorder') : t('no_subscription')}</span></div>
@@ -2346,8 +2319,7 @@
             navigateTo('main');
 
             setTimeout(() => {
-                addNotification('🧪 Тестовый режим', 'Доступен тариф 10₽ для проверки оплаты');
-                addNotification('💳 Крипто-оплата', 'Доступна оплата в USDT (BEP20)');
+                addNotification('💳 Крипто-оплата', 'Доступна оплата в BTC, USDT, ETH, SOL, TRX');
             }, 1500);
 
         })();
