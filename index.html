@@ -6,7 +6,7 @@
     <title>Lethal DLC — Premium Cheat</title>
     <style>
         /* ============================================================
-           ВЕСЬ ТВОЙ CSS — ПОЛНОСТЬЮ СОХРАНЁН
+           ПОЛНЫЙ CSS (сохранён полностью)
            ============================================================ */
         * {
             margin: 0;
@@ -31,10 +31,6 @@
             --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --gold: #f5c842;
             --gold-dim: rgba(245, 200, 66, 0.08);
-            --test: #22c55e;
-            --test-dim: rgba(34, 197, 94, 0.08);
-            --crypto: #f7931a;
-            --crypto-dim: rgba(247, 147, 26, 0.08);
         }
 
         html { scroll-behavior: smooth; }
@@ -967,7 +963,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 2.8rem 3rem;
-            max-width: 560px;
+            max-width: 520px;
             width: 100%;
             animation: slideUp 0.4s ease-out;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
@@ -996,7 +992,7 @@
 
         .payment-methods {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 0.8rem;
             margin-bottom: 1.5rem;
         }
@@ -1047,15 +1043,6 @@
             font-weight: 400;
             font-size: 0.75rem;
             color: #888;
-        }
-        .payment-details .row .value.crypto-address {
-            font-family: monospace;
-            font-weight: 400;
-            font-size: 0.7rem;
-            color: var(--crypto);
-            word-break: break-all;
-            max-width: 200px;
-            text-align: right;
         }
 
         .btn-pay {
@@ -1447,18 +1434,7 @@
             };
 
             // ============================================================
-            // ТВОИ КРИПТО-АДРЕСА (ПОДСТАВЛЕНЫ)
-            // ============================================================
-            const CRYPTO_ADDRESSES = {
-                BTC: 'bc1q20zk30g3fel9tnr24d9wjk4ulrpqaeky6qe5th',
-                USDT_BSC: '0x4C162e145dA9f49c78A6665A9d76d1D0C2BD844e',
-                USDT_TRC20: 'TBXrKBwZL1zWzpKCVgK4giKaRSU8qiNgt9',
-                ETH: '0x4C162e145dA9f49c78A6665A9d76d1D0C2BD844e',
-                SOL: 'Fxptx9ChjDFWCYZ3CTVahKkvvKVdaN8NurmQfDDCMTac'
-            };
-
-            // ============================================================
-            // НАСТРОЙКИ ЦЕН (в рублях) — БЕЗ ТЕСТОВОГО ТАРИФА
+            // НАСТРОЙКИ ЦЕН (в рублях)
             // ============================================================
             const PRICE_MONTH_RUB = 250;
             const PRICE_QUARTER_RUB = 400;
@@ -1527,11 +1503,9 @@
                     key_count: 'Ключей',
                     loader_install: 'Установка лоадера',
                     buy_to_access: 'Приобретите подписку',
-                    select_payment: 'Выберите способ оплаты',
+                    select_payment: 'Оплата через DonationAlerts',
                     pay_da: 'DonationAlerts',
                     pay_da_sub: 'Банковские карты, СБП',
-                    pay_crypto: 'Криптовалюта',
-                    pay_crypto_sub: 'BTC, USDT, ETH, SOL, TRX',
                     amount: 'Сумма',
                     method: 'Способ',
                     details: 'Реквизиты',
@@ -1544,15 +1518,7 @@
                     hwid_price: '400 ₽',
                     payment_redirect: 'Перенаправление...',
                     new_purchase: 'Новая покупка!',
-                    your_id: 'Ваш ID',
-                    crypto_address: 'Адрес для перевода',
-                    crypto_network: 'Сеть',
-                    crypto_instruction: 'Отправьте точную сумму в USDT (BEP20) на указанный адрес. После подтверждения в сети подписка активируется автоматически.',
-                    btc: 'Bitcoin (BTC)',
-                    usdt_bsc: 'USDT (BEP20 / BSC)',
-                    usdt_trc20: 'USDT (TRC20)',
-                    eth: 'Ethereum (ETH)',
-                    sol: 'Solana (SOL)'
+                    your_id: 'Ваш ID'
                 },
                 en: {
                     login: 'Login',
@@ -1600,11 +1566,9 @@
                     key_count: 'Keys',
                     loader_install: 'Loader installation',
                     buy_to_access: 'Buy subscription to access',
-                    select_payment: 'Select payment method',
+                    select_payment: 'Payment via DonationAlerts',
                     pay_da: 'DonationAlerts',
                     pay_da_sub: 'Bank cards, SBP',
-                    pay_crypto: 'Cryptocurrency',
-                    pay_crypto_sub: 'BTC, USDT, ETH, SOL, TRX',
                     amount: 'Amount',
                     method: 'Method',
                     details: 'Details',
@@ -1617,15 +1581,7 @@
                     hwid_price: '400 ₽',
                     payment_redirect: 'Redirecting...',
                     new_purchase: 'New purchase!',
-                    your_id: 'Your ID',
-                    crypto_address: 'Address for transfer',
-                    crypto_network: 'Network',
-                    crypto_instruction: 'Send the exact amount in USDT (BEP20) to the address above. After network confirmation, the subscription will be activated automatically.',
-                    btc: 'Bitcoin (BTC)',
-                    usdt_bsc: 'USDT (BEP20 / BSC)',
-                    usdt_trc20: 'USDT (TRC20)',
-                    eth: 'Ethereum (ETH)',
-                    sol: 'Solana (SOL)'
+                    your_id: 'Your ID'
                 }
             };
 
@@ -1683,7 +1639,7 @@
             }
 
             // ============================================================
-            // ЛОГИКА ПОДПИСКИ (без тестового тарифа)
+            // ЛОГИКА ПОДПИСКИ
             // ============================================================
             function getPlanByAmount(amountRub) {
                 if (amountRub >= PRICE_LIFETIME_RUB) return { id: 'lifetime', label: 'Навсегда', days: 365 * 10 };
@@ -1900,7 +1856,7 @@
             }
 
             // ============================================================
-            // РЕНДЕР ЦЕН (без тестового тарифа)
+            // РЕНДЕР ЦЕН
             // ============================================================
             function renderPricing() {
                 const grid = document.getElementById('pricing-grid');
@@ -1946,7 +1902,7 @@
             }
 
             // ============================================================
-            // МОДАЛКА ОПЛАТЫ (с криптовалютой, без теста)
+            // МОДАЛКА ОПЛАТЫ (ТОЛЬКО DONATIONALERTS)
             // ============================================================
             function openPaymentModal(priceRub, planId) {
                 const price = getPriceInCurrency(priceRub);
@@ -1960,10 +1916,8 @@
                 };
                 const planLabel = planLabels[planId] || 'Подписка';
 
-                let selectedMethod = 'da';
-
-                // USDT сумма в рублях (для крипто)
-                const usdtAmount = (priceRub / 90).toFixed(2);
+                const daUrl =
+                    `https://www.donationalerts.com/r/lethaldlc?amount=${priceRub}&currency=RUB&message=USER_${currentUser.id}%20${encodeURIComponent(planLabel)}%20(${priceRub}₽)`;
 
                 const overlay = document.createElement('div');
                 overlay.className = 'payment-overlay';
@@ -1977,24 +1931,16 @@
                             <div style="color:var(--gold);font-weight:700;font-size:0.8rem;margin-bottom:0.3rem;">⚠️ ВАЖНАЯ ИНСТРУКЦИЯ</div>
                             <div style="color:#aaa;font-size:0.8rem;line-height:1.6;">
                                 1. Скопируйте ваш ID: <strong style="color:#fff;">USER_${currentUser.id}</strong><br>
-                                2. При оплате <strong style="color:#fff;">обязательно укажите</strong> этот ID в комментарии<br>
-                                3. Выберите удобный способ оплаты ниже
+                                2. Вставьте его в <strong style="color:#fff;">описание</strong> платежа на DonationAlerts<br>
+                                3. Укажите сумму <strong style="color:#fff;">${priceRub} ₽</strong><br>
+                                4. После оплаты подписка активируется автоматически
                             </div>
                         </div>
 
-                        <div class="payment-methods">
-                            <div class="payment-method selected" data-method="da">
-                                ${t('pay_da')}
-                                <span class="sub-text">${t('pay_da_sub')}</span>
-                            </div>
-                            <div class="payment-method" data-method="crypto">
-                                ${t('pay_crypto')}
-                                <span class="sub-text">${t('pay_crypto_sub')}</span>
-                            </div>
-                        </div>
-
-                        <div class="payment-details" id="paymentDetails">
-                            <!-- Заполняется JS -->
+                        <div class="payment-details">
+                            <div class="row"><span class="label">${t('method')}</span><span class="value">DonationAlerts</span></div>
+                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${priceStr}</span></div>
+                            <div class="row"><span class="label">Ваш ID</span><span class="value" style="font-size:0.8rem;color:#fff;font-weight:700;">USER_${currentUser.id}</span></div>
                         </div>
 
                         <button class="btn-pay" id="payBtn">${t('pay')}</button>
@@ -2004,80 +1950,63 @@
 
                 document.body.appendChild(overlay);
 
-                function updatePaymentDetails(method) {
-                    const details = document.getElementById('paymentDetails');
-                    if (method === 'da') {
-                        details.innerHTML = `
-                            <div class="row"><span class="label">${t('method')}</span><span class="value">DonationAlerts</span></div>
-                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${priceStr}</span></div>
-                            <div class="row"><span class="label">Ваш ID</span><span class="value" style="font-size:0.8rem;color:#fff;font-weight:700;">USER_${currentUser.id}</span></div>
-                            <div style="color:#666;font-size:0.7rem;margin-top:0.5rem;">После оплаты вы будете перенаправлены на сайт</div>
-                        `;
-                    } else {
-                        details.innerHTML = `
-                            <div class="row"><span class="label">${t('method')}</span><span class="value">${t('pay_crypto')}</span></div>
-                            <div class="row"><span class="label">${t('amount')}</span><span class="value">≈ ${usdtAmount} USDT</span></div>
-                            <div style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border);">
-                                <div style="color:#666;font-size:0.7rem;margin-bottom:0.3rem;">${t('crypto_address')}:</div>
-                                <div style="font-size:0.7rem;color:var(--crypto);word-break:break-all;font-family:monospace;margin-bottom:0.5rem;">
-                                    <strong>BTC:</strong> ${CRYPTO_ADDRESSES.BTC}<br>
-                                    <strong>USDT (BEP20):</strong> ${CRYPTO_ADDRESSES.USDT_BSC}<br>
-                                    <strong>USDT (TRC20):</strong> ${CRYPTO_ADDRESSES.USDT_TRC20}<br>
-                                    <strong>ETH:</strong> ${CRYPTO_ADDRESSES.ETH}<br>
-                                    <strong>SOL:</strong> ${CRYPTO_ADDRESSES.SOL}
-                                </div>
-                                <div style="color:#666;font-size:0.65rem;margin-top:0.3rem;">
-                                    💡 ${t('crypto_instruction')}<br>
-                                    <span style="color:#444;">ID обязательно укажите в комментарии к переводу</span>
-                                </div>
-                            </div>
-                        `;
-                    }
-                }
-
-                updatePaymentDetails('da');
-
-                overlay.querySelectorAll('.payment-method').forEach(el => {
-                    el.addEventListener('click', function() {
-                        overlay.querySelectorAll('.payment-method').forEach(m => m.classList.remove(
-                        'selected'));
-                        this.classList.add('selected');
-                        selectedMethod = this.dataset.method;
-                        updatePaymentDetails(selectedMethod);
-                    });
-                });
-
                 overlay.querySelector('#closePaymentBtn').addEventListener('click', () => overlay.remove());
                 overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 
                 overlay.querySelector('#payBtn').addEventListener('click', function() {
-                    const daUrl =
-                        `https://www.donationalerts.com/r/lethaldlc?amount=${priceRub}&currency=RUB&message=USER_${currentUser.id}%20${encodeURIComponent(planLabel)}%20(${priceRub}₽)`;
+                    window.open(daUrl, '_blank');
 
-                    if (selectedMethod === 'da') {
-                        window.open(daUrl, '_blank');
-                    } else {
-                        const allAddresses =
-                            `BTC: ${CRYPTO_ADDRESSES.BTC}\nUSDT (BEP20): ${CRYPTO_ADDRESSES.USDT_BSC}\nUSDT (TRC20): ${CRYPTO_ADDRESSES.USDT_TRC20}\nETH: ${CRYPTO_ADDRESSES.ETH}\nSOL: ${CRYPTO_ADDRESSES.SOL}`;
-                        navigator.clipboard.writeText(allAddresses).then(() => {
-                            addNotification('✅ Адреса скопированы', 'Все крипто-адреса скопированы в буфер обмена');
-                        }).catch(() => {});
-                        window.open(`https://bscscan.com/address/${CRYPTO_ADDRESSES.USDT_BSC}`, '_blank');
-                    }
+                    // === ПОКАЗЫВАЕМ ОЖИДАНИЕ ОПЛАТЫ ===
+                    overlay.innerHTML = `
+                        <div class="payment-modal" style="text-align:center;">
+                            <div style="font-size:2rem;color:#fff;font-weight:300;margin-bottom:0.5rem;">⏳</div>
+                            <h2>Ожидание оплаты</h2>
+                            <div class="sub">После оплаты подписка активируется автоматически</div>
+                            <div style="margin:1.5rem 0;color:#666;font-size:0.8rem;">
+                                Мы проверяем поступление платежа...
+                                <br><span style="color:#444;font-size:0.7rem;">Это может занять до 2 минут</span>
+                            </div>
+                            <button class="btn-close-payment" id="cancelBtn">Закрыть</button>
+                        </div>
+                    `;
 
-                    const key = generateKey();
-                    const success = activateSubscription(currentUser, priceRub, key);
-                    if (success) {
-                        addNotification('✅ Оплата выполнена!', `Ваш ключ: ${key}`);
-                        if (selectedMethod === 'crypto') {
-                            addNotification('💳 Крипто-оплата', 'После подтверждения в сети подписка активируется');
+                    overlay.querySelector('#cancelBtn').addEventListener('click', () => overlay.remove());
+
+                    // === ЗАПУСКАЕМ ПРОВЕРКУ ОПЛАТЫ ===
+                    let attempts = 0;
+                    const maxAttempts = 30;
+
+                    const checkPayment = setInterval(async () => {
+                        attempts++;
+                        try {
+                            const response = await fetch('/api/webhook', { method: 'POST' });
+                            const data = await response.json();
+
+                            if (data.activated_users && data.activated_users.length > 0) {
+                                clearInterval(checkPayment);
+                                // Активация подписки
+                                const key = generateKey();
+                                const success = activateSubscription(currentUser, priceRub, key);
+                                if (success) {
+                                    addNotification('✅ Оплата подтверждена!', `Ваш ключ: ${key}`);
+                                    overlay.remove();
+                                    navigateTo('cabinet');
+                                    renderCabinet();
+                                } else {
+                                    addNotification('❌ Ошибка', 'Не удалось активировать подписку');
+                                }
+                                return;
+                            }
+
+                            if (attempts >= maxAttempts) {
+                                clearInterval(checkPayment);
+                                addNotification('⏰ Время ожидания истекло', 'Если вы оплатили, подписка активируется вручную');
+                                overlay.remove();
+                            }
+                        } catch (e) {
+                            console.error('Ошибка проверки:', e);
                         }
-                        overlay.remove();
-                        navigateTo('cabinet');
-                        renderCabinet();
-                    } else {
-                        addNotification('❌ Ошибка', 'Не удалось активировать подписку');
-                    }
+                    }, 10000);
                 });
             }
 
@@ -2105,7 +2034,7 @@
             }
 
             // ============================================================
-            // КАБИНЕТ (без тестового статуса)
+            // КАБИНЕТ
             // ============================================================
             function renderCabinet() {
                 const container = document.getElementById('cabinetContent');
@@ -2319,7 +2248,7 @@
             navigateTo('main');
 
             setTimeout(() => {
-                addNotification('💳 Крипто-оплата', 'Доступна оплата в BTC, USDT, ETH, SOL, TRX');
+                addNotification('✅ Система готова', 'Оплата через DonationAlerts');
             }, 1500);
 
         })();
