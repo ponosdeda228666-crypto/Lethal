@@ -1,0 +1,21 @@
+{
+  "user@example.com": {
+    "name": "Иван",
+    "email": "user@example.com",
+    "password": "hash",
+    "subscription": {
+      "active": true,
+      "preorder": true,
+      "expires": "2026-10-06T00:00:00.000Z",
+      "plan": "DonationAlerts"
+    },
+    "keys": [
+      {
+        "key": "DA-ABC123-XYZ",
+        "plan": "DonationAlerts",
+        "purchased": "2026-09-06T00:00:00.000Z"
+      }
+    ],
+    "hwid": null
+  }
+}
