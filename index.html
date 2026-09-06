@@ -6,7 +6,7 @@
     <title>Lethal DLC — Premium Cheat</title>
     <style>
         /* ============================================================
-           ВЕСЬ ТВОЙ CSS (2к+ строк) — ПОЛНОСТЬЮ СОХРАНЁН
+           ВЕСЬ ТВОЙ CSS — ПОЛНОСТЬЮ СОХРАНЁН
            ============================================================ */
         * {
             margin: 0;
@@ -33,10 +33,7 @@
             --gold-dim: rgba(245, 200, 66, 0.08);
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
@@ -47,6 +44,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* ===== ФОН ===== */
         .bg-container {
             position: fixed;
             top: 0;
@@ -58,7 +56,6 @@
             overflow: hidden;
             background: #050505;
         }
-
         .bg-gradient {
             position: absolute;
             inset: -50%;
@@ -70,7 +67,6 @@
             animation: gradientShift 30s ease-in-out infinite alternate;
             transform-origin: center;
         }
-
         .bg-gradient2 {
             position: absolute;
             inset: -50%;
@@ -81,20 +77,17 @@
             transform-origin: center;
             opacity: 0.7;
         }
-
         @keyframes gradientShift {
             0% { transform: rotate(0deg) scale(1); }
             33% { transform: rotate(120deg) scale(1.1); }
             66% { transform: rotate(240deg) scale(0.9); }
             100% { transform: rotate(360deg) scale(1.05); }
         }
-
         @keyframes gradientShift2 {
             0% { transform: rotate(0deg) scale(1) translate(0, 0); }
             50% { transform: rotate(180deg) scale(1.15) translate(5%, 5%); }
             100% { transform: rotate(360deg) scale(0.95) translate(-5%, -5%); }
         }
-
         .bg-grid {
             position: absolute;
             inset: 0;
@@ -104,19 +97,16 @@
             background-size: 55px 55px;
             animation: gridDrift 70s linear infinite;
         }
-
         @keyframes gridDrift {
             0% { transform: translate(0, 0) rotate(0deg); }
             100% { transform: translate(-25px, -25px) rotate(0.5deg); }
         }
-
         .bg-orb {
             position: absolute;
             border-radius: 50%;
             filter: blur(90px);
             animation: orbFloat 25s ease-in-out infinite alternate;
         }
-
         .bg-orb.orb1 {
             width: 450px;
             height: 450px;
@@ -125,7 +115,6 @@
             left: -5%;
             animation-duration: 28s;
         }
-
         .bg-orb.orb2 {
             width: 550px;
             height: 550px;
@@ -135,7 +124,6 @@
             animation-duration: 32s;
             animation-delay: -6s;
         }
-
         .bg-orb.orb3 {
             width: 380px;
             height: 380px;
@@ -146,7 +134,6 @@
             animation-duration: 24s;
             animation-delay: -12s;
         }
-
         @keyframes orbFloat {
             0% { transform: translate(0, 0) scale(1); }
             33% { transform: translate(70px, -50px) scale(1.1); }
@@ -177,6 +164,7 @@
             flex-direction: column;
         }
 
+        /* ===== HEADER ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -187,12 +175,10 @@
             gap: 1rem;
             animation: fadeDown 0.8s ease-out;
         }
-
         @keyframes fadeDown {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .logo {
             font-size: 2rem;
             font-weight: 900;
@@ -221,7 +207,6 @@
             gap: 1.5rem;
             flex-wrap: wrap;
         }
-
         .language-selector {
             display: flex;
             gap: 0.2rem;
@@ -335,6 +320,7 @@
             to { opacity: 1; }
         }
 
+        /* ===== HERO ===== */
         .hero {
             padding: 4rem 0 2rem;
             min-height: 45vh;
@@ -343,7 +329,6 @@
             justify-content: center;
             align-items: flex-start;
         }
-
         .hero-tag {
             display: inline-block;
             font-size: 0.6rem;
@@ -358,7 +343,6 @@
             background: var(--surface);
             animation: fadeDown 0.8s ease-out;
         }
-
         .hero h1 {
             font-size: 4.5rem;
             font-weight: 900;
@@ -392,14 +376,12 @@
             line-height: 1.9;
             animation: fadeUp 1s ease-out;
         }
-
         .btn-group {
             display: flex;
             gap: 1.2rem;
             flex-wrap: wrap;
             animation: fadeUp 1.2s ease-out;
         }
-
         .btn {
             padding: 0.85rem 2.8rem;
             font-family: 'Inter', sans-serif;
@@ -435,7 +417,6 @@
         }
         .btn:hover::before { transform: scaleX(1); }
         .btn:active { transform: scale(0.96); }
-
         .btn-primary {
             background: #fff;
             color: #0a0a0a;
@@ -443,7 +424,6 @@
         }
         .btn-primary::before { background: #0a0a0a; }
         .btn-primary:hover { color: #fff; }
-
         .btn-outline {
             border-color: #333;
             color: #888;
@@ -451,12 +431,12 @@
         .btn-outline::before { background: #333; }
         .btn-outline:hover { color: #fff; border-color: #fff; }
 
+        /* ===== СЕКЦИИ ===== */
         .section {
             padding: 3rem 0 2rem;
             border-top: 1px solid var(--border);
         }
         .section:last-of-type { border-bottom: none; }
-
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -491,12 +471,12 @@
             text-transform: uppercase;
         }
 
+        /* ===== ВОЗМОЖНОСТИ ===== */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1.8rem;
         }
-
         .feature-item {
             position: relative;
             padding: 2.5rem 2rem;
@@ -512,23 +492,17 @@
             flex-direction: column;
             justify-content: flex-end;
         }
-
         .feature-item::before {
             content: '';
             position: absolute;
             inset: 0;
-            background:
-                radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.04) 0%, transparent 60%);
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.04) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.5s ease;
             pointer-events: none;
             z-index: 0;
         }
-
-        .feature-item:hover::before {
-            opacity: 1;
-        }
-
+        .feature-item:hover::before { opacity: 1; }
         .feature-item::after {
             content: '';
             position: absolute;
@@ -540,11 +514,7 @@
             transition: left 0.8s ease;
             z-index: 1;
         }
-
-        .feature-item:hover::after {
-            left: 100%;
-        }
-
+        .feature-item:hover::after { left: 100%; }
         .feature-item .index {
             position: absolute;
             top: 1.2rem;
@@ -556,12 +526,7 @@
             transition: all 0.4s ease;
             z-index: 1;
         }
-
-        .feature-item:hover .index {
-            color: #666;
-            transform: translateX(-4px);
-        }
-
+        .feature-item:hover .index { color: #666; transform: translateX(-4px); }
         .feature-item .category {
             font-size: 0.55rem;
             font-weight: 700;
@@ -573,11 +538,7 @@
             z-index: 1;
             transition: all 0.3s ease;
         }
-
-        .feature-item:hover .category {
-            color: #888;
-        }
-
+        .feature-item:hover .category { color: #888; }
         .feature-item h3 {
             font-size: 1.4rem;
             font-weight: 700;
@@ -588,11 +549,7 @@
             transition: all 0.3s ease;
             letter-spacing: -0.5px;
         }
-
-        .feature-item:hover h3 {
-            transform: translateX(4px);
-        }
-
+        .feature-item:hover h3 { transform: translateX(4px); }
         .feature-item p {
             color: #888;
             font-size: 0.9rem;
@@ -602,11 +559,7 @@
             max-width: 90%;
             transition: all 0.3s ease;
         }
-
-        .feature-item:hover p {
-            color: #aaa;
-        }
-
+        .feature-item:hover p { color: #aaa; }
         .feature-item .shape {
             position: absolute;
             bottom: -30px;
@@ -618,15 +571,8 @@
             transition: all 0.8s ease;
             z-index: 0;
         }
-
-        .feature-item:hover .shape {
-            width: 160px;
-            height: 160px;
-            border-color: rgba(255, 255, 255, 0.04);
-            bottom: -40px;
-            right: -40px;
-        }
-
+        .feature-item:hover .shape { width: 160px; height: 160px; border-color: rgba(255, 255, 255, 0.04); bottom: -40px;
+            right: -40px; }
         .feature-item .shape2 {
             position: absolute;
             top: -50px;
@@ -638,15 +584,8 @@
             transition: all 0.8s ease;
             z-index: 0;
         }
-
-        .feature-item:hover .shape2 {
-            width: 140px;
-            height: 140px;
-            border-color: rgba(255, 255, 255, 0.03);
-            top: -60px;
-            left: -60px;
-        }
-
+        .feature-item:hover .shape2 { width: 140px; height: 140px; border-color: rgba(255, 255, 255, 0.03); top: -60px;
+            left: -60px; }
         .feature-item .accent-line {
             position: absolute;
             left: 0;
@@ -657,34 +596,21 @@
             transition: height 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             z-index: 1;
         }
-
-        .feature-item:hover .accent-line {
-            height: 60%;
-        }
-
+        .feature-item:hover .accent-line { height: 60%; }
         .feature-item {
             opacity: 0;
             animation: featureAppear 0.8s ease-out forwards;
         }
-
         .feature-item:nth-child(1) { animation-delay: 0.1s; }
         .feature-item:nth-child(2) { animation-delay: 0.2s; }
         .feature-item:nth-child(3) { animation-delay: 0.3s; }
         .feature-item:nth-child(4) { animation-delay: 0.4s; }
         .feature-item:nth-child(5) { animation-delay: 0.5s; }
         .feature-item:nth-child(6) { animation-delay: 0.6s; }
-
         @keyframes featureAppear {
-            from {
-                opacity: 0;
-                transform: translateY(40px) scale(0.96);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(40px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
-
         .feature-item .dot {
             display: inline-block;
             width: 6px;
@@ -695,18 +621,18 @@
             transition: all 0.4s ease;
             vertical-align: middle;
         }
-
         .feature-item:hover .dot {
             background: #fff;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
             animation: dotPulse 1.5s ease-in-out infinite;
         }
-
         @keyframes dotPulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
+            0%,
+            100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.4; transform: scale(0.7); }
         }
 
+        /* ===== ЦЕНЫ ===== */
         .pricing-controls {
             display: flex;
             justify-content: flex-end;
@@ -750,7 +676,6 @@
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
         }
-
         .price-card {
             background: var(--surface);
             padding: 2.5rem 1.8rem;
@@ -768,7 +693,6 @@
             transform: translateY(-6px);
             box-shadow: var(--shadow);
         }
-
         .price-card .preorder-badge {
             position: absolute;
             top: 0;
@@ -782,7 +706,6 @@
             padding: 0.2rem 1rem;
             border-bottom-left-radius: var(--radius);
         }
-
         .price-card .popular-badge {
             position: absolute;
             top: -0.6rem;
@@ -797,14 +720,12 @@
             padding: 0.15rem 1.2rem;
             border-radius: 30px;
         }
-
         .price-card .amount {
             font-size: 3rem;
             font-weight: 800;
             color: #fff;
             letter-spacing: 2px;
         }
-
         .price-card .old-amount {
             font-size: 1.2rem;
             font-weight: 400;
@@ -813,7 +734,6 @@
             display: block;
             margin-bottom: 0.2rem;
         }
-
         .price-card .period {
             color: #777;
             font-size: 0.8rem;
@@ -821,14 +741,12 @@
             letter-spacing: 2px;
             margin-top: 0.1rem;
         }
-
         .price-card .desc {
             color: #999;
             margin: 1.5rem 0 2rem;
             font-size: 0.9rem;
             line-height: 1.7;
         }
-
         .btn-buy {
             padding: 0.6rem 2.2rem;
             font-family: 'Inter', sans-serif;
@@ -851,6 +769,7 @@
             transform: translateY(-2px);
         }
 
+        /* ===== HWID ===== */
         .hwid-section {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -908,6 +827,7 @@
             transform: translateY(-2px);
         }
 
+        /* ===== КАБИНЕТ ===== */
         .cabinet-grid {
             display: grid;
             grid-template-columns: 1fr 2.2fr;
@@ -937,13 +857,9 @@
             margin-bottom: 0.8rem;
             transition: all 0.4s ease;
         }
-        .cabinet-sidebar:hover .avatar {
-            border-color: var(--border-hover);
-            background: rgba(255, 255, 255, 0.06);
-        }
+        .cabinet-sidebar:hover .avatar { border-color: var(--border-hover); background: rgba(255, 255, 255, 0.06); }
         .cabinet-sidebar .name { font-size: 1.1rem; font-weight: 600; color: #fff; }
         .cabinet-sidebar .email { color: #666; font-size: 0.8rem; }
-
         .cabinet-sidebar .status-badge {
             margin-top: 0.8rem;
             display: inline-block;
@@ -964,7 +880,6 @@
             color: var(--gold);
             background: var(--gold-dim);
         }
-
         .cabinet-sidebar .divider { margin: 1.2rem 0; border-top: 1px solid var(--border); }
         .cabinet-sidebar .info-row {
             display: flex;
@@ -1020,10 +935,7 @@
             padding: 0.2rem 0.6rem;
             border-radius: 4px;
         }
-        .cabinet-content .key-box .copy-btn:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.04);
-        }
+        .cabinet-content .key-box .copy-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.04); }
         .cabinet-content .instruction-text {
             color: #888;
             font-size: 0.9rem;
@@ -1031,7 +943,9 @@
         }
         .cabinet-content .instruction-text .highlight { color: #fff; font-weight: 600; }
 
-        .payment-overlay, .auth-overlay {
+        /* ===== МОДАЛКИ ===== */
+        .payment-overlay,
+        .auth-overlay {
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.92);
@@ -1043,7 +957,8 @@
             padding: 1.5rem;
             animation: fadeIn 0.3s ease-out;
         }
-        .payment-modal, .auth-modal {
+        .payment-modal,
+        .auth-modal {
             background: #111;
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
@@ -1058,7 +973,8 @@
             from { opacity: 0; transform: translateY(40px) scale(0.96); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .payment-modal h2, .auth-modal h2 {
+        .payment-modal h2,
+        .auth-modal h2 {
             font-size: 1.6rem;
             font-weight: 300;
             letter-spacing: 4px;
@@ -1066,7 +982,8 @@
             text-align: center;
             margin-bottom: 0.3rem;
         }
-        .payment-modal .sub, .auth-modal .sub {
+        .payment-modal .sub,
+        .auth-modal .sub {
             color: #666;
             font-size: 0.85rem;
             text-align: center;
@@ -1079,7 +996,6 @@
             gap: 0.8rem;
             margin-bottom: 1.5rem;
         }
-
         .payment-method {
             background: var(--surface);
             border: 2px solid var(--border);
@@ -1093,10 +1009,7 @@
             font-size: 0.75rem;
             color: #888;
         }
-        .payment-method:hover {
-            border-color: var(--border-hover);
-            background: var(--surface-hover);
-        }
+        .payment-method:hover { border-color: var(--border-hover); background: var(--surface-hover); }
         .payment-method.selected {
             border-color: #fff;
             color: #fff;
@@ -1147,11 +1060,9 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .btn-pay:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
-        }
-        .btn-close-payment, .auth-modal .close-auth {
+        .btn-pay:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05); }
+        .btn-close-payment,
+        .auth-modal .close-auth {
             display: block;
             margin-top: 0.8rem;
             background: transparent;
@@ -1167,7 +1078,8 @@
             padding: 0.4rem;
             transition: color 0.3s ease;
         }
-        .btn-close-payment:hover, .auth-modal .close-auth:hover { color: #fff; }
+        .btn-close-payment:hover,
+        .auth-modal .close-auth:hover { color: #fff; }
 
         .auth-modal .field { margin-bottom: 1rem; }
         .auth-modal .field label {
@@ -1208,10 +1120,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .auth-modal .auth-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
-        }
+        .auth-modal .auth-submit:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05); }
         .auth-modal .toggle-auth {
             text-align: center;
             margin-top: 1rem;
@@ -1234,6 +1143,7 @@
         }
         .auth-error.show { display: block; animation: fadeIn 0.3s ease-out; }
 
+        /* ===== УВЕДОМЛЕНИЯ ===== */
         .notification-container {
             position: fixed;
             top: 20px;
@@ -1246,7 +1156,6 @@
             width: 100%;
             pointer-events: none;
         }
-
         .notification {
             background: #111;
             border: 1px solid var(--border);
@@ -1258,30 +1167,27 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
             border-left: 3px solid var(--gold);
         }
-
         .notification .notif-title {
             font-size: 0.8rem;
             font-weight: 700;
             color: #fff;
         }
-
         .notification .notif-body {
             font-size: 0.7rem;
             color: #888;
             margin-top: 0.2rem;
         }
-
         .notification .notif-time {
             font-size: 0.55rem;
             color: #444;
             margin-top: 0.3rem;
         }
-
         @keyframes notifSlideIn {
             from { opacity: 0; transform: translateX(100px); }
             to { opacity: 1; transform: translateX(0); }
         }
 
+        /* ===== FOOTER ===== */
         .footer {
             margin-top: 4rem;
             padding-top: 2rem;
@@ -1317,7 +1223,8 @@
             .section-title { font-size: 1.4rem; }
             .features-grid { grid-template-columns: 1fr; }
             .pricing-grid { grid-template-columns: 1fr; }
-            .auth-modal, .payment-modal { padding: 2rem 1.5rem; }
+            .auth-modal,
+            .payment-modal { padding: 2rem 1.5rem; }
             .footer { flex-direction: column; text-align: center; }
             .footer-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
             .cabinet-sidebar { padding: 1.5rem; }
@@ -1333,10 +1240,12 @@
             .hero h1 { font-size: 2rem; letter-spacing: 1px; }
             .hero h1 small { font-size: 0.8rem; letter-spacing: 2px; }
             .btn-sm { padding: 0.2rem 0.8rem; font-size: 0.5rem; }
-            .lang-btn, .currency-btn { padding: 0.15rem 0.5rem; font-size: 0.5rem; }
+            .lang-btn,
+            .currency-btn { padding: 0.15rem 0.5rem; font-size: 0.5rem; }
             .btn { padding: 0.6rem 1.4rem; font-size: 0.65rem; }
             .price-card .amount { font-size: 2.4rem; }
-            .feature-item .shape, .feature-item .shape2 { display: none; }
+            .feature-item .shape,
+            .feature-item .shape2 { display: none; }
         }
     </style>
 </head>
@@ -1472,9 +1381,9 @@
                 <div class="pricing-controls">
                     <span class="label">Валюта</span>
                     <div class="currency-selector">
-                        <button class="currency-btn active" data-currency="USD">USD</button>
-                        <button class="currency-btn" data-currency="RUB">RUB</button>
-                        <button class="currency-btn" data-currency="UAH">UAH</button>
+                        <button class="currency-btn active" data-currency="RUB">₽</button>
+                        <button class="currency-btn" data-currency="USD">$</button>
+                        <button class="currency-btn" data-currency="UAH">₴</button>
                     </div>
                 </div>
                 <div class="pricing-grid" id="pricing-grid"></div>
@@ -1482,7 +1391,7 @@
                 <div class="hwid-section" style="margin-top:2rem;">
                     <div class="hwid-header">
                         <h3>Сброс HWID</h3>
-                        <span class="price-tag">400 ₽</span>
+                        <span class="price-tag" id="hwidPrice">400 ₽</span>
                     </div>
                     <p>Перенесите лицензию на другой компьютер. После оплаты вы сможете сбросить привязку к текущему устройству.</p>
                     <button class="btn-hwid" id="hwidBtn">Сбросить HWID</button>
@@ -1515,24 +1424,37 @@
             'use strict';
 
             // ============================================================
+            // КУРСЫ ВАЛЮТ (относительно рубля)
+            // ============================================================
+            const CURRENCIES = {
+                RUB: { rate: 1, symbol: '₽', label: 'RUB' },
+                USD: { rate: 0.01, symbol: '$', label: 'USD' }, // 1$ = 100₽
+                UAH: { rate: 0.4, symbol: '₴', label: 'UAH' } // 1₴ = 2.5₽
+            };
+
+            // ============================================================
             // НАСТРОЙКИ ЦЕН (в рублях)
             // ============================================================
-            const PRICE_MONTH = 250; // 1 месяц
-            const PRICE_QUARTER = 400; // 3 месяца
-            const PRICE_LIFETIME = 600; // Навсегда
+            const PRICE_MONTH_RUB = 250;
+            const PRICE_QUARTER_RUB = 400;
+            const PRICE_LIFETIME_RUB = 600;
+            const PRICE_HWID_RUB = 400;
 
             // ★★★ УПРАВЛЕНИЕ ПОДПИСКОЙ (false = предзаказ, true = активна) ★★★
             const SUBSCRIPTION_ACTIVE = false;
 
             // ============================================================
-            // ВСЕ ОСТАЛЬНЫЕ ПЕРЕМЕННЫЕ
+            // СОСТОЯНИЕ
             // ============================================================
-            const RATES = {
-                USD: { rate: 1, symbol: '$', round: false },
-                RUB: { rate: 1, symbol: '₽', round: false },
-                UAH: { rate: 1, symbol: '₴', round: false }
-            };
+            let currentLang = 'ru';
+            let currentCurrency = 'RUB';
+            let users = JSON.parse(localStorage.getItem('lethal_users') || '{}');
+            let currentUser = null;
+            let currentUserEmail = null;
 
+            // ============================================================
+            // ПЕРЕВОДЫ
+            // ============================================================
             const TRANSLATIONS = {
                 ru: {
                     login: 'Войти',
@@ -1663,19 +1585,22 @@
             };
 
             // ============================================================
-            // СОСТОЯНИЕ
-            // ============================================================
-            let currentLang = 'ru';
-            let currentCurrency = 'RUB';
-            let users = JSON.parse(localStorage.getItem('lethal_users') || '{}');
-            let currentUser = null;
-            let currentUserEmail = null;
-
-            // ============================================================
-            // БАЗОВЫЕ ФУНКЦИИ
+            // ФУНКЦИИ
             // ============================================================
             function t(key) {
                 return TRANSLATIONS[currentLang]?.[key] || key;
+            }
+
+            function getPriceInCurrency(rubPrice) {
+                const rate = CURRENCIES[currentCurrency]?.rate || 1;
+                const price = rubPrice * rate;
+                // Округляем до 2 знаков, если есть дробная часть
+                if (price % 1 === 0) return price;
+                return Math.round(price * 100) / 100;
+            }
+
+            function getSymbol() {
+                return CURRENCIES[currentCurrency]?.symbol || '₽';
             }
 
             function generateUserId() {
@@ -1714,24 +1639,25 @@
             }
 
             // ============================================================
-            // ЛОГИКА ПОДПИСКИ
+            // ЛОГИКА ПОДПИСКИ (с пересчётом в рубли)
             // ============================================================
-            function getPlanByAmount(amount) {
-                if (amount >= PRICE_LIFETIME) return { id: 'lifetime', label: 'Навсегда', days: 365 * 10 };
-                if (amount >= PRICE_QUARTER) return { id: 'quarter', label: '3 месяца', days: 90 };
-                if (amount >= PRICE_MONTH) return { id: 'month', label: '1 месяц', days: 30 };
+            function getPlanByAmount(amountRub) {
+                if (amountRub >= PRICE_LIFETIME_RUB) return { id: 'lifetime', label: 'Навсегда', days: 365 * 10 };
+                if (amountRub >= PRICE_QUARTER_RUB) return { id: 'quarter', label: '3 месяца', days: 90 };
+                if (amountRub >= PRICE_MONTH_RUB) return { id: 'month', label: '1 месяц', days: 30 };
                 return null;
             }
 
-            function activateSubscription(user, amount, key) {
-                const plan = getPlanByAmount(amount);
+            function activateSubscription(user, amountRub, key) {
+                const plan = getPlanByAmount(amountRub);
                 if (!plan) return false;
 
                 if (!user.keys) user.keys = [];
                 user.keys.push({
                     key: key,
                     plan: plan.label,
-                    amount: amount,
+                    amount: amountRub,
+                    currency: 'RUB',
                     purchased: new Date().toISOString()
                 });
 
@@ -1744,7 +1670,7 @@
                     preorder: !SUBSCRIPTION_ACTIVE,
                     expires: expires.toISOString(),
                     plan: plan.label,
-                    amount: amount
+                    amount: amountRub
                 };
 
                 saveUsers();
@@ -1899,8 +1825,18 @@
                     this.classList.add('active');
                     currentCurrency = this.dataset.currency;
                     renderPricing();
+                    updateHwidPrice();
                 });
             });
+
+            function updateHwidPrice() {
+                const priceEl = document.getElementById('hwidPrice');
+                if (priceEl) {
+                    const price = getPriceInCurrency(PRICE_HWID_RUB);
+                    const symbol = getSymbol();
+                    priceEl.textContent = `${symbol}${price}`;
+                }
+            }
 
             // ============================================================
             // ОБНОВЛЕНИЕ UI
@@ -1920,49 +1856,57 @@
             }
 
             // ============================================================
-            // РЕНДЕР ЦЕН
+            // РЕНДЕР ЦЕН (с пересчётом валют)
             // ============================================================
             function renderPricing() {
                 const grid = document.getElementById('pricing-grid');
                 if (!grid) return;
 
                 const plans = [
-                    { id: 'month', label: '1 месяц', price: PRICE_MONTH, period: 'месяц', desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.' },
-                    { id: 'quarter', label: '3 месяца', price: PRICE_QUARTER, period: '3 месяца', desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
+                    { id: 'month', label: '1 месяц', priceRub: PRICE_MONTH_RUB, period: 'месяц', desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.' },
+                    { id: 'quarter', label: '3 месяца', priceRub: PRICE_QUARTER_RUB, period: '3 месяца', desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
                         popular: true },
-                    { id: 'lifetime', label: 'Навсегда', price: PRICE_LIFETIME, period: 'навсегда', desc: 'Пожизненная лицензия. Все будущие обновления включены.' }
+                    { id: 'lifetime', label: 'Навсегда', priceRub: PRICE_LIFETIME_RUB, period: 'навсегда', desc: 'Пожизненная лицензия. Все будущие обновления включены.' }
                 ];
 
                 grid.innerHTML = plans.map(item => {
-                    const sym = RATES[currentCurrency].symbol;
+                    const price = getPriceInCurrency(item.priceRub);
+                    const priceStr = Number.isInteger(price) ? price : price.toFixed(2);
+                    const sym = getSymbol();
                     const pop = item.popular ? `<div class="popular-badge">${t('popular')}</div>` : '';
                     return `
                         <div class="price-card">
                             ${pop}
                             <div class="preorder-badge">${t('preorder')}</div>
-                            <div class="amount">${sym}${item.price}</div>
+                            <div class="amount">${sym}${priceStr}</div>
                             <div class="period">${item.period}</div>
                             <div class="desc">${item.desc}</div>
-                            <button class="btn-buy" data-price="${item.price}" data-plan="${item.id}">${t('add_to_cart')}</button>
+                            <button class="btn-buy" data-price-rub="${item.priceRub}" data-plan="${item.id}">${t('add_to_cart')}</button>
                         </div>
                     `;
                 }).join('');
 
                 grid.querySelectorAll('.btn-buy').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        const price = parseInt(this.dataset.price);
+                        const priceRub = parseInt(this.dataset.priceRub);
                         const planId = this.dataset.plan;
                         if (!currentUser) { showAuthModal('login'); return; }
-                        openPaymentModal(price, planId);
+                        openPaymentModal(priceRub, planId);
                     });
                 });
+
+                // Обновляем цену HWID
+                updateHwidPrice();
             }
 
             // ============================================================
-            // МОДАЛКА ОПЛАТЫ (С ID)
+            // МОДАЛКА ОПЛАТЫ (с ID и пересчётом валют)
             // ============================================================
-            function openPaymentModal(price, planId) {
-                const sym = RATES[currentCurrency].symbol;
+            function openPaymentModal(priceRub, planId) {
+                const price = getPriceInCurrency(priceRub);
+                const priceStr = Number.isInteger(price) ? price : price.toFixed(2);
+                const sym = getSymbol();
+
                 const planLabels = {
                     month: '1 месяц',
                     quarter: '3 месяца',
@@ -1972,7 +1916,7 @@
 
                 // ★★★ ССЫЛКА С ID ★★★
                 const daUrl =
-                    `https://www.donationalerts.com/r/lethaldlc?amount=${price}&currency=RUB&message=USER_${currentUser.id}%20${encodeURIComponent(planLabel)}%20(${price}₽)`;
+                    `https://www.donationalerts.com/r/lethaldlc?amount=${priceRub}&currency=RUB&message=USER_${currentUser.id}%20${encodeURIComponent(planLabel)}%20(${priceRub}₽)`;
 
                 const overlay = document.createElement('div');
                 overlay.className = 'payment-overlay';
@@ -1980,21 +1924,21 @@
                 overlay.innerHTML = `
                     <div class="payment-modal">
                         <h2>${t('checkout')}</h2>
-                        <div class="sub">${planLabel} — ${sym}${price}</div>
+                        <div class="sub">${planLabel} — ${sym}${priceStr}</div>
 
                         <div style="background:rgba(255,200,50,0.05);border:1px solid var(--gold);border-radius:var(--radius);padding:1rem;margin-bottom:1.5rem;">
                             <div style="color:var(--gold);font-weight:700;font-size:0.8rem;margin-bottom:0.3rem;">⚠️ ВАЖНАЯ ИНСТРУКЦИЯ</div>
                             <div style="color:#aaa;font-size:0.8rem;line-height:1.6;">
                                 1. Скопируйте ваш ID: <strong style="color:#fff;">USER_${currentUser.id}</strong><br>
                                 2. Вставьте его в <strong style="color:#fff;">описание</strong> платежа на DonationAlerts<br>
-                                3. Укажите сумму <strong style="color:#fff;">${price} ₽</strong><br>
+                                3. Укажите сумму <strong style="color:#fff;">${priceRub} ₽</strong><br>
                                 4. После оплаты подписка активируется автоматически
                             </div>
                         </div>
 
                         <div class="payment-details">
                             <div class="row"><span class="label">${t('method')}</span><span class="value">DonationAlerts</span></div>
-                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${price}</span></div>
+                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${priceStr}</span></div>
                             <div class="row"><span class="label">Ваш ID</span><span class="value" style="font-size:0.8rem;color:#fff;font-weight:700;">USER_${currentUser.id}</span></div>
                         </div>
 
@@ -2013,7 +1957,7 @@
 
                     // ★★★ АКТИВАЦИЯ ПОСЛЕ ОПЛАТЫ ★★★
                     const key = generateKey();
-                    const success = activateSubscription(currentUser, price, key);
+                    const success = activateSubscription(currentUser, priceRub, key);
                     if (success) {
                         addNotification('✅ Оплата выполнена!', `Ваш ключ: ${key}`);
                         overlay.remove();
