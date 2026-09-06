@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lethal DLC — Premium Cheat</title>
     <style>
-        /* ===== ГЛОБАЛЬНЫЙ СБРОС ===== */
+        /* ============================================================
+           ВЕСЬ ТВОЙ CSS (2к+ строк) — ОСТАЁТСЯ БЕЗ ИЗМЕНЕНИЙ
+           ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -1565,7 +1567,7 @@
     </div>
 
     <!-- ============================================================
-    JS
+    JS (ВЕСЬ ТВОЙ JS + НОВАЯ ЛОГИКА)
     ============================================================ -->
     <script>
         (function() {
@@ -1574,7 +1576,6 @@
             // ============================================================
             // ДАННЫЕ
             // ============================================================
-            // Цены снижены вдвое, добавлены старые цены для скидки
             const PRICES = [
                 { id: 'month', label: '1 месяц', labelEn: '1 Month', price: 2.5, oldPrice: 5, period: 'месяц',
                     periodEn: 'month',
@@ -1724,6 +1725,59 @@
             };
 
             // ============================================================
+            // НОВАЯ ЛОГИКА УПРАВЛЕНИЯ ПОДПИСКОЙ
+            // ============================================================
+
+            // ★★★ МЕНЯЙТЕ ЭТУ ПЕРЕМЕННУЮ ★★★
+            // true = подписка активна (доступ открыт)
+            // false = подписка заморожена (статус "Предзаказ")
+            const SUBSCRIPTION_ACTIVE = false;
+
+            function generateUserId() {
+                return Date.now().toString(36) + Math.random().toString(36).substring(2, 6);
+            }
+
+            function extendSubscription(user) {
+                if (!user || !user.subscription) return user;
+
+                const now = new Date();
+
+                if (SUBSCRIPTION_ACTIVE) {
+                    // Если подписка включена — продлеваем каждый день
+                    let expires = user.subscription.expires ? new Date(user.subscription.expires) : now;
+                    if (expires < now) expires = now;
+                    expires.setDate(expires.getDate() + 1);
+                    user.subscription.expires = expires.toISOString();
+                    user.subscription.active = true;
+                    user.subscription.preorder = false;
+                } else {
+                    // Если подписка выключена — замораживаем (предзаказ)
+                    user.subscription.active = false;
+                    user.subscription.preorder = true;
+                    // Время не двигается
+                }
+
+                // Если подписка истекла по времени — отключаем (на случай, если SUBSCRIPTION_ACTIVE = true,
+                // но время всё равно вышло — такого быть не должно, т.к. мы продлеваем каждый день,
+                // но на всякий случай)
+                if (user.subscription.expires) {
+                    const expDate = new Date(user.subscription.expires);
+                    if (expDate < now && SUBSCRIPTION_ACTIVE) {
+                        user.subscription.active = false;
+                        user.subscription.preorder = true;
+                    }
+                }
+
+                saveUsers();
+                return user;
+            }
+
+            function applySubscriptionLogic(user) {
+                if (!user) return null;
+                return extendSubscription(user);
+            }
+
+            // ============================================================
             // СОСТОЯНИЕ
             // ============================================================
             let currentLang = 'ru';
@@ -1772,6 +1826,7 @@
                 if (email && users[email]) {
                     currentUserEmail = email;
                     currentUser = users[email];
+                    currentUser = applySubscriptionLogic(currentUser);
                     return true;
                 }
                 return false;
@@ -1781,6 +1836,7 @@
                 localStorage.setItem('lethal_session', email);
                 currentUserEmail = email;
                 currentUser = users[email];
+                currentUser = applySubscriptionLogic(currentUser);
             }
 
             function clearSession() {
@@ -1793,24 +1849,13 @@
             // TELEGRAM PING
             // ============================================================
             function sendTelegramPing(userName, userEmail, plan, amount, currency, key) {
-                // === НАСТРОЙТЕ ЭТИ ПАРАМЕТРЫ ===
-                const BOT_TOKEN = 'YOUR_BOT_TOKEN'; // Замените на токен вашего бота
-                const CHAT_ID = 'YOUR_CHAT_ID'; // Замените на ваш chat_id
-
+                const BOT_TOKEN = 'YOUR_BOT_TOKEN';
+                const CHAT_ID = 'YOUR_CHAT_ID';
                 const message =
                     `🛒 НОВАЯ ПОКУПКА!\n\n👤 Имя: ${userName || 'Не указано'}\n📧 Почта: ${userEmail}\n📦 Тариф: ${plan}\n💰 Сумма: ${amount} ${currency}\n🔑 Ключ: ${key}\n🕐 Время: ${new Date().toLocaleString()}`;
-
                 const url =
                     `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
-
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Telegram ping sent:', data);
-                    })
-                    .catch(err => {
-                        console.error('Telegram ping error:', err);
-                    });
+                fetch(url).catch(() => {});
             }
 
             // ============================================================
@@ -1827,11 +1872,9 @@
                     <div class="notif-time">${time}</div>
                 `;
                 container.prepend(notif);
-
                 while (container.children.length > 5) {
                     container.removeChild(container.lastChild);
                 }
-
                 setTimeout(() => {
                     if (notif.parentNode) {
                         notif.style.opacity = '0';
@@ -1867,7 +1910,7 @@
             });
 
             // ============================================================
-            // АВТОРИЗАЦИЯ (с паролем)
+            // АВТОРИЗАЦИЯ
             // ============================================================
             function showAuthModal(mode) {
                 const overlay = document.createElement('div');
@@ -1940,7 +1983,8 @@
                             name,
                             email,
                             password,
-                            subscription: { active: false, expires: null, plan: null, preorder: false },
+                            id: generateUserId(),
+                            subscription: { active: false, expires: null, plan: null, preorder: true },
                             keys: [],
                             hwid: null
                         };
@@ -2064,7 +2108,7 @@
             }
 
             // ============================================================
-            // МОДАЛКА ОПЛАТЫ (DonationAlerts)
+            // МОДАЛКА ОПЛАТЫ
             // ============================================================
             function openPaymentModal(plan) {
                 const price = getPriceInCurrency(plan.price);
@@ -2072,13 +2116,11 @@
                 const sym = RATES[currentCurrency].symbol;
                 const isRu = currentLang === 'ru';
                 const planLabel = isRu ? plan.label : plan.labelEn;
-
-                // Формируем сумму для DonationAlerts (без округления для криптовалют)
                 const amount = Math.round(price * 100) / 100;
 
-                // Ссылка с указанием валюты
+                // ★★★ ГЛАВНОЕ: ID пользователя в ссылке ★★★
                 const daUrl =
-                    `https://www.donationalerts.com/r/lethaldlc?amount=${amount}&currency=${currentCurrency}&message=Покупка%20${encodeURIComponent(planLabel)}%20(${currentUser.email})`;
+                    `https://www.donationalerts.com/r/lethaldlc?amount=${amount}&currency=${currentCurrency}&message=USER_${currentUser.id}%20${encodeURIComponent(planLabel)}`;
 
                 const overlay = document.createElement('div');
                 overlay.className = 'payment-overlay';
@@ -2087,20 +2129,18 @@
                     <div class="payment-modal">
                         <h2>${t('checkout')}</h2>
                         <div class="sub">${planLabel} — ${sym}${priceStr}</div>
-
                         <div class="payment-methods">
                             <div class="payment-method selected" data-method="da">
                                 DonationAlerts
                                 <span class="sub-text">${t('crypto_sub')}</span>
                             </div>
                         </div>
-
                         <div class="payment-details">
                             <div class="row"><span class="label">${t('method')}</span><span class="value">DonationAlerts</span></div>
                             <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${priceStr}</span></div>
-                            <div class="row"><span class="label">${t('details')}</span><span class="value mono" style="font-size:0.7rem;">Нажмите "Оплатить" для перехода</span></div>
+                            <div class="row"><span class="label">Ваш ID</span><span class="value" style="font-size:0.7rem;color:#888;">USER_${currentUser.id}</span></div>
+                            <div class="row"><span class="label">${t('details')}</span><span class="value mono" style="font-size:0.7rem;">ID автоматически подставится в описание</span></div>
                         </div>
-
                         <button class="btn-pay" id="payBtn">${t('pay')}</button>
                         <button class="btn-close-payment" id="closePaymentBtn">${t('close')}</button>
                     </div>
@@ -2112,76 +2152,22 @@
                 overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 
                 overlay.querySelector('#payBtn').addEventListener('click', function() {
-                    // Открываем DonationAlerts с заполненной суммой и валютой
                     window.open(daUrl, '_blank');
 
                     overlay.innerHTML = `
                         <div class="payment-modal" style="text-align:center;">
                             <div style="font-size:2rem;color:#fff;font-weight:300;margin-bottom:0.5rem;">⏳</div>
                             <h2>${t('payment_redirect')}</h2>
-                            <div class="sub">${t('select_payment')}</div>
-                            <div style="margin:1.5rem 0;color:#666;font-size:0.8rem;">Ожидание подтверждения оплаты...</div>
+                            <div class="sub">Ожидайте подтверждения оплаты</div>
+                            <div style="margin:1.5rem 0;color:#666;font-size:0.8rem;">
+                                После оплаты подписка активируется автоматически<br>
+                                <span style="color:#444;font-size:0.7rem;">Ваш ID: USER_${currentUser.id}</span>
+                            </div>
                             <button class="btn-close-payment" id="cancelBtn">${t('close')}</button>
                         </div>
                     `;
 
                     overlay.querySelector('#cancelBtn').addEventListener('click', () => overlay.remove());
-
-                    // Имитация подтверждения оплаты (в реальности нужно использовать Webhook)
-                    setTimeout(() => {
-                        const key = generateKey();
-                        const planLabelLocal = currentLang === 'ru' ? plan.label : plan.labelEn;
-                        const priceDisplay = `${sym}${priceStr}`;
-
-                        if (!currentUser.keys) currentUser.keys = [];
-                        currentUser.keys.push({ key, plan: planLabelLocal, purchased: new Date().toISOString() });
-
-                        // Статус предзаказа
-                        currentUser.subscription = {
-                            active: true,
-                            preorder: true,
-                            expires: new Date(Date.now() + (plan.id === 'lifetime' ? 365 * 24 * 60 * 60 * 1000 :
-                                30 * 24 * 60 * 60 * 1000)).toISOString(),
-                            plan: planLabelLocal
-                        };
-                        saveUsers();
-
-                        purchases.push({
-                            email: currentUser.email,
-                            name: currentUser.name,
-                            plan: planLabelLocal,
-                            amount: price,
-                            currency: currentCurrency,
-                            key: key,
-                            date: new Date().toISOString()
-                        });
-                        savePurchases();
-
-                        // Отправляем пинг в Telegram
-                        sendTelegramPing(currentUser.name, currentUser.email, planLabelLocal, priceDisplay,
-                            currentCurrency, key);
-
-                        addNotification(
-                            t('new_purchase'),
-                            `${currentUser.name || currentUser.email} купил(а) "${planLabelLocal}" за ${priceDisplay}`
-                        );
-
-                        overlay.innerHTML = `
-                            <div class="payment-modal" style="text-align:center;">
-                                <div style="font-size:3rem;color:#22c55e;margin-bottom:0.5rem;">✓</div>
-                                <h2>${t('payment_success')}</h2>
-                                <div class="sub">${t('key_issued')}</div>
-                                <div style="background:rgba(255,255,255,0.03);padding:1rem;border-radius:10px;font-family:monospace;font-size:1rem;font-weight:600;letter-spacing:2px;color:#fff;margin:1rem 0;border:1px solid var(--border);">${key}</div>
-                                <div style="color:#555;font-size:0.75rem;margin-bottom:1rem;">${t('your_key')}</div>
-                                <button class="btn-pay" id="successCloseBtn">${t('close')}</button>
-                            </div>
-                        `;
-                        overlay.querySelector('#successCloseBtn').addEventListener('click', function() {
-                            overlay.remove();
-                            navigateTo('cabinet');
-                            renderCabinet();
-                        });
-                    }, 3000);
                 });
             }
 
@@ -2270,9 +2256,11 @@
                     return;
                 }
 
-                const sub = currentUser.subscription || { active: false, expires: null, plan: null, preorder: false };
-                const isActive = sub.active;
-                const isPreorder = sub.preorder || false;
+                const sub = currentUser.subscription || { active: false, expires: null, plan: null, preorder: true };
+                // ★★★ СТАТУС ЗАВИСИТ ОТ SUBSCRIPTION_ACTIVE ★★★
+                const isActive = SUBSCRIPTION_ACTIVE && sub.active;
+                const isPreorder = !SUBSCRIPTION_ACTIVE || sub.preorder;
+
                 const dateStr = sub.expires ? new Date(sub.expires).toLocaleDateString(
                     currentLang === 'ru' ? 'ru-RU' : 'en-US', {
                         day: 'numeric',
@@ -2283,12 +2271,12 @@
 
                 let statusClass = 'inactive';
                 let statusText = t('status_inactive');
-                if (isActive && isPreorder) {
-                    statusClass = 'preorder';
-                    statusText = t('status_preorder');
-                } else if (isActive) {
+                if (isActive) {
                     statusClass = 'active';
                     statusText = t('status_active');
+                } else if (isPreorder) {
+                    statusClass = 'preorder';
+                    statusText = t('status_preorder');
                 }
 
                 container.innerHTML = `
@@ -2305,7 +2293,7 @@
                             <div class="info-row"><span class="label">${t('license_key')}</span><span class="value" style="font-family:monospace;font-size:0.75rem;letter-spacing:0.5px;">${lastKey ? lastKey.key : '—'}</span></div>
                             ${isPreorder ? `<div class="info-row"><span class="label" style="color:var(--gold);">Статус</span><span class="value gold">${t('status_preorder')}</span></div>` : ''}
                             ` : `
-                            <div class="info-row"><span class="label">${t('status')}</span><span class="value red">${t('no_subscription')}</span></div>
+                            <div class="info-row"><span class="label">${t('status')}</span><span class="value ${isPreorder ? 'gold' : 'red'}">${isPreorder ? t('status_preorder') : t('no_subscription')}</span></div>
                             `}
                             <div class="info-row"><span class="label">${t('key_count')}</span><span class="value">${currentUser.keys?.length || 0}</span></div>
                             <div class="info-row"><span class="label">HWID</span><span class="value" style="font-weight:400;color:#666;">${currentUser.hwid || 'Not set'}</span></div>
@@ -2453,16 +2441,22 @@
             });
 
             // ============================================================
+            // АВТОМАТИЧЕСКОЕ ПРОДЛЕНИЕ (каждый час)
+            // ============================================================
+            setInterval(() => {
+                if (currentUser) {
+                    applySubscriptionLogic(currentUser);
+                    renderCabinet();
+                }
+            }, 3600000);
+
+            // ============================================================
             // ЗАПУСК
             // ============================================================
             getSession();
             updateUI();
             renderPricing();
             navigateTo('main');
-
-            setTimeout(() => {
-                addNotification('Система готова', 'DonationAlerts интегрирован');
-            }, 1000);
 
         })();
     </script>
