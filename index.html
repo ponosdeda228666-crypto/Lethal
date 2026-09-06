@@ -47,7 +47,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ===== ФОН ===== */
         .bg-container {
             position: fixed;
             top: 0;
@@ -155,7 +154,6 @@
             100% { transform: translate(50px, 35px) scale(1.05); }
         }
 
-        /* ===== ЧАСТИЦЫ ===== */
         #particles-canvas {
             position: fixed;
             top: 0;
@@ -168,7 +166,6 @@
             opacity: 0.6;
         }
 
-        /* ===== КОНТЕЙНЕР ===== */
         .container {
             position: relative;
             z-index: 1;
@@ -180,7 +177,6 @@
             flex-direction: column;
         }
 
-        /* ===== HEADER ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -328,9 +324,6 @@
         .btn-sm.primary:hover { background: #fff; color: #000; }
         .btn-sm.danger:hover { border-color: #ef4444; color: #ef4444; }
 
-        /* ============================================================
-           СТРАНИЦЫ
-           ============================================================ */
         .page { display: none; animation: fadeUp 0.6s ease-out; }
         .page.active { display: block; }
         @keyframes fadeUp {
@@ -342,9 +335,6 @@
             to { opacity: 1; }
         }
 
-        /* ============================================================
-           HERO
-           ============================================================ */
         .hero {
             padding: 4rem 0 2rem;
             min-height: 45vh;
@@ -461,9 +451,6 @@
         .btn-outline::before { background: #333; }
         .btn-outline:hover { color: #fff; border-color: #fff; }
 
-        /* ============================================================
-           СЕКЦИЯ ВОЗМОЖНОСТЕЙ
-           ============================================================ */
         .section {
             padding: 3rem 0 2rem;
             border-top: 1px solid var(--border);
@@ -720,9 +707,6 @@
             50% { opacity: 0.4; transform: scale(0.7); }
         }
 
-        /* ============================================================
-           ТАРИФЫ
-           ============================================================ */
         .pricing-controls {
             display: flex;
             justify-content: flex-end;
@@ -924,9 +908,6 @@
             transform: translateY(-2px);
         }
 
-        /* ============================================================
-           КАБИНЕТ
-           ============================================================ */
         .cabinet-grid {
             display: grid;
             grid-template-columns: 1fr 2.2fr;
@@ -1050,9 +1031,6 @@
         }
         .cabinet-content .instruction-text .highlight { color: #fff; font-weight: 600; }
 
-        /* ============================================================
-           МОДАЛКИ
-           ============================================================ */
         .payment-overlay, .auth-overlay {
             position: fixed;
             inset: 0;
@@ -1070,7 +1048,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 2.8rem 3rem;
-            max-width: 480px;
+            max-width: 520px;
             width: 100%;
             animation: slideUp 0.4s ease-out;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
@@ -1256,9 +1234,6 @@
         }
         .auth-error.show { display: block; animation: fadeIn 0.3s ease-out; }
 
-        /* ============================================================
-           УВЕДОМЛЕНИЯ
-           ============================================================ */
         .notification-container {
             position: fixed;
             top: 20px;
@@ -1307,9 +1282,6 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* ============================================================
-           FOOTER
-           ============================================================ */
         .footer {
             margin-top: 4rem;
             padding-top: 2rem;
@@ -1327,9 +1299,6 @@
         .footer a:hover { color: #888; }
         .footer-links { display: flex; gap: 2rem; }
 
-        /* ============================================================
-           АДАПТИВ
-           ============================================================ */
         @media (max-width: 1024px) {
             .features-grid { grid-template-columns: repeat(2, 1fr); }
             .hero h1 { font-size: 3.5rem; }
@@ -1373,9 +1342,6 @@
 </head>
 <body>
 
-    <!-- ============================================================
-    ФОН
-    ============================================================ -->
     <div class="bg-container">
         <div class="bg-gradient"></div>
         <div class="bg-gradient2"></div>
@@ -1386,17 +1352,10 @@
     </div>
     <canvas id="particles-canvas"></canvas>
 
-    <!-- ============================================================
-    УВЕДОМЛЕНИЯ
-    ============================================================ -->
     <div class="notification-container" id="notifications"></div>
 
-    <!-- ============================================================
-    КОНТЕЙНЕР
-    ============================================================ -->
     <div class="container">
 
-        <!-- ===== HEADER ===== -->
         <header class="header">
             <div class="logo">Lethal <span>DLC</span></div>
             <div class="header-right">
@@ -1418,9 +1377,6 @@
             </div>
         </header>
 
-        <!-- ============================================================
-        СТРАНИЦА: ГЛАВНАЯ
-        ============================================================ -->
         <div class="page active" id="page-main">
             <section class="hero">
                 <div class="hero-tag">Premium Cheat Solution</div>
@@ -1438,7 +1394,6 @@
                 </div>
             </section>
 
-            <!-- ===== ВОЗМОЖНОСТИ ===== -->
             <section class="section">
                 <div class="section-header">
                     <h2 class="section-title">Возможности</h2>
@@ -1508,9 +1463,6 @@
             </section>
         </div>
 
-        <!-- ============================================================
-        СТРАНИЦА: ЦЕНЫ
-        ============================================================ -->
         <div class="page" id="page-pricing">
             <section class="section">
                 <div class="section-header">
@@ -1525,9 +1477,7 @@
                         <button class="currency-btn" data-currency="UAH">UAH</button>
                     </div>
                 </div>
-                <div class="pricing-grid" id="pricing-grid">
-                    <!-- JS заполнение -->
-                </div>
+                <div class="pricing-grid" id="pricing-grid"></div>
 
                 <div class="hwid-section" style="margin-top:2rem;">
                     <div class="hwid-header">
@@ -1540,22 +1490,16 @@
             </section>
         </div>
 
-        <!-- ============================================================
-        СТРАНИЦА: КАБИНЕТ
-        ============================================================ -->
         <div class="page" id="page-cabinet">
             <section class="section">
                 <div class="section-header">
                     <h2 class="section-title">Личный кабинет</h2>
                     <span class="section-sub">управление подпиской</span>
                 </div>
-                <div id="cabinetContent">
-                    <!-- JS заполнение -->
-                </div>
+                <div id="cabinetContent"></div>
             </section>
         </div>
 
-        <!-- ===== FOOTER ===== -->
         <footer class="footer">
             <span>&copy; 2027 Lethal DLC — Все права защищены</span>
             <div class="footer-links">
@@ -1566,246 +1510,172 @@
         </footer>
     </div>
 
-    <!-- ============================================================
-    JS (ВЕСЬ ТВОЙ JS + НОВАЯ ЛОГИКА)
-    ============================================================ -->
     <script>
         (function() {
             'use strict';
 
             // ============================================================
-            // ДАННЫЕ
+            // НАСТРОЙКИ ЦЕН (в рублях)
             // ============================================================
-            const PRICES = [
-                { id: 'month', label: '1 месяц', labelEn: '1 Month', price: 2.5, oldPrice: 5, period: 'месяц',
-                    periodEn: 'month',
-                    desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.', descEn: 'Full access. Priority support. Auto-updates.',
-                    preorder: true },
-                { id: 'quarter', label: '3 месяца', labelEn: '3 Months', price: 4, oldPrice: 8, period: '3 месяца',
-                    periodEn: '3 months',
-                    desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.', descEn: 'Full access. Priority support. Auto-updates.',
-                    popular: true, preorder: true },
-                { id: 'lifetime', label: 'Навсегда', labelEn: 'Lifetime', price: 6, oldPrice: 12, period: 'навсегда',
-                    periodEn: 'lifetime',
-                    desc: 'Пожизненная лицензия. Все будущие обновления включены.', descEn: 'Lifetime license. All future updates included.',
-                    preorder: true }
-            ];
+            const PRICE_MONTH = 250; // 1 месяц
+            const PRICE_QUARTER = 400; // 3 месяца
+            const PRICE_LIFETIME = 600; // Навсегда
+
+            // ============================================================
+            // КОНСТАНТЫ
+            // ============================================================
+            const SUBSCRIPTION_ACTIVE = false; // ★★★ МЕНЯЙТЕ ЗДЕСЬ ★★★
 
             const RATES = {
                 USD: { rate: 1, symbol: '$', round: false },
-                RUB: { rate: 96.7, symbol: '₽', round: true },
-                UAH: { rate: 41.2, symbol: '₴', round: true }
+                RUB: { rate: 1, symbol: '₽', round: false },
+                UAH: { rate: 1, symbol: '₴', round: false }
             };
-
-            const TRANSLATIONS = {
-                ru: {
-                    login: 'Войти',
-                    register: 'Регистрация',
-                    login_title: 'Вход',
-                    register_title: 'Регистрация',
-                    login_sub: 'Войдите в свой аккаунт',
-                    register_sub: 'Создайте новый аккаунт',
-                    email: 'Email',
-                    password: 'Пароль',
-                    name: 'Имя',
-                    no_account: 'Нет аккаунта? Зарегистрироваться',
-                    has_account: 'Уже есть аккаунт? Войти',
-                    close: 'Закрыть',
-                    error_email: 'Введите корректный email',
-                    error_password: 'Пароль должен быть не менее 6 символов',
-                    error_user_exists: 'Пользователь уже существует',
-                    error_user_not_found: 'Пользователь не найден',
-                    error_wrong_password: 'Неверный пароль',
-                    log_out: 'Выйти',
-                    subscription: 'Подписка',
-                    ends: 'Заканчивается',
-                    license_key: 'Лицензионный ключ',
-                    no_subscription: 'Нет активной подписки',
-                    buy_subscription: 'Купить подписку',
-                    your_key: 'Ваш активационный ключ',
-                    key_not_found: 'Ключ не найден',
-                    copy_key: 'Скопировать ключ',
-                    copied: 'Скопировано!',
-                    install_instruction: 'Инструкция по установке:',
-                    step1: 'Скачайте лоадер по ссылке: lethaldlc.com/loader',
-                    step2: 'Запустите файл от имени администратора',
-                    step3: 'Введите активационный ключ (указан выше)',
-                    step4: 'Нажмите "Инжект" и запустите игру',
-                    after_activation: 'После активации лоадер автоматически обновляется.',
-                    download_loader: 'Скачать загрузчик',
-                    add_to_cart: 'Купить',
-                    popular: 'Популярный',
-                    preorder: 'Предзаказ',
-                    full_access: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
-                    lifetime_license: 'Пожизненная лицензия. Все будущие обновления включены.',
-                    status_active: 'Активна',
-                    status_inactive: 'Неактивна',
-                    status_preorder: 'Предзаказ',
-                    key_count: 'Ключей',
-                    loader_install: 'Установка лоадера',
-                    buy_to_access: 'Приобретите подписку',
-                    select_payment: 'Оплата через DonationAlerts',
-                    crypto: 'DonationAlerts',
-                    crypto_sub: 'Безопасная оплата',
-                    amount: 'Сумма',
-                    method: 'Способ',
-                    details: 'Реквизиты',
-                    pay: 'Оплатить',
-                    payment_success: 'Оплата выполнена!',
-                    key_issued: 'Ваш ключ активации',
-                    hwid_reset: 'Сброс HWID',
-                    hwid_reset_success: 'HWID успешно сброшен!',
-                    hwid_reset_desc: 'Перенесите лицензию на другой компьютер. После оплаты вы сможете сбросить привязку к текущему устройству.',
-                    hwid_price: '400 ₽',
-                    payment_redirect: 'Перенаправление на DonationAlerts...',
-                    new_purchase: 'Новая покупка!'
-                },
-                en: {
-                    login: 'Login',
-                    register: 'Register',
-                    login_title: 'Login',
-                    register_title: 'Register',
-                    login_sub: 'Login to your account',
-                    register_sub: 'Create a new account',
-                    email: 'Email',
-                    password: 'Password',
-                    name: 'Name',
-                    no_account: 'No account? Register',
-                    has_account: 'Already have an account? Login',
-                    close: 'Close',
-                    error_email: 'Enter a valid email',
-                    error_password: 'Password must be at least 6 characters',
-                    error_user_exists: 'User already exists',
-                    error_user_not_found: 'User not found',
-                    error_wrong_password: 'Wrong password',
-                    log_out: 'Log out',
-                    subscription: 'Subscription',
-                    ends: 'Ends',
-                    license_key: 'License key',
-                    no_subscription: 'No active subscription',
-                    buy_subscription: 'Buy subscription',
-                    your_key: 'Your activation key',
-                    key_not_found: 'Key not found',
-                    copy_key: 'Copy key',
-                    copied: 'Copied!',
-                    install_instruction: 'Installation instructions:',
-                    step1: 'Download the loader from: lethaldlc.com/loader',
-                    step2: 'Run the file as administrator',
-                    step3: 'Enter the activation key (shown above)',
-                    step4: 'Click "Inject" and launch the game',
-                    after_activation: 'After activation, the loader updates automatically.',
-                    download_loader: 'Download loader',
-                    add_to_cart: 'Buy',
-                    popular: 'Popular',
-                    preorder: 'Pre-order',
-                    full_access: 'Full access. Priority support. Auto-updates.',
-                    lifetime_license: 'Lifetime license. All future updates included.',
-                    status_active: 'Active',
-                    status_inactive: 'Inactive',
-                    status_preorder: 'Pre-order',
-                    key_count: 'Keys',
-                    loader_install: 'Loader installation',
-                    buy_to_access: 'Buy subscription to access',
-                    select_payment: 'Payment via DonationAlerts',
-                    crypto: 'DonationAlerts',
-                    crypto_sub: 'Secure payment',
-                    amount: 'Amount',
-                    method: 'Method',
-                    details: 'Details',
-                    pay: 'Pay',
-                    payment_success: 'Payment successful!',
-                    key_issued: 'Your activation key',
-                    hwid_reset: 'HWID Reset',
-                    hwid_reset_success: 'HWID successfully reset!',
-                    hwid_reset_desc: 'Move your license to another PC. After payment you can reset the binding to the current device.',
-                    hwid_price: '400 ₽',
-                    payment_redirect: 'Redirecting to DonationAlerts...',
-                    new_purchase: 'New purchase!'
-                }
-            };
-
-            // ============================================================
-            // НОВАЯ ЛОГИКА УПРАВЛЕНИЯ ПОДПИСКОЙ
-            // ============================================================
-
-            // ★★★ МЕНЯЙТЕ ЭТУ ПЕРЕМЕННУЮ ★★★
-            // true = подписка активна (доступ открыт)
-            // false = подписка заморожена (статус "Предзаказ")
-            const SUBSCRIPTION_ACTIVE = false;
-
-            function generateUserId() {
-                return Date.now().toString(36) + Math.random().toString(36).substring(2, 6);
-            }
-
-            function extendSubscription(user) {
-                if (!user || !user.subscription) return user;
-
-                const now = new Date();
-
-                if (SUBSCRIPTION_ACTIVE) {
-                    // Если подписка включена — продлеваем каждый день
-                    let expires = user.subscription.expires ? new Date(user.subscription.expires) : now;
-                    if (expires < now) expires = now;
-                    expires.setDate(expires.getDate() + 1);
-                    user.subscription.expires = expires.toISOString();
-                    user.subscription.active = true;
-                    user.subscription.preorder = false;
-                } else {
-                    // Если подписка выключена — замораживаем (предзаказ)
-                    user.subscription.active = false;
-                    user.subscription.preorder = true;
-                    // Время не двигается
-                }
-
-                // Если подписка истекла по времени — отключаем (на случай, если SUBSCRIPTION_ACTIVE = true,
-                // но время всё равно вышло — такого быть не должно, т.к. мы продлеваем каждый день,
-                // но на всякий случай)
-                if (user.subscription.expires) {
-                    const expDate = new Date(user.subscription.expires);
-                    if (expDate < now && SUBSCRIPTION_ACTIVE) {
-                        user.subscription.active = false;
-                        user.subscription.preorder = true;
-                    }
-                }
-
-                saveUsers();
-                return user;
-            }
-
-            function applySubscriptionLogic(user) {
-                if (!user) return null;
-                return extendSubscription(user);
-            }
 
             // ============================================================
             // СОСТОЯНИЕ
             // ============================================================
             let currentLang = 'ru';
-            let currentCurrency = 'USD';
+            let currentCurrency = 'RUB';
             let users = JSON.parse(localStorage.getItem('lethal_users') || '{}');
             let currentUser = null;
             let currentUserEmail = null;
-            let purchases = JSON.parse(localStorage.getItem('lethal_purchases') || '[]');
 
             // ============================================================
             // ФУНКЦИИ
             // ============================================================
             function t(key) {
-                return TRANSLATIONS[currentLang]?.[key] || key;
+                const dict = {
+                    ru: {
+                        login: 'Войти',
+                        register: 'Регистрация',
+                        login_title: 'Вход',
+                        register_title: 'Регистрация',
+                        login_sub: 'Войдите в свой аккаунт',
+                        register_sub: 'Создайте новый аккаунт',
+                        email: 'Email',
+                        password: 'Пароль',
+                        name: 'Имя',
+                        no_account: 'Нет аккаунта? Зарегистрироваться',
+                        has_account: 'Уже есть аккаунт? Войти',
+                        close: 'Закрыть',
+                        error_email: 'Введите корректный email',
+                        error_password: 'Пароль должен быть не менее 6 символов',
+                        error_user_exists: 'Пользователь уже существует',
+                        error_user_not_found: 'Пользователь не найден',
+                        error_wrong_password: 'Неверный пароль',
+                        log_out: 'Выйти',
+                        subscription: 'Подписка',
+                        ends: 'Заканчивается',
+                        license_key: 'Лицензионный ключ',
+                        no_subscription: 'Нет активной подписки',
+                        buy_subscription: 'Купить подписку',
+                        your_key: 'Ваш активационный ключ',
+                        key_not_found: 'Ключ не найден',
+                        copy_key: 'Скопировать ключ',
+                        copied: 'Скопировано!',
+                        install_instruction: 'Инструкция по установке:',
+                        step1: 'Скачайте лоадер по ссылке: lethaldlc.com/loader',
+                        step2: 'Запустите файл от имени администратора',
+                        step3: 'Введите активационный ключ (указан выше)',
+                        step4: 'Нажмите "Инжект" и запустите игру',
+                        after_activation: 'После активации лоадер автоматически обновляется.',
+                        download_loader: 'Скачать загрузчик',
+                        add_to_cart: 'Купить',
+                        popular: 'Популярный',
+                        preorder: 'Предзаказ',
+                        full_access: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
+                        lifetime_license: 'Пожизненная лицензия. Все будущие обновления включены.',
+                        status_active: 'Активна',
+                        status_inactive: 'Неактивна',
+                        status_preorder: 'Предзаказ',
+                        key_count: 'Ключей',
+                        loader_install: 'Установка лоадера',
+                        buy_to_access: 'Приобретите подписку',
+                        select_payment: 'Оплата через DonationAlerts',
+                        crypto: 'DonationAlerts',
+                        crypto_sub: 'Безопасная оплата',
+                        amount: 'Сумма',
+                        method: 'Способ',
+                        details: 'Реквизиты',
+                        pay: 'Оплатить',
+                        payment_success: 'Оплата выполнена!',
+                        key_issued: 'Ваш ключ активации',
+                        hwid_reset: 'Сброс HWID',
+                        hwid_reset_success: 'HWID успешно сброшен!',
+                        hwid_reset_desc: 'Перенесите лицензию на другой компьютер. После оплаты вы сможете сбросить привязку к текущему устройству.',
+                        hwid_price: '400 ₽',
+                        payment_redirect: 'Перенаправление на DonationAlerts...',
+                        new_purchase: 'Новая покупка!'
+                    },
+                    en: {
+                        login: 'Login',
+                        register: 'Register',
+                        login_title: 'Login',
+                        register_title: 'Register',
+                        login_sub: 'Login to your account',
+                        register_sub: 'Create a new account',
+                        email: 'Email',
+                        password: 'Password',
+                        name: 'Name',
+                        no_account: 'No account? Register',
+                        has_account: 'Already have an account? Login',
+                        close: 'Close',
+                        error_email: 'Enter a valid email',
+                        error_password: 'Password must be at least 6 characters',
+                        error_user_exists: 'User already exists',
+                        error_user_not_found: 'User not found',
+                        error_wrong_password: 'Wrong password',
+                        log_out: 'Log out',
+                        subscription: 'Subscription',
+                        ends: 'Ends',
+                        license_key: 'License key',
+                        no_subscription: 'No active subscription',
+                        buy_subscription: 'Buy subscription',
+                        your_key: 'Your activation key',
+                        key_not_found: 'Key not found',
+                        copy_key: 'Copy key',
+                        copied: 'Copied!',
+                        install_instruction: 'Installation instructions:',
+                        step1: 'Download the loader from: lethaldlc.com/loader',
+                        step2: 'Run the file as administrator',
+                        step3: 'Enter the activation key (shown above)',
+                        step4: 'Click "Inject" and launch the game',
+                        after_activation: 'After activation, the loader updates automatically.',
+                        download_loader: 'Download loader',
+                        add_to_cart: 'Buy',
+                        popular: 'Popular',
+                        preorder: 'Pre-order',
+                        full_access: 'Full access. Priority support. Auto-updates.',
+                        lifetime_license: 'Lifetime license. All future updates included.',
+                        status_active: 'Active',
+                        status_inactive: 'Inactive',
+                        status_preorder: 'Pre-order',
+                        key_count: 'Keys',
+                        loader_install: 'Loader installation',
+                        buy_to_access: 'Buy subscription to access',
+                        select_payment: 'Payment via DonationAlerts',
+                        crypto: 'DonationAlerts',
+                        crypto_sub: 'Secure payment',
+                        amount: 'Amount',
+                        method: 'Method',
+                        details: 'Details',
+                        pay: 'Pay',
+                        payment_success: 'Payment successful!',
+                        key_issued: 'Your activation key',
+                        hwid_reset: 'HWID Reset',
+                        hwid_reset_success: 'HWID successfully reset!',
+                        hwid_reset_desc: 'Move your license to another PC. After payment you can reset the binding to the current device.',
+                        hwid_price: '400 ₽',
+                        payment_redirect: 'Redirecting to DonationAlerts...',
+                        new_purchase: 'New purchase!'
+                    }
+                };
+                return dict[currentLang]?.[key] || key;
             }
 
-            function roundPrice(v) {
-                if (v < 10) return Math.round(v);
-                if (v < 50) return Math.ceil(v / 5) * 5;
-                if (v < 200) return Math.ceil(v / 10) * 10;
-                if (v < 1000) return Math.ceil(v / 50) * 50;
-                return Math.ceil(v / 100) * 100;
-            }
-
-            function getPriceInCurrency(usdPrice) {
-                const data = RATES[currentCurrency];
-                let raw = usdPrice * data.rate;
-                return data.round ? roundPrice(raw) : raw;
+            function generateUserId() {
+                return Date.now().toString(36) + Math.random().toString(36).substring(2, 6);
             }
 
             function generateKey() {
@@ -1817,16 +1687,11 @@
                 localStorage.setItem('lethal_users', JSON.stringify(users));
             }
 
-            function savePurchases() {
-                localStorage.setItem('lethal_purchases', JSON.stringify(purchases));
-            }
-
             function getSession() {
                 const email = localStorage.getItem('lethal_session');
                 if (email && users[email]) {
                     currentUserEmail = email;
                     currentUser = users[email];
-                    currentUser = applySubscriptionLogic(currentUser);
                     return true;
                 }
                 return false;
@@ -1836,7 +1701,6 @@
                 localStorage.setItem('lethal_session', email);
                 currentUserEmail = email;
                 currentUser = users[email];
-                currentUser = applySubscriptionLogic(currentUser);
             }
 
             function clearSession() {
@@ -1846,44 +1710,41 @@
             }
 
             // ============================================================
-            // TELEGRAM PING
+            // ЛОГИКА ПОДПИСКИ
             // ============================================================
-            function sendTelegramPing(userName, userEmail, plan, amount, currency, key) {
-                const BOT_TOKEN = 'YOUR_BOT_TOKEN';
-                const CHAT_ID = 'YOUR_CHAT_ID';
-                const message =
-                    `🛒 НОВАЯ ПОКУПКА!\n\n👤 Имя: ${userName || 'Не указано'}\n📧 Почта: ${userEmail}\n📦 Тариф: ${plan}\n💰 Сумма: ${amount} ${currency}\n🔑 Ключ: ${key}\n🕐 Время: ${new Date().toLocaleString()}`;
-                const url =
-                    `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
-                fetch(url).catch(() => {});
+            function getPlanByAmount(amount) {
+                if (amount >= PRICE_LIFETIME) return { id: 'lifetime', label: 'Навсегда', days: 365 * 10 };
+                if (amount >= PRICE_QUARTER) return { id: 'quarter', label: '3 месяца', days: 90 };
+                if (amount >= PRICE_MONTH) return { id: 'month', label: '1 месяц', days: 30 };
+                return null;
             }
 
-            // ============================================================
-            // УВЕДОМЛЕНИЯ
-            // ============================================================
-            function addNotification(title, body) {
-                const container = document.getElementById('notifications');
-                const notif = document.createElement('div');
-                notif.className = 'notification';
-                const time = new Date().toLocaleTimeString();
-                notif.innerHTML = `
-                    <div class="notif-title">${title}</div>
-                    <div class="notif-body">${body}</div>
-                    <div class="notif-time">${time}</div>
-                `;
-                container.prepend(notif);
-                while (container.children.length > 5) {
-                    container.removeChild(container.lastChild);
-                }
-                setTimeout(() => {
-                    if (notif.parentNode) {
-                        notif.style.opacity = '0';
-                        notif.style.transition = 'opacity 0.5s';
-                        setTimeout(() => {
-                            if (notif.parentNode) notif.remove();
-                        }, 500);
-                    }
-                }, 10000);
+            function activateSubscription(user, amount, key) {
+                const plan = getPlanByAmount(amount);
+                if (!plan) return false;
+
+                if (!user.keys) user.keys = [];
+                user.keys.push({
+                    key: key,
+                    plan: plan.label,
+                    amount: amount,
+                    purchased: new Date().toISOString()
+                });
+
+                const now = new Date();
+                let expires = new Date(now);
+                expires.setDate(expires.getDate() + plan.days);
+
+                user.subscription = {
+                    active: SUBSCRIPTION_ACTIVE,
+                    preorder: !SUBSCRIPTION_ACTIVE,
+                    expires: expires.toISOString(),
+                    plan: plan.label,
+                    amount: amount
+                };
+
+                saveUsers();
+                return true;
             }
 
             // ============================================================
@@ -1923,7 +1784,7 @@
                         <div class="auth-error" id="authError"></div>
                         <div class="field"><label>${t('email')}</label><input type="email" id="authEmail" placeholder="your@email.com"></div>
                         <div class="field"><label>${t('password')}</label><input type="password" id="authPassword" placeholder="••••••••"></div>
-                        ${!isLogin ? `<div class="field"><label>${t('name')}</label><input type="text" id="authName" placeholder="Your name"></div>` : ''}
+                        ${!isLogin ? `<div class="field"><label>${t('name')}</label><input type="text" id="authName" placeholder="Ваше имя"></div>` : ''}
                         <button class="auth-submit" id="authSubmitBtn">${isLogin ? t('login') : t('register')}</button>
                         <div class="toggle-auth">${isLogin ? t('no_account') : t('has_account')}</div>
                         <button class="close-auth" id="closeAuthBtn">${t('close')}</button>
@@ -2022,17 +1883,6 @@
                     updateUI();
                     renderCabinet();
                     renderPricing();
-                    const heroSmall = document.querySelector('.hero h1 small');
-                    const heroP = document.querySelector('.hero p');
-                    if (currentLang === 'ru') {
-                        heroSmall.textContent = 'невидимость. точность. превосходство.';
-                        heroP.textContent =
-                            'Профессиональный инструмент для доминации. Полный контроль над игровой механикой.';
-                    } else {
-                        heroSmall.textContent = 'invisible. precise. superior.';
-                        heroP.textContent =
-                            'Professional domination tool. Full control over game mechanics.';
-                    }
                 });
             });
 
@@ -2071,38 +1921,35 @@
             function renderPricing() {
                 const grid = document.getElementById('pricing-grid');
                 if (!grid) return;
-                const isRu = currentLang === 'ru';
-                grid.innerHTML = PRICES.map(item => {
-                    const val = getPriceInCurrency(item.price);
-                    const oldVal = getPriceInCurrency(item.oldPrice);
-                    const str = Number.isInteger(val) ? val.toString() : val.toFixed(2);
-                    const oldStr = Number.isInteger(oldVal) ? oldVal.toString() : oldVal.toFixed(2);
+
+                const plans = [
+                    { id: 'month', label: '1 месяц', price: PRICE_MONTH, period: 'месяц', desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.' },
+                    { id: 'quarter', label: '3 месяца', price: PRICE_QUARTER, period: '3 месяца', desc: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
+                        popular: true },
+                    { id: 'lifetime', label: 'Навсегда', price: PRICE_LIFETIME, period: 'навсегда', desc: 'Пожизненная лицензия. Все будущие обновления включены.' }
+                ];
+
+                grid.innerHTML = plans.map(item => {
                     const sym = RATES[currentCurrency].symbol;
-                    const label = isRu ? item.label : item.labelEn;
-                    const period = isRu ? item.period : item.periodEn;
-                    const desc = isRu ? item.desc : item.descEn;
                     const pop = item.popular ? `<div class="popular-badge">${t('popular')}</div>` : '';
-                    const preorderBadge = item.preorder ?
-                        `<div class="preorder-badge">${t('preorder')}</div>` : '';
                     return `
                         <div class="price-card">
-                            ${preorderBadge}
                             ${pop}
-                            <div class="old-amount">${sym}${oldStr}</div>
-                            <div class="amount">${sym}${str}</div>
-                            <div class="period">${period}</div>
-                            <div class="desc">${desc}</div>
-                            <button class="btn-buy" data-id="${item.id}">${t('add_to_cart')}</button>
+                            <div class="preorder-badge">${t('preorder')}</div>
+                            <div class="amount">${sym}${item.price}</div>
+                            <div class="period">${item.period}</div>
+                            <div class="desc">${item.desc}</div>
+                            <button class="btn-buy" data-price="${item.price}" data-plan="${item.id}">${t('add_to_cart')}</button>
                         </div>
                     `;
                 }).join('');
+
                 grid.querySelectorAll('.btn-buy').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        const plan = PRICES.find(p => p.id === this.dataset.id);
-                        if (plan) {
-                            if (!currentUser) { showAuthModal('login'); return; }
-                            openPaymentModal(plan);
-                        }
+                        const price = parseInt(this.dataset.price);
+                        const planId = this.dataset.plan;
+                        if (!currentUser) { showAuthModal('login'); return; }
+                        openPaymentModal(price, planId);
                     });
                 });
             }
@@ -2110,17 +1957,18 @@
             // ============================================================
             // МОДАЛКА ОПЛАТЫ
             // ============================================================
-            function openPaymentModal(plan) {
-                const price = getPriceInCurrency(plan.price);
-                const priceStr = Number.isInteger(price) ? price.toString() : price.toFixed(2);
+            function openPaymentModal(price, planId) {
                 const sym = RATES[currentCurrency].symbol;
-                const isRu = currentLang === 'ru';
-                const planLabel = isRu ? plan.label : plan.labelEn;
-                const amount = Math.round(price * 100) / 100;
+                const planLabels = {
+                    month: '1 месяц',
+                    quarter: '3 месяца',
+                    lifetime: 'Навсегда'
+                };
+                const planLabel = planLabels[planId] || 'Подписка';
 
-                // ★★★ ГЛАВНОЕ: ID пользователя в ссылке ★★★
+                // Формируем ссылку с ID и суммой
                 const daUrl =
-                    `https://www.donationalerts.com/r/lethaldlc?amount=${amount}&currency=${currentCurrency}&message=USER_${currentUser.id}%20${encodeURIComponent(planLabel)}`;
+                    `https://www.donationalerts.com/r/lethaldlc?amount=${price}&currency=RUB&message=USER_${currentUser.id}%20${encodeURIComponent(planLabel)}%20(${price}₽)`;
 
                 const overlay = document.createElement('div');
                 overlay.className = 'payment-overlay';
@@ -2128,19 +1976,24 @@
                 overlay.innerHTML = `
                     <div class="payment-modal">
                         <h2>${t('checkout')}</h2>
-                        <div class="sub">${planLabel} — ${sym}${priceStr}</div>
-                        <div class="payment-methods">
-                            <div class="payment-method selected" data-method="da">
-                                DonationAlerts
-                                <span class="sub-text">${t('crypto_sub')}</span>
+                        <div class="sub">${planLabel} — ${sym}${price}</div>
+
+                        <div style="background:rgba(255,200,50,0.05);border:1px solid var(--gold);border-radius:var(--radius);padding:1rem;margin-bottom:1.5rem;">
+                            <div style="color:var(--gold);font-weight:700;font-size:0.8rem;margin-bottom:0.3rem;">⚠️ ВАЖНАЯ ИНСТРУКЦИЯ</div>
+                            <div style="color:#aaa;font-size:0.8rem;line-height:1.6;">
+                                1. Скопируйте ваш ID: <strong style="color:#fff;">USER_${currentUser.id}</strong><br>
+                                2. Вставьте его в <strong style="color:#fff;">описание</strong> платежа на DonationAlerts<br>
+                                3. Укажите сумму <strong style="color:#fff;">${price} ₽</strong><br>
+                                4. После оплаты подписка активируется автоматически
                             </div>
                         </div>
+
                         <div class="payment-details">
                             <div class="row"><span class="label">${t('method')}</span><span class="value">DonationAlerts</span></div>
-                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${priceStr}</span></div>
-                            <div class="row"><span class="label">Ваш ID</span><span class="value" style="font-size:0.7rem;color:#888;">USER_${currentUser.id}</span></div>
-                            <div class="row"><span class="label">${t('details')}</span><span class="value mono" style="font-size:0.7rem;">ID автоматически подставится в описание</span></div>
+                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${price}</span></div>
+                            <div class="row"><span class="label">Ваш ID</span><span class="value" style="font-size:0.8rem;color:#fff;font-weight:700;">USER_${currentUser.id}</span></div>
                         </div>
+
                         <button class="btn-pay" id="payBtn">${t('pay')}</button>
                         <button class="btn-close-payment" id="closePaymentBtn">${t('close')}</button>
                     </div>
@@ -2154,88 +2007,42 @@
                 overlay.querySelector('#payBtn').addEventListener('click', function() {
                     window.open(daUrl, '_blank');
 
-                    overlay.innerHTML = `
-                        <div class="payment-modal" style="text-align:center;">
-                            <div style="font-size:2rem;color:#fff;font-weight:300;margin-bottom:0.5rem;">⏳</div>
-                            <h2>${t('payment_redirect')}</h2>
-                            <div class="sub">Ожидайте подтверждения оплаты</div>
-                            <div style="margin:1.5rem 0;color:#666;font-size:0.8rem;">
-                                После оплаты подписка активируется автоматически<br>
-                                <span style="color:#444;font-size:0.7rem;">Ваш ID: USER_${currentUser.id}</span>
-                            </div>
-                            <button class="btn-close-payment" id="cancelBtn">${t('close')}</button>
-                        </div>
-                    `;
-
-                    overlay.querySelector('#cancelBtn').addEventListener('click', () => overlay.remove());
+                    // После оплаты — активируем подписку (имитация, в реальности через Webhook)
+                    const key = generateKey();
+                    const success = activateSubscription(currentUser, price, key);
+                    if (success) {
+                        addNotification('✅ Оплата выполнена!', `Ваш ключ: ${key}`);
+                        overlay.remove();
+                        navigateTo('cabinet');
+                        renderCabinet();
+                    } else {
+                        addNotification('❌ Ошибка', 'Не удалось активировать подписку');
+                    }
                 });
             }
 
             // ============================================================
-            // СБРОС HWID
+            // УВЕДОМЛЕНИЯ
             // ============================================================
-            document.getElementById('hwidBtn')?.addEventListener('click', function() {
-                if (!currentUser) { showAuthModal('login'); return; }
-
-                const overlay = document.createElement('div');
-                overlay.className = 'payment-overlay';
-
-                overlay.innerHTML = `
-                    <div class="payment-modal" style="text-align:center;">
-                        <div style="font-size:2.5rem;color:#444;margin-bottom:0.5rem;">◆</div>
-                        <h2>${t('hwid_reset')}</h2>
-                        <div class="sub">${t('hwid_reset_desc')}</div>
-                        <div style="background:rgba(255,255,255,0.03);padding:0.8rem;border-radius:10px;margin:1rem 0;border:1px solid var(--border);">
-                            <span style="color:#888;">${t('amount')}:</span>
-                            <span style="color:#fff;font-weight:700;font-size:1.2rem;">400 ₽</span>
-                        </div>
-                        <button class="btn-pay" id="hwidPayBtn">${t('pay')}</button>
-                        <button class="btn-close-payment" id="hwidCloseBtn">${t('close')}</button>
-                    </div>
+            function addNotification(title, body) {
+                const container = document.getElementById('notifications');
+                const notif = document.createElement('div');
+                notif.className = 'notification';
+                const time = new Date().toLocaleTimeString();
+                notif.innerHTML = `
+                    <div class="notif-title">${title}</div>
+                    <div class="notif-body">${body}</div>
+                    <div class="notif-time">${time}</div>
                 `;
-
-                document.body.appendChild(overlay);
-
-                overlay.querySelector('#hwidCloseBtn').addEventListener('click', () => overlay.remove());
-                overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-
-                overlay.querySelector('#hwidPayBtn').addEventListener('click', function() {
-                    window.open(
-                        `https://www.donationalerts.com/r/lethaldlc?amount=400&currency=RUB&message=Сброс%20HWID%20(${currentUser.email})`,
-                        '_blank');
-
-                    overlay.innerHTML = `
-                        <div class="payment-modal" style="text-align:center;">
-                            <div style="font-size:2rem;color:#fff;font-weight:300;margin-bottom:0.5rem;">⏳</div>
-                            <h2>${t('payment_redirect')}</h2>
-                            <div class="sub">${t('hwid_reset_desc')}</div>
-                            <button class="btn-close-payment" id="hwidCancelBtn">${t('close')}</button>
-                        </div>
-                    `;
-
-                    overlay.querySelector('#hwidCancelBtn').addEventListener('click', () => overlay.remove());
-
-                    setTimeout(() => {
-                        currentUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
-                        saveUsers();
-                        overlay.innerHTML = `
-                            <div class="payment-modal" style="text-align:center;">
-                                <div style="font-size:3rem;color:#22c55e;margin-bottom:0.5rem;">✓</div>
-                                <h2>${t('hwid_reset_success')}</h2>
-                                <div class="sub">${t('hwid_reset_desc')}</div>
-                                <div style="background:rgba(255,255,255,0.03);padding:0.8rem;border-radius:10px;margin:1rem 0;border:1px solid var(--border);font-family:monospace;font-size:0.8rem;color:#888;">
-                                    Новый HWID: ${currentUser.hwid}
-                                </div>
-                                <button class="btn-pay" id="hwidSuccessClose">${t('close')}</button>
-                            </div>
-                        `;
-                        overlay.querySelector('#hwidSuccessClose').addEventListener('click', function() {
-                            overlay.remove();
-                            renderCabinet();
-                        });
-                    }, 3000);
-                });
-            });
+                container.prepend(notif);
+                setTimeout(() => {
+                    if (notif.parentNode) {
+                        notif.style.opacity = '0';
+                        notif.style.transition = 'opacity 0.5s';
+                        setTimeout(() => { if (notif.parentNode) notif.remove(); }, 500);
+                    }
+                }, 10000);
+            }
 
             // ============================================================
             // КАБИНЕТ
@@ -2257,9 +2064,8 @@
                 }
 
                 const sub = currentUser.subscription || { active: false, expires: null, plan: null, preorder: true };
-                // ★★★ СТАТУС ЗАВИСИТ ОТ SUBSCRIPTION_ACTIVE ★★★
-                const isActive = SUBSCRIPTION_ACTIVE && sub.active;
-                const isPreorder = !SUBSCRIPTION_ACTIVE || sub.preorder;
+                const isActive = sub.active;
+                const isPreorder = sub.preorder || !isActive;
 
                 const dateStr = sub.expires ? new Date(sub.expires).toLocaleDateString(
                     currentLang === 'ru' ? 'ru-RU' : 'en-US', {
@@ -2267,6 +2073,7 @@
                         month: 'short',
                         year: 'numeric'
                     }) : '—';
+
                 const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
 
                 let statusClass = 'inactive';
@@ -2290,13 +2097,13 @@
                             <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${statusClass === 'active' ? 'green' : statusClass === 'preorder' ? 'gold' : 'red'}">${statusText}</span></div>
                             ${isActive ? `
                             <div class="info-row"><span class="label">${t('ends')}</span><span class="value">${dateStr}</span></div>
-                            <div class="info-row"><span class="label">${t('license_key')}</span><span class="value" style="font-family:monospace;font-size:0.75rem;letter-spacing:0.5px;">${lastKey ? lastKey.key : '—'}</span></div>
-                            ${isPreorder ? `<div class="info-row"><span class="label" style="color:var(--gold);">Статус</span><span class="value gold">${t('status_preorder')}</span></div>` : ''}
+                            <div class="info-row"><span class="label">Тариф</span><span class="value">${sub.plan || '—'}</span></div>
+                            <div class="info-row"><span class="label">${t('license_key')}</span><span class="value" style="font-family:monospace;font-size:0.7rem;letter-spacing:0.5px;">${lastKey ? lastKey.key : '—'}</span></div>
                             ` : `
                             <div class="info-row"><span class="label">${t('status')}</span><span class="value ${isPreorder ? 'gold' : 'red'}">${isPreorder ? t('status_preorder') : t('no_subscription')}</span></div>
                             `}
                             <div class="info-row"><span class="label">${t('key_count')}</span><span class="value">${currentUser.keys?.length || 0}</span></div>
-                            <div class="info-row"><span class="label">HWID</span><span class="value" style="font-weight:400;color:#666;">${currentUser.hwid || 'Not set'}</span></div>
+                            <div class="info-row"><span class="label">HWID</span><span class="value" style="font-weight:400;color:#666;">${currentUser.hwid || 'Не установлен'}</span></div>
                             <div class="divider"></div>
                             <button class="btn-sm" style="width:100%;font-size:0.6rem;border-color:#555;color:#aaa;" data-page="pricing">${t('buy_subscription')}</button>
                         </div>
@@ -2346,16 +2153,14 @@
             }
 
             // ============================================================
-            // ЭФФЕКТ СЛЕДОВАНИЯ ЗА МЫШЬЮ ДЛЯ БАННЕРОВ
+            // HWID
             // ============================================================
-            document.querySelectorAll('.feature-item').forEach(item => {
-                item.addEventListener('mousemove', function(e) {
-                    const rect = this.getBoundingClientRect();
-                    const x = ((e.clientX - rect.left) / rect.width) * 100;
-                    const y = ((e.clientY - rect.top) / rect.height) * 100;
-                    this.style.setProperty('--mouse-x', x + '%');
-                    this.style.setProperty('--mouse-y', y + '%');
-                });
+            document.getElementById('hwidBtn')?.addEventListener('click', function() {
+                if (!currentUser) { showAuthModal('login'); return; }
+                currentUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
+                saveUsers();
+                addNotification('✅ HWID сброшен', 'Новый HWID: ' + currentUser.hwid);
+                renderCabinet();
             });
 
             // ============================================================
@@ -2439,16 +2244,6 @@
                 for (let p of particles) { p.x = Math.random() * width;
                     p.y = Math.random() * height; }
             });
-
-            // ============================================================
-            // АВТОМАТИЧЕСКОЕ ПРОДЛЕНИЕ (каждый час)
-            // ============================================================
-            setInterval(() => {
-                if (currentUser) {
-                    applySubscriptionLogic(currentUser);
-                    renderCabinet();
-                }
-            }, 3600000);
 
             // ============================================================
             // ЗАПУСК
