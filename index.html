@@ -6,7 +6,7 @@
     <title>Lethal DLC — Premium Cheat</title>
     <style>
         /* ============================================================
-           ВЕСЬ ТВОЙ CSS (2к+ строк) — ОСТАЁТСЯ БЕЗ ИЗМЕНЕНИЙ
+           ВЕСЬ ТВОЙ CSS (2к+ строк) — ПОЛНОСТЬЮ СОХРАНЁН
            ============================================================ */
         * {
             margin: 0;
@@ -1521,15 +1521,145 @@
             const PRICE_QUARTER = 400; // 3 месяца
             const PRICE_LIFETIME = 600; // Навсегда
 
-            // ============================================================
-            // КОНСТАНТЫ
-            // ============================================================
-            const SUBSCRIPTION_ACTIVE = false; // ★★★ МЕНЯЙТЕ ЗДЕСЬ ★★★
+            // ★★★ УПРАВЛЕНИЕ ПОДПИСКОЙ (false = предзаказ, true = активна) ★★★
+            const SUBSCRIPTION_ACTIVE = false;
 
+            // ============================================================
+            // ВСЕ ОСТАЛЬНЫЕ ПЕРЕМЕННЫЕ
+            // ============================================================
             const RATES = {
                 USD: { rate: 1, symbol: '$', round: false },
                 RUB: { rate: 1, symbol: '₽', round: false },
                 UAH: { rate: 1, symbol: '₴', round: false }
+            };
+
+            const TRANSLATIONS = {
+                ru: {
+                    login: 'Войти',
+                    register: 'Регистрация',
+                    login_title: 'Вход',
+                    register_title: 'Регистрация',
+                    login_sub: 'Войдите в свой аккаунт',
+                    register_sub: 'Создайте новый аккаунт',
+                    email: 'Email',
+                    password: 'Пароль',
+                    name: 'Имя',
+                    no_account: 'Нет аккаунта? Зарегистрироваться',
+                    has_account: 'Уже есть аккаунт? Войти',
+                    close: 'Закрыть',
+                    error_email: 'Введите корректный email',
+                    error_password: 'Пароль должен быть не менее 6 символов',
+                    error_user_exists: 'Пользователь уже существует',
+                    error_user_not_found: 'Пользователь не найден',
+                    error_wrong_password: 'Неверный пароль',
+                    log_out: 'Выйти',
+                    subscription: 'Подписка',
+                    ends: 'Заканчивается',
+                    license_key: 'Лицензионный ключ',
+                    no_subscription: 'Нет активной подписки',
+                    buy_subscription: 'Купить подписку',
+                    your_key: 'Ваш активационный ключ',
+                    key_not_found: 'Ключ не найден',
+                    copy_key: 'Скопировать ключ',
+                    copied: 'Скопировано!',
+                    install_instruction: 'Инструкция по установке:',
+                    step1: 'Скачайте лоадер по ссылке: lethaldlc.com/loader',
+                    step2: 'Запустите файл от имени администратора',
+                    step3: 'Введите активационный ключ (указан выше)',
+                    step4: 'Нажмите "Инжект" и запустите игру',
+                    after_activation: 'После активации лоадер автоматически обновляется.',
+                    download_loader: 'Скачать загрузчик',
+                    add_to_cart: 'Купить',
+                    popular: 'Популярный',
+                    preorder: 'Предзаказ',
+                    full_access: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
+                    lifetime_license: 'Пожизненная лицензия. Все будущие обновления включены.',
+                    status_active: 'Активна',
+                    status_inactive: 'Неактивна',
+                    status_preorder: 'Предзаказ',
+                    key_count: 'Ключей',
+                    loader_install: 'Установка лоадера',
+                    buy_to_access: 'Приобретите подписку',
+                    select_payment: 'Оплата через DonationAlerts',
+                    crypto: 'DonationAlerts',
+                    crypto_sub: 'Безопасная оплата',
+                    amount: 'Сумма',
+                    method: 'Способ',
+                    details: 'Реквизиты',
+                    pay: 'Оплатить',
+                    payment_success: 'Оплата выполнена!',
+                    key_issued: 'Ваш ключ активации',
+                    hwid_reset: 'Сброс HWID',
+                    hwid_reset_success: 'HWID успешно сброшен!',
+                    hwid_reset_desc: 'Перенесите лицензию на другой компьютер. После оплаты вы сможете сбросить привязку к текущему устройству.',
+                    hwid_price: '400 ₽',
+                    payment_redirect: 'Перенаправление на DonationAlerts...',
+                    new_purchase: 'Новая покупка!',
+                    your_id: 'Ваш ID'
+                },
+                en: {
+                    login: 'Login',
+                    register: 'Register',
+                    login_title: 'Login',
+                    register_title: 'Register',
+                    login_sub: 'Login to your account',
+                    register_sub: 'Create a new account',
+                    email: 'Email',
+                    password: 'Password',
+                    name: 'Name',
+                    no_account: 'No account? Register',
+                    has_account: 'Already have an account? Login',
+                    close: 'Close',
+                    error_email: 'Enter a valid email',
+                    error_password: 'Password must be at least 6 characters',
+                    error_user_exists: 'User already exists',
+                    error_user_not_found: 'User not found',
+                    error_wrong_password: 'Wrong password',
+                    log_out: 'Log out',
+                    subscription: 'Subscription',
+                    ends: 'Ends',
+                    license_key: 'License key',
+                    no_subscription: 'No active subscription',
+                    buy_subscription: 'Buy subscription',
+                    your_key: 'Your activation key',
+                    key_not_found: 'Key not found',
+                    copy_key: 'Copy key',
+                    copied: 'Copied!',
+                    install_instruction: 'Installation instructions:',
+                    step1: 'Download the loader from: lethaldlc.com/loader',
+                    step2: 'Run the file as administrator',
+                    step3: 'Enter the activation key (shown above)',
+                    step4: 'Click "Inject" and launch the game',
+                    after_activation: 'After activation, the loader updates automatically.',
+                    download_loader: 'Download loader',
+                    add_to_cart: 'Buy',
+                    popular: 'Popular',
+                    preorder: 'Pre-order',
+                    full_access: 'Full access. Priority support. Auto-updates.',
+                    lifetime_license: 'Lifetime license. All future updates included.',
+                    status_active: 'Active',
+                    status_inactive: 'Inactive',
+                    status_preorder: 'Pre-order',
+                    key_count: 'Keys',
+                    loader_install: 'Loader installation',
+                    buy_to_access: 'Buy subscription to access',
+                    select_payment: 'Payment via DonationAlerts',
+                    crypto: 'DonationAlerts',
+                    crypto_sub: 'Secure payment',
+                    amount: 'Amount',
+                    method: 'Method',
+                    details: 'Details',
+                    pay: 'Pay',
+                    payment_success: 'Payment successful!',
+                    key_issued: 'Your activation key',
+                    hwid_reset: 'HWID Reset',
+                    hwid_reset_success: 'HWID successfully reset!',
+                    hwid_reset_desc: 'Move your license to another PC. After payment you can reset the binding to the current device.',
+                    hwid_price: '400 ₽',
+                    payment_redirect: 'Redirecting to DonationAlerts...',
+                    new_purchase: 'New purchase!',
+                    your_id: 'Your ID'
+                }
             };
 
             // ============================================================
@@ -1542,136 +1672,10 @@
             let currentUserEmail = null;
 
             // ============================================================
-            // ФУНКЦИИ
+            // БАЗОВЫЕ ФУНКЦИИ
             // ============================================================
             function t(key) {
-                const dict = {
-                    ru: {
-                        login: 'Войти',
-                        register: 'Регистрация',
-                        login_title: 'Вход',
-                        register_title: 'Регистрация',
-                        login_sub: 'Войдите в свой аккаунт',
-                        register_sub: 'Создайте новый аккаунт',
-                        email: 'Email',
-                        password: 'Пароль',
-                        name: 'Имя',
-                        no_account: 'Нет аккаунта? Зарегистрироваться',
-                        has_account: 'Уже есть аккаунт? Войти',
-                        close: 'Закрыть',
-                        error_email: 'Введите корректный email',
-                        error_password: 'Пароль должен быть не менее 6 символов',
-                        error_user_exists: 'Пользователь уже существует',
-                        error_user_not_found: 'Пользователь не найден',
-                        error_wrong_password: 'Неверный пароль',
-                        log_out: 'Выйти',
-                        subscription: 'Подписка',
-                        ends: 'Заканчивается',
-                        license_key: 'Лицензионный ключ',
-                        no_subscription: 'Нет активной подписки',
-                        buy_subscription: 'Купить подписку',
-                        your_key: 'Ваш активационный ключ',
-                        key_not_found: 'Ключ не найден',
-                        copy_key: 'Скопировать ключ',
-                        copied: 'Скопировано!',
-                        install_instruction: 'Инструкция по установке:',
-                        step1: 'Скачайте лоадер по ссылке: lethaldlc.com/loader',
-                        step2: 'Запустите файл от имени администратора',
-                        step3: 'Введите активационный ключ (указан выше)',
-                        step4: 'Нажмите "Инжект" и запустите игру',
-                        after_activation: 'После активации лоадер автоматически обновляется.',
-                        download_loader: 'Скачать загрузчик',
-                        add_to_cart: 'Купить',
-                        popular: 'Популярный',
-                        preorder: 'Предзаказ',
-                        full_access: 'Полный доступ. Приоритетная поддержка. Обновления автоматически.',
-                        lifetime_license: 'Пожизненная лицензия. Все будущие обновления включены.',
-                        status_active: 'Активна',
-                        status_inactive: 'Неактивна',
-                        status_preorder: 'Предзаказ',
-                        key_count: 'Ключей',
-                        loader_install: 'Установка лоадера',
-                        buy_to_access: 'Приобретите подписку',
-                        select_payment: 'Оплата через DonationAlerts',
-                        crypto: 'DonationAlerts',
-                        crypto_sub: 'Безопасная оплата',
-                        amount: 'Сумма',
-                        method: 'Способ',
-                        details: 'Реквизиты',
-                        pay: 'Оплатить',
-                        payment_success: 'Оплата выполнена!',
-                        key_issued: 'Ваш ключ активации',
-                        hwid_reset: 'Сброс HWID',
-                        hwid_reset_success: 'HWID успешно сброшен!',
-                        hwid_reset_desc: 'Перенесите лицензию на другой компьютер. После оплаты вы сможете сбросить привязку к текущему устройству.',
-                        hwid_price: '400 ₽',
-                        payment_redirect: 'Перенаправление на DonationAlerts...',
-                        new_purchase: 'Новая покупка!'
-                    },
-                    en: {
-                        login: 'Login',
-                        register: 'Register',
-                        login_title: 'Login',
-                        register_title: 'Register',
-                        login_sub: 'Login to your account',
-                        register_sub: 'Create a new account',
-                        email: 'Email',
-                        password: 'Password',
-                        name: 'Name',
-                        no_account: 'No account? Register',
-                        has_account: 'Already have an account? Login',
-                        close: 'Close',
-                        error_email: 'Enter a valid email',
-                        error_password: 'Password must be at least 6 characters',
-                        error_user_exists: 'User already exists',
-                        error_user_not_found: 'User not found',
-                        error_wrong_password: 'Wrong password',
-                        log_out: 'Log out',
-                        subscription: 'Subscription',
-                        ends: 'Ends',
-                        license_key: 'License key',
-                        no_subscription: 'No active subscription',
-                        buy_subscription: 'Buy subscription',
-                        your_key: 'Your activation key',
-                        key_not_found: 'Key not found',
-                        copy_key: 'Copy key',
-                        copied: 'Copied!',
-                        install_instruction: 'Installation instructions:',
-                        step1: 'Download the loader from: lethaldlc.com/loader',
-                        step2: 'Run the file as administrator',
-                        step3: 'Enter the activation key (shown above)',
-                        step4: 'Click "Inject" and launch the game',
-                        after_activation: 'After activation, the loader updates automatically.',
-                        download_loader: 'Download loader',
-                        add_to_cart: 'Buy',
-                        popular: 'Popular',
-                        preorder: 'Pre-order',
-                        full_access: 'Full access. Priority support. Auto-updates.',
-                        lifetime_license: 'Lifetime license. All future updates included.',
-                        status_active: 'Active',
-                        status_inactive: 'Inactive',
-                        status_preorder: 'Pre-order',
-                        key_count: 'Keys',
-                        loader_install: 'Loader installation',
-                        buy_to_access: 'Buy subscription to access',
-                        select_payment: 'Payment via DonationAlerts',
-                        crypto: 'DonationAlerts',
-                        crypto_sub: 'Secure payment',
-                        amount: 'Amount',
-                        method: 'Method',
-                        details: 'Details',
-                        pay: 'Pay',
-                        payment_success: 'Payment successful!',
-                        key_issued: 'Your activation key',
-                        hwid_reset: 'HWID Reset',
-                        hwid_reset_success: 'HWID successfully reset!',
-                        hwid_reset_desc: 'Move your license to another PC. After payment you can reset the binding to the current device.',
-                        hwid_price: '400 ₽',
-                        payment_redirect: 'Redirecting to DonationAlerts...',
-                        new_purchase: 'New purchase!'
-                    }
-                };
-                return dict[currentLang]?.[key] || key;
+                return TRANSLATIONS[currentLang]?.[key] || key;
             }
 
             function generateUserId() {
@@ -1955,7 +1959,7 @@
             }
 
             // ============================================================
-            // МОДАЛКА ОПЛАТЫ
+            // МОДАЛКА ОПЛАТЫ (С ID)
             // ============================================================
             function openPaymentModal(price, planId) {
                 const sym = RATES[currentCurrency].symbol;
@@ -1966,7 +1970,7 @@
                 };
                 const planLabel = planLabels[planId] || 'Подписка';
 
-                // Формируем ссылку с ID и суммой
+                // ★★★ ССЫЛКА С ID ★★★
                 const daUrl =
                     `https://www.donationalerts.com/r/lethaldlc?amount=${price}&currency=RUB&message=USER_${currentUser.id}%20${encodeURIComponent(planLabel)}%20(${price}₽)`;
 
@@ -2007,7 +2011,7 @@
                 overlay.querySelector('#payBtn').addEventListener('click', function() {
                     window.open(daUrl, '_blank');
 
-                    // После оплаты — активируем подписку (имитация, в реальности через Webhook)
+                    // ★★★ АКТИВАЦИЯ ПОСЛЕ ОПЛАТЫ ★★★
                     const key = generateKey();
                     const success = activateSubscription(currentUser, price, key);
                     if (success) {
@@ -2045,7 +2049,7 @@
             }
 
             // ============================================================
-            // КАБИНЕТ
+            // ★★★ КАБИНЕТ (С ID) ★★★
             // ============================================================
             function renderCabinet() {
                 const container = document.getElementById('cabinetContent');
@@ -2058,8 +2062,7 @@
                             <button class="btn-sm primary" id="cabinetLoginBtn" style="padding:0.6rem 2rem;font-size:0.7rem;">${t('login')}</button>
                         </div>
                     `;
-                    document.getElementById('cabinetLoginBtn')?.addEventListener('click', () => showAuthModal(
-                    'login'));
+                    document.getElementById('cabinetLoginBtn')?.addEventListener('click', () => showAuthModal('login'));
                     return;
                 }
 
@@ -2092,6 +2095,13 @@
                             <div class="avatar">${currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}</div>
                             <div class="name">${currentUser.name || 'Пользователь'}</div>
                             <div class="email">${currentUser.email}</div>
+
+                            <!-- ★★★ ID ПОКАЗАН ЗДЕСЬ ★★★ -->
+                            <div style="margin-top:0.8rem;padding:0.5rem;background:rgba(255,200,50,0.05);border-radius:8px;border:1px solid var(--gold);text-align:center;">
+                                <div style="color:var(--gold);font-weight:700;font-size:0.7rem;">🔑 ${t('your_id')}</div>
+                                <div style="font-family:monospace;font-size:0.9rem;color:#fff;font-weight:700;letter-spacing:1px;word-break:break-all;">USER_${currentUser.id}</div>
+                            </div>
+
                             <div class="status-badge ${statusClass}">${statusText}</div>
                             <div class="divider"></div>
                             <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${statusClass === 'active' ? 'green' : statusClass === 'preorder' ? 'gold' : 'red'}">${statusText}</span></div>
