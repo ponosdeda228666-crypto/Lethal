@@ -1,0 +1,13 @@
+{
+  "name": "lethaldlc",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
