@@ -6,7 +6,7 @@
     <title>Lethal DLC — Premium Cheat</title>
     <style>
         /* ============================================================
-           СТРОГИЙ ЧЕРНО-БЕЛЫЙ ДИЗАЙН (MONOCHROME)
+           СТРОГИЙ МОНОХРОМНЫЙ ДИЗАЙН (ЧЕРНО-БЕЛЫЙ)
            ============================================================ */
         * {
             margin: 0;
@@ -501,7 +501,7 @@
         .info-row .label { color: #666666; }
         .info-row .val { color: #ffffff; font-weight: 600; }
 
-        /* ДВЕ ГЛАВНЫЕ КНОПКИ В ЛЕВОЙ ПАНЕЛИ */
+        /* ДВЕ ГЛАВНЫЕ КНОПКИ В САЙДБАРЕ */
         .sidebar-buttons-container {
             display: flex;
             flex-direction: column;
@@ -961,9 +961,16 @@
                             type: type
                         })
                     });
-                    return res.ok;
+                    const data = await res.json();
+                    if (!res.ok) {
+                        console.error("Ошибка Telegram API:", data);
+                        addNotification('Ошибка Telegram', data.error || 'Сбой отправки');
+                        return false;
+                    }
+                    return true;
                 } catch (e) {
-                    console.error("Ошибка при отправке в Telegram:", e);
+                    console.error("Сбой сети /api/telegram:", e);
+                    addNotification('Ошибка сети', 'Не удалось связаться с /api/telegram');
                     return false;
                 }
             }
@@ -987,7 +994,7 @@
                 if (email && users[email]) {
                     const u = users[email];
                     const currentValidChecksum = await generateChecksum(u);
-                    // Проверка на ручную подделку баланса злоумышленником
+                    // Защита: если злоумышленник изменил balance в DevTools
                     if (u.checksum && u.checksum !== currentValidChecksum) {
                         console.warn("Попытка накрутки баланса! Сброс.");
                         u.balance = 0;
@@ -1088,7 +1095,6 @@
 
                 wrap.querySelector('#confirmPurchaseBtn').addEventListener('click', async function() {
                     if (isFullCover) {
-                        // 100% покрытие балансом
                         currentUser.balance -= totalPrice;
 
                         if (isHwid) {
@@ -1116,7 +1122,7 @@
                         return;
                     }
 
-                    // Частичное покрытие балансом: списываем доступное, остаток оплачивается
+                    // Частичное покрытие балансом
                     if (balanceDeduction > 0) {
                         currentUser.balance -= balanceDeduction;
                         await verifyAndSaveUser(currentUser);
@@ -1242,7 +1248,7 @@
                         currentUser.withdrawals.unshift(withRecord);
                         await verifyAndSaveUser(currentUser);
 
-                        // Отправка в Telegram с интерактивными кнопками
+                        // Отправка в Telegram
                         const tgText = `💸 <b>ЗАЯВКА НА ВЫВОД СРЕДСТВ!</b>\n\n` +
                                        `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
                                        `🆔 <b>ID:</b> <code>USER_${esc(currentUser.id)}</code>\n` +
@@ -1321,7 +1327,7 @@
                     });
                     await verifyAndSaveUser(currentUser);
 
-                    // Отправка в Telegram с интерактивными кнопками
+                    // Отправка в Telegram
                     const tgText = `🎬 <b>ЗАЯВКА НА МЕДИА (TIKTOK)!</b>\n\n` +
                                    `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
                                    `🆔 <b>ID:</b> <code>USER_${esc(currentUser.id)}</code>\n` +
