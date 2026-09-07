@@ -6,7 +6,7 @@
     <title>Lethal DLC — Premium Cheat</title>
     <style>
         /* ============================================================
-           СТРОГИЙ МОНОХРОМНЫЙ ДИЗАЙН (ЧЕРНО-БЕЛЫЙ)
+           ПОЛНЫЙ МОНОХРОМНЫЙ ДИЗАЙН (СТРОГО ЧЕРНО-БЕЛЫЙ)
            ============================================================ */
         * {
             margin: 0;
@@ -18,15 +18,16 @@
 
         :root {
             --bg: #000000;
-            --surface: #0a0a0a;
-            --surface-card: #0f0f0f;
-            --surface-hover: #161616;
+            --surface: #09090b;
+            --surface-card: #0f0f11;
+            --surface-hover: #17171a;
             --border: rgba(255, 255, 255, 0.08);
             --border-hover: rgba(255, 255, 255, 0.25);
+            --border-focus: #ffffff;
             --text-primary: #ffffff;
             --text-secondary: #888888;
             --text-muted: #444444;
-            --shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.95);
             --radius: 12px;
             --radius-lg: 18px;
             --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -711,6 +712,40 @@
             color: #ffffff;
         }
 
+        .promo-input-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+        }
+        .promo-input-row input {
+            flex: 1;
+            padding: 0.75rem 0.9rem;
+            background: #000000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+        .promo-input-row input:focus { border-color: #ffffff; }
+        .promo-input-row button {
+            padding: 0 1.2rem;
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #ffffff;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+        .promo-input-row button:hover { background: #000000; color: #ffffff; }
+
         .field-group { margin-bottom: 1.2rem; }
         .field-group label {
             display: block;
@@ -948,7 +983,7 @@
             }
 
             // ============================================================
-            // 2. ОТПРАВКА В TELEGRAM ЧЕРЕЗ СЕРВЕРНЫЙ ШЛЮЗ (/api/telegram)
+            // 2. ОТПРАВКА И СИНХРОНИЗАЦИЯ С TELEGRAM СЕРВЕРОМ
             // ============================================================
             async function sendTelegramAlert(text, actionId, type) {
                 try {
@@ -975,12 +1010,28 @@
                 }
             }
 
+            async function checkTelegramApproval(actionId) {
+                try {
+                    const res = await fetch(`/api/telegram?check=${actionId}`);
+                    if (!res.ok) return null;
+                    const data = await res.json();
+                    return data.status || null;
+                } catch (e) {
+                    return null;
+                }
+            }
+
             // ============================================================
-            // 3. БАЗА ДАННЫХ И СЕССИИ
+            // 3. БАЗА ДАННЫХ, ПРОМОКОДЫ И СЕССИИ
             // ============================================================
             let users = JSON.parse(localStorage.getItem('lethal_users') || '{}');
+            let promocodes = JSON.parse(localStorage.getItem('lethal_promocodes') || '{}');
             let currentUser = null;
             let currentTab = 'withdrawals';
+
+            function savePromocodes() {
+                localStorage.setItem('lethal_promocodes', JSON.stringify(promocodes));
+            }
 
             async function verifyAndSaveUser(user) {
                 if (!user) return;
@@ -994,7 +1045,7 @@
                 if (email && users[email]) {
                     const u = users[email];
                     const currentValidChecksum = await generateChecksum(u);
-                    // Защита: если злоумышленник изменил balance в DevTools
+                    // Защита: сброс баланса при ручном взломе через DevTools
                     if (u.checksum && u.checksum !== currentValidChecksum) {
                         console.warn("Попытка накрутки баланса! Сброс.");
                         u.balance = 0;
@@ -1013,7 +1064,7 @@
             }
 
             // ============================================================
-            // 4. ТАРИФЫ И УМНАЯ СИСТЕМА СПИСАНИЯ
+            // 4. ТАРИФНЫЕ ПЛАНЫ
             // ============================================================
             const PLANS = [
                 { id: 'month', label: '1 Месяц', price: 250, desc: 'Полный функционал, автоматические обновления и обход защиты.' },
@@ -1049,53 +1100,110 @@
             }
 
             // ============================================================
-            // 5. МОДАЛКА УМНОЙ ПОКУПКИ (БАЛАНС + ДОПЛАТА)
+            // 5. МОДАЛКА ОПЛАТЫ (СКИДКА 10% ПО ПРОМОКОДУ + СПИСАНИЕ БАЛАНСА)
             // ============================================================
-            function openSmartPurchaseModal(totalPrice, planId, isHwid = false) {
-                const balance = currentUser.balance || 0;
-                const balanceDeduction = Math.min(balance, totalPrice);
-                const finalToPay = totalPrice - balanceDeduction;
-                const isFullCover = finalToPay === 0;
-
+            function openSmartPurchaseModal(basePrice, planId, isHwid = false) {
                 const planObj = isHwid ? { label: 'Сброс HWID' } : (PLANS.find(p => p.id === planId) || { label: 'Подписка' });
+
+                let appliedPromo = null;
+                let promoDiscount = 0;
 
                 const wrap = document.createElement('div');
                 wrap.className = 'modal-wrap';
+
+                function updateBillCalculation() {
+                    const priceAfterPromo = basePrice - promoDiscount;
+                    const balance = currentUser.balance || 0;
+                    const balanceDeduction = Math.min(balance, priceAfterPromo);
+                    const finalToPay = priceAfterPromo - balanceDeduction;
+                    const isFullCover = finalToPay === 0;
+
+                    const calcBox = wrap.querySelector('#calcDetailsBox');
+                    calcBox.innerHTML = `
+                        <div class="split-row">
+                            <span>Начальная стоимость</span>
+                            <span>${basePrice} ₽</span>
+                        </div>
+                        ${appliedPromo ? `
+                        <div class="split-row">
+                            <span>Промокод [${esc(appliedPromo)}] (-10%)</span>
+                            <span style="color:#ffffff;">-${promoDiscount} ₽</span>
+                        </div>
+                        ` : ''}
+                        <div class="split-row">
+                            <span>Списание с кошелька</span>
+                            <span style="color:#ffffff;">-${balanceDeduction} ₽</span>
+                        </div>
+                        <div class="split-row total">
+                            <span>К оплате</span>
+                            <span>${finalToPay} ₽</span>
+                        </div>
+                    `;
+
+                    const actionBtn = wrap.querySelector('#confirmPurchaseBtn');
+                    if (isFullCover) {
+                        actionBtn.textContent = `Оплатить с баланса (${priceAfterPromo} ₽)`;
+                    } else {
+                        actionBtn.textContent = `Оплатить доплату (${finalToPay} ₽)`;
+                    }
+                }
+
                 wrap.innerHTML = `
                     <div class="modal-card">
                         <h2>Оформление тарифа</h2>
                         <div class="sub">${esc(planObj.label)}</div>
 
-                        <div class="split-calculation-box">
-                            <div class="split-row">
-                                <span>Стоимость тарифа</span>
-                                <span>${totalPrice} ₽</span>
-                            </div>
-                            <div class="split-row">
-                                <span>Списание с кошелька</span>
-                                <span style="color:#ffffff;">-${balanceDeduction} ₽</span>
-                            </div>
-                            <div class="split-row total">
-                                <span>К оплате</span>
-                                <span>${finalToPay} ₽</span>
-                            </div>
+                        <div class="promo-input-row">
+                            <input type="text" id="promoCodeInp" placeholder="Промокод (скидка 10%)" maxlength="16">
+                            <button id="applyPromoBtn">Применить</button>
                         </div>
 
-                        ${isFullCover ? `
-                            <button class="btn-modal-action" id="confirmPurchaseBtn">Оплатить с баланса (${totalPrice} ₽)</button>
-                        ` : `
-                            <button class="btn-modal-action" id="confirmPurchaseBtn">Оплатить доплату (${finalToPay} ₽)</button>
-                        `}
+                        <div class="split-calculation-box" id="calcDetailsBox"></div>
+
+                        <button class="btn-modal-action" id="confirmPurchaseBtn">Оплатить</button>
                         <button class="btn-modal-cancel" id="cancelPurchaseBtn">Отмена</button>
                     </div>
                 `;
                 document.body.appendChild(wrap);
 
+                updateBillCalculation();
+
                 wrap.querySelector('#cancelPurchaseBtn').addEventListener('click', () => wrap.remove());
 
+                // Применение промокода
+                wrap.querySelector('#applyPromoBtn').addEventListener('click', () => {
+                    const inputCode = wrap.querySelector('#promoCodeInp').value.trim().toUpperCase();
+                    if (!inputCode) {
+                        addNotification('Ошибка', 'Введите промокод');
+                        return;
+                    }
+                    if (appliedPromo) {
+                        addNotification('Внимание', 'Промокод уже применен');
+                        return;
+                    }
+
+                    if (promocodes[inputCode]) {
+                        appliedPromo = inputCode;
+                        promoDiscount = Math.round(basePrice * 0.10);
+                        updateBillCalculation();
+                        addNotification('Успешно', `Промокод применен! Скидка 10% (-${promoDiscount} ₽)`);
+                        wrap.querySelector('#promoCodeInp').disabled = true;
+                        wrap.querySelector('#applyPromoBtn').disabled = true;
+                    } else {
+                        addNotification('Ошибка', 'Указанный промокод не найден или не одобрен');
+                    }
+                });
+
+                // Подтверждение оплаты
                 wrap.querySelector('#confirmPurchaseBtn').addEventListener('click', async function() {
+                    const priceAfterPromo = basePrice - promoDiscount;
+                    const balance = currentUser.balance || 0;
+                    const balanceDeduction = Math.min(balance, priceAfterPromo);
+                    const finalToPay = priceAfterPromo - balanceDeduction;
+                    const isFullCover = finalToPay === 0;
+
                     if (isFullCover) {
-                        currentUser.balance -= totalPrice;
+                        currentUser.balance -= priceAfterPromo;
 
                         if (isHwid) {
                             currentUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
@@ -1110,25 +1218,40 @@
                             addNotification('Успешно', `Тариф активирован! Ключ: ${key}`);
                         }
 
+                        // Фиксация статистики для владельца промокода
+                        if (appliedPromo && promocodes[appliedPromo]) {
+                            promocodes[appliedPromo].uses = (promocodes[appliedPromo].uses || 0) + 1;
+                            promocodes[appliedPromo].volume = (promocodes[appliedPromo].volume || 0) + priceAfterPromo;
+                            promocodes[appliedPromo].reward = (promocodes[appliedPromo].reward || 0) + Math.round(priceAfterPromo * 0.15);
+                            savePromocodes();
+                        }
+
                         wrap.remove();
                         renderCabinet();
 
-                        // Оповещение администратора в Telegram
                         sendTelegramAlert(`⚡️ <b>Покупка с баланса!</b>\n\n` +
                                           `👤 <b>Юзер:</b> ${esc(currentUser.email)}\n` +
                                           `📦 <b>Услуга:</b> ${esc(planObj.label)}\n` +
-                                          `💰 <b>Списано:</b> ${totalPrice} ₽\n` +
+                                          `🏷 <b>Промокод:</b> ${appliedPromo ? esc(appliedPromo) : 'Не использован'}\n` +
+                                          `💰 <b>Списано:</b> ${priceAfterPromo} ₽\n` +
                                           `💳 <b>Остаток:</b> ${currentUser.balance} ₽`, Date.now(), 'purchase');
                         return;
                     }
 
-                    // Частичное покрытие балансом
+                    // Частичное покрытие балансом + доплата через DonationAlerts
                     if (balanceDeduction > 0) {
                         currentUser.balance -= balanceDeduction;
                         await verifyAndSaveUser(currentUser);
                     }
 
-                    const daMsg = `USER_${currentUser.id} ${planId} (Баланс:${balanceDeduction}₽, Доплата:${finalToPay}₽)`;
+                    if (appliedPromo && promocodes[appliedPromo]) {
+                        promocodes[appliedPromo].uses = (promocodes[appliedPromo].uses || 0) + 1;
+                        promocodes[appliedPromo].volume = (promocodes[appliedPromo].volume || 0) + priceAfterPromo;
+                        promocodes[appliedPromo].reward = (promocodes[appliedPromo].reward || 0) + Math.round(priceAfterPromo * 0.15);
+                        savePromocodes();
+                    }
+
+                    const daMsg = `USER_${currentUser.id} ${planId} (Bal:${balanceDeduction}₽, Rem:${finalToPay}₽, Promo:${appliedPromo || 'none'})`;
                     const daUrl = new URL('https://www.donationalerts.com/r/lethaldlc');
                     daUrl.searchParams.set('amount', String(finalToPay));
                     daUrl.searchParams.set('currency', 'RUB');
@@ -1142,7 +1265,7 @@
             }
 
             // ============================================================
-            // 6. МОДАЛКА: КОШЕЛЁК (С УКАЗАНИЕМ TELEGRAM ДЛЯ ВЫВОДА)
+            // 6. МОДАЛКА: КОШЕЛЁК
             // ============================================================
             function openWalletModal() {
                 const wrap = document.createElement('div');
@@ -1190,7 +1313,7 @@
                     });
                 });
 
-                // Вывод с кнопками принятия/отклонения в Telegram
+                // Вывод средств
                 wrap.querySelector('#btnWithdrawFlow').addEventListener('click', () => {
                     wrap.innerHTML = `
                         <div class="modal-card">
@@ -1248,7 +1371,6 @@
                         currentUser.withdrawals.unshift(withRecord);
                         await verifyAndSaveUser(currentUser);
 
-                        // Отправка в Telegram
                         const tgText = `💸 <b>ЗАЯВКА НА ВЫВОД СРЕДСТВ!</b>\n\n` +
                                        `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
                                        `🆔 <b>ID:</b> <code>USER_${esc(currentUser.id)}</code>\n` +
@@ -1267,9 +1389,9 @@
             }
 
             // ============================================================
-            // 7. МОДАЛКА: МЕДИА ПРОЕКТ (TIKTOK + TELEGRAM СВЯЗЬ)
+            // 7. МОДАЛКА: ПОДАЧА ЗАЯВКИ НА МЕДИА (TIKTOK)
             // ============================================================
-            function openMediaModal() {
+            function openMediaApplyModal() {
                 const wrap = document.createElement('div');
                 wrap.className = 'modal-wrap';
                 wrap.innerHTML = `
@@ -1319,15 +1441,15 @@
                     const reqId = Date.now().toString(36).toUpperCase();
                     if (!currentUser.mediaApplications) currentUser.mediaApplications = [];
                     currentUser.mediaApplications.unshift({
-                        id: 'M-' + reqId,
+                        id: reqId,
                         tiktok: ttUrl,
                         promo: promo,
                         telegram: tgContact,
+                        status: 'pending',
                         date: new Date().toLocaleDateString()
                     });
                     await verifyAndSaveUser(currentUser);
 
-                    // Отправка в Telegram
                     const tgText = `🎬 <b>ЗАЯВКА НА МЕДИА (TIKTOK)!</b>\n\n` +
                                    `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
                                    `🆔 <b>ID:</b> <code>USER_${esc(currentUser.id)}</code>\n` +
@@ -1339,15 +1461,67 @@
                     await sendTelegramAlert(tgText, reqId, 'media');
 
                     wrap.remove();
-                    addNotification('Заявка принята', 'Модератор проверит профиль в Telegram');
+                    addNotification('Заявка принята', 'Администратор проверит профиль в Telegram');
                     renderCabinet();
                 });
             }
 
             // ============================================================
-            // 8. РЕНДЕР ЛИЧНОГО КАБИНЕТА
+            // 8. МОДАЛКА: СТАТИСТИКА МЕДИА-ПАРТНЕРА
             // ============================================================
-            function renderCabinet() {
+            function openMediaStatsModal(promoCode) {
+                const stat = promocodes[promoCode] || { uses: 0, volume: 0, reward: 0 };
+
+                const wrap = document.createElement('div');
+                wrap.className = 'modal-wrap';
+                wrap.innerHTML = `
+                    <div class="modal-card">
+                        <h2>Медиа Аналитика</h2>
+                        <div class="sub">Партнёрский промокод: <b style="color:#fff;">${esc(promoCode)}</b></div>
+
+                        <div class="split-calculation-box">
+                            <div class="split-row">
+                                <span>Покупок по коду</span>
+                                <span style="color:#fff; font-weight:700;">${stat.uses || 0}</span>
+                            </div>
+                            <div class="split-row">
+                                <span>Сгенерированный оборот</span>
+                                <span style="color:#fff; font-weight:700;">${stat.volume || 0} ₽</span>
+                            </div>
+                            <div class="split-row total">
+                                <span>Доход партнёра (15%)</span>
+                                <span>${stat.reward || 0} ₽</span>
+                            </div>
+                        </div>
+
+                        ${(stat.reward && stat.reward > 0) ? `
+                        <button class="btn-modal-action" id="claimRewardBtn">Перевести ${stat.reward} ₽ на баланс</button>
+                        ` : `
+                        <p style="text-align:center; font-size:0.75rem; color:#666; margin-bottom:1rem;">У вас пока нет накопленных реферальных средств</p>
+                        `}
+                        <button class="btn-modal-cancel" id="closeStatsBtn">Закрыть</button>
+                    </div>
+                `;
+                document.body.appendChild(wrap);
+
+                wrap.querySelector('#closeStatsBtn').addEventListener('click', () => wrap.remove());
+
+                wrap.querySelector('#claimRewardBtn')?.addEventListener('click', async () => {
+                    const amount = stat.reward;
+                    currentUser.balance += amount;
+                    stat.reward = 0;
+                    savePromocodes();
+                    await verifyAndSaveUser(currentUser);
+                    addNotification('Успешно', `Зачислено ${amount} ₽ на ваш основной баланс!`);
+                    wrap.remove();
+                    renderCabinet();
+                });
+            }
+
+            // ============================================================
+            // 9. РЕНДЕР ЛИЧНОГО КАБИНЕТА
+            // ============================================================
+            async function renderCabinet() {
                 const container = document.getElementById('cabinetWrapper');
                 if (!currentUser) {
                     container.innerHTML = `
@@ -1359,6 +1533,30 @@
                     document.getElementById('cabLoginTrigger')?.addEventListener('click', showAuthModal);
                     return;
                 }
+
+                // Проверяем одобрение заявок на сервере Telegram
+                if (currentUser.mediaApplications && currentUser.mediaApplications.length > 0) {
+                    for (let app of currentUser.mediaApplications) {
+                        if (app.status === 'pending') {
+                            const decision = await checkTelegramApproval(app.id);
+                            if (decision === 'approved') {
+                                app.status = 'approved';
+                                // Активируем промокод в системе
+                                if (!promocodes[app.promo]) {
+                                    promocodes[app.promo] = { owner: currentUser.email, uses: 0, volume: 0, reward: 0 };
+                                    savePromocodes();
+                                }
+                                await verifyAndSaveUser(currentUser);
+                                addNotification('Медиа Проект', `Ваша заявка одобрена! Промокод ${app.promo} активен.`);
+                            } else if (decision === 'rejected') {
+                                app.status = 'rejected';
+                                await verifyAndSaveUser(currentUser);
+                            }
+                        }
+                    }
+                }
+
+                const approvedMedia = currentUser.mediaApplications?.find(a => a.status === 'approved');
 
                 const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
                 const isSubActive = currentUser.subscription?.active;
@@ -1384,7 +1582,7 @@
                                 <b style="color:#fff;">Промокод: ${esc(m.promo)}</b>
                                 <div style="font-size:0.7rem;color:#666;">${esc(m.tiktok)} • TG: ${esc(m.telegram || '—')} • ${esc(m.date)}</div>
                             </div>
-                            <span class="history-tag">На проверке</span>
+                            <span class="history-tag">${m.status === 'approved' ? 'ОДОБРЕНО' : (m.status === 'rejected' ? 'ОТКЛОНЕНО' : 'НА ПРОВЕРКЕ')}</span>
                         </div>
                     `).join('');
                 }
@@ -1420,7 +1618,7 @@
 
                             <div class="sidebar-divider"></div>
 
-                            <!-- ДВЕ ОТДЕЛЬНЫЕ КНОПКИ СЛЕВА -->
+                            <!-- КНОПКИ В ЛЕВОЙ ПАНЕЛИ -->
                             <div class="sidebar-buttons-container">
                                 <button class="btn-side-tile" id="openWalletBtn">
                                     <div class="icon-tag">₽</div>
@@ -1430,13 +1628,23 @@
                                     </div>
                                 </button>
 
-                                <button class="btn-side-tile" id="openMediaBtn">
+                                ${approvedMedia ? `
+                                <button class="btn-side-tile" id="openMediaStatsBtn" style="border-color:#ffffff;">
+                                    <div class="icon-tag">★</div>
+                                    <div class="text-group">
+                                        <span class="title">Медиа статистика</span>
+                                        <span class="subtitle">Код: ${esc(approvedMedia.promo)}</span>
+                                    </div>
+                                </button>
+                                ` : `
+                                <button class="btn-side-tile" id="openMediaApplyBtn">
                                     <div class="icon-tag">★</div>
                                     <div class="text-group">
                                         <span class="title">Медиа проект</span>
                                         <span class="subtitle">TikTok & Промокоды</span>
                                     </div>
                                 </button>
+                                `}
                             </div>
 
                             <div class="sidebar-divider"></div>
@@ -1494,7 +1702,10 @@
                 `;
 
                 document.getElementById('openWalletBtn')?.addEventListener('click', openWalletModal);
-                document.getElementById('openMediaBtn')?.addEventListener('click', openMediaModal);
+                document.getElementById('openMediaApplyBtn')?.addEventListener('click', openMediaApplyModal);
+                document.getElementById('openMediaStatsBtn')?.addEventListener('click', () => {
+                    openMediaStatsModal(approvedMedia.promo);
+                });
 
                 document.getElementById('tabWithTrigger')?.addEventListener('click', () => {
                     currentTab = 'withdrawals';
@@ -1523,7 +1734,7 @@
             }
 
             // ============================================================
-            // 9. АВТОРИЗАЦИЯ С ХЕШИРОВАНИЕМ (SHA-256)
+            // 10. АВТОРИЗАЦИЯ С ХЕШИРОВАНИЕМ (SHA-256)
             // ============================================================
             function showAuthModal() {
                 const wrap = document.createElement('div');
@@ -1593,7 +1804,7 @@
             }
 
             // ============================================================
-            // 10. УВЕДОМЛЕНИЯ И НАВИГАЦИЯ
+            // 11. УВЕДОМЛЕНИЯ И НАВИГАЦИЯ
             // ============================================================
             function addNotification(title, body) {
                 const container = document.getElementById('notifications');
@@ -1668,7 +1879,7 @@
             });
 
             // ============================================================
-            // 11. МОНОХРОМНЫЙ ХОЛСТ С ЧАСТИЦАМИ
+            // 12. МОНОХРОМНЫЙ ХОЛСТ С ЧАСТИЦАМИ
             // ============================================================
             const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
