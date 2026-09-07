@@ -6,7 +6,7 @@
     <title>Lethal DLC — Premium Cheat</title>
     <style>
         /* ============================================================
-           ПОЛНЫЙ ОРИГИНАЛЬНЫЙ CSS
+           ПОЛНЫЙ ДИЗАЙН И СТИЛИЗАЦИЯ
            ============================================================ */
         * {
             margin: 0;
@@ -20,8 +20,8 @@
             --bg: #050505;
             --surface: rgba(255, 255, 255, 0.03);
             --surface-hover: rgba(255, 255, 255, 0.06);
-            --border: rgba(255, 255, 255, 0.05);
-            --border-hover: rgba(255, 255, 255, 0.12);
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.15);
             --text-primary: #f0f0f0;
             --text-secondary: #888;
             --text-muted: #444;
@@ -30,11 +30,11 @@
             --radius-lg: 20px;
             --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --gold: #f5c842;
-            --gold-dim: rgba(245, 200, 66, 0.08);
+            --gold-dim: rgba(245, 200, 66, 0.1);
             --green: #22c55e;
-            --green-dim: rgba(34, 197, 94, 0.1);
-            --blue: #3b82f6;
-            --blue-dim: rgba(59, 130, 246, 0.12);
+            --green-dim: rgba(34, 197, 94, 0.12);
+            --cyan: #06b6d4;
+            --cyan-dim: rgba(6, 182, 212, 0.12);
         }
 
         html { scroll-behavior: smooth; }
@@ -727,14 +727,6 @@
             color: #fff;
             letter-spacing: 2px;
         }
-        .price-card .old-amount {
-            font-size: 1.2rem;
-            font-weight: 400;
-            color: #555;
-            text-decoration: line-through;
-            display: block;
-            margin-bottom: 0.2rem;
-        }
         .price-card .period {
             color: #777;
             font-size: 0.8rem;
@@ -828,91 +820,99 @@
             transform: translateY(-2px);
         }
 
-        /* ===== КАБИНЕТ ===== */
+        /* ===== КАБИНЕТ: УЛЬТРА-ДИНАМИЧНЫЙ ДИЗАЙН ===== */
         .cabinet-grid {
             display: grid;
-            grid-template-columns: 1fr 2.2fr;
+            grid-template-columns: 1fr 2.3fr;
             gap: 2rem;
         }
         .cabinet-sidebar {
-            background: var(--surface);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             padding: 2rem;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(12px);
             transition: all 0.4s ease;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
         .cabinet-sidebar:hover { border-color: var(--border-hover); }
         .cabinet-sidebar .avatar {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.04);
-            border: 2px solid var(--border);
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+            border: 2px solid rgba(255, 255, 255, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #444;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
             margin-bottom: 0.8rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
             transition: all 0.4s ease;
         }
-        .cabinet-sidebar:hover .avatar { border-color: var(--border-hover); background: rgba(255, 255, 255, 0.06); }
-        .cabinet-sidebar .name { font-size: 1.1rem; font-weight: 600; color: #fff; }
+        .cabinet-sidebar:hover .avatar { transform: scale(1.05); border-color: #fff; }
+        .cabinet-sidebar .name { font-size: 1.2rem; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
         .cabinet-sidebar .email { color: #666; font-size: 0.8rem; }
-        .cabinet-sidebar .status-badge {
+        
+        .pulse-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             margin-top: 0.8rem;
-            display: inline-block;
-            font-size: 0.55rem;
+            font-size: 0.6rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            padding: 0.15rem 0.8rem;
+            padding: 0.25rem 0.9rem;
             border-radius: 30px;
             border: 1px solid #333;
-            color: #555;
-            transition: all 0.3s ease;
+            color: #777;
         }
-        .cabinet-sidebar .status-badge.active { border-color: #22c55e; color: #22c55e; }
-        .cabinet-sidebar .status-badge.inactive { border-color: #ef4444; color: #ef4444; }
-        .cabinet-sidebar .status-badge.preorder {
-            border-color: var(--gold);
-            color: var(--gold);
-            background: var(--gold-dim);
+        .pulse-status .indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 10px currentColor;
         }
+        .pulse-status.active { border-color: #22c55e; color: #22c55e; background: rgba(34, 197, 94, 0.06); }
+        .pulse-status.inactive { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.06); }
+        .pulse-status.preorder { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+
         .cabinet-sidebar .divider { margin: 1.2rem 0; border-top: 1px solid var(--border); }
         .cabinet-sidebar .info-row {
             display: flex;
             justify-content: space-between;
-            padding: 0.4rem 0;
+            padding: 0.45rem 0;
             font-size: 0.8rem;
         }
-        .cabinet-sidebar .info-row .label { color: #555; }
+        .cabinet-sidebar .info-row .label { color: #666; }
         .cabinet-sidebar .info-row .value { color: #fff; font-weight: 500; }
-        .cabinet-sidebar .info-row .value.green { color: #22c55e; }
-        .cabinet-sidebar .info-row .value.red { color: #ef4444; }
-        .cabinet-sidebar .info-row .value.gold { color: var(--gold); }
+        .cabinet-sidebar .info-row .value.green { color: #22c55e; font-weight: 700; }
+        .cabinet-sidebar .info-row .value.gold { color: var(--gold); font-weight: 700; }
 
-        /* ===== КРАСИВЫЕ КНОПКИ В ЛЕВОЙ ПАНЕЛИ ===== */
+        /* ===== КНОПКИ В САЙДБАРЕ ===== */
         .sidebar-actions-group {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            margin-top: 1.2rem;
+            gap: 0.85rem;
+            margin-top: 1.4rem;
         }
         .sidebar-action-card {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 0.85rem 1.1rem;
-            border-radius: 12px;
+            gap: 1.1rem;
+            padding: 1rem 1.2rem;
+            border-radius: 14px;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             text-align: left;
             width: 100%;
             position: relative;
@@ -922,156 +922,267 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), transparent);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
         .sidebar-action-card:hover::before { opacity: 1; }
         .sidebar-action-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
         }
         .sidebar-action-card .icon-box {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             flex-shrink: 0;
+            transition: transform 0.3s ease;
         }
+        .sidebar-action-card:hover .icon-box { transform: scale(1.1); }
         .sidebar-action-card .meta {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
         }
         .sidebar-action-card .meta-title {
-            font-size: 0.75rem;
-            font-weight: 700;
+            font-size: 0.78rem;
+            font-weight: 800;
             color: #fff;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
             text-transform: uppercase;
         }
         .sidebar-action-card .meta-sub {
-            font-size: 0.65rem;
+            font-size: 0.68rem;
             color: #888;
         }
 
-        /* Стиль кнопки кошелька */
+        /* Кнопка Кошелька */
         .sidebar-action-card.wallet-btn {
-            border-color: rgba(34, 197, 94, 0.25);
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border-color: rgba(34, 197, 94, 0.28);
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
         }
         .sidebar-action-card.wallet-btn .icon-box {
             background: var(--green-dim);
-            border: 1px solid rgba(34, 197, 94, 0.3);
+            border: 1px solid rgba(34, 197, 94, 0.4);
             color: var(--green);
         }
         .sidebar-action-card.wallet-btn:hover {
             border-color: var(--green);
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+            box-shadow: 0 0 25px rgba(34, 197, 94, 0.2);
         }
 
-        /* Стиль кнопки заявки на модерку */
-        .sidebar-action-card.moder-btn {
-            border-color: rgba(59, 130, 246, 0.25);
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
-        }
-        .sidebar-action-card.moder-btn .icon-box {
-            background: var(--blue-dim);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            color: var(--blue);
-        }
-        .sidebar-action-card.moder-btn:hover {
-            border-color: var(--blue);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
-        }
-
-        /* Стиль кнопки медиа */
+        /* Кнопка Медиа (TikTok) */
         .sidebar-action-card.media-btn {
-            border-color: rgba(254, 44, 85, 0.25);
-            background: linear-gradient(135deg, rgba(254, 44, 85, 0.05) 0%, rgba(37, 244, 238, 0.03) 100%);
+            border-color: rgba(254, 44, 85, 0.3);
+            background: linear-gradient(135deg, rgba(254, 44, 85, 0.08) 0%, rgba(37, 244, 238, 0.04) 100%);
         }
         .sidebar-action-card.media-btn .icon-box {
-            background: rgba(254, 44, 85, 0.12);
-            border: 1px solid rgba(254, 44, 85, 0.3);
+            background: rgba(254, 44, 85, 0.15);
+            border: 1px solid rgba(254, 44, 85, 0.4);
         }
         .sidebar-action-card.media-btn:hover {
             border-color: #fe2c55;
-            box-shadow: 0 0 20px rgba(254, 44, 85, 0.18);
+            box-shadow: 0 0 25px rgba(254, 44, 85, 0.25);
         }
 
+        /* ===== ПРАВАЯ ДИНАМИЧЕСКАЯ ОБЛАСТЬ КАБИНЕТА ===== */
         .cabinet-content {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 2rem;
-            backdrop-filter: blur(8px);
-            transition: all 0.4s ease;
             display: flex;
             flex-direction: column;
-            gap: 1.8rem;
+            gap: 1.5rem;
         }
-        .cabinet-content:hover { border-color: var(--border-hover); }
-        .cabinet-content h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 0.8rem;
+
+        /* Карточки быстрых показателей */
+        .dashboard-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
         }
-        .cabinet-content .key-box {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
-            font-family: 'Inter', monospace;
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #fff;
+        .metric-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
             border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.4rem;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .metric-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+        .metric-card .metric-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5rem;
+        }
+        .metric-card .metric-val {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+        .metric-card .metric-hint {
+            font-size: 0.65rem;
+            color: #888;
+            margin-top: 0.3rem;
+        }
+
+        /* Блок управления ключом и лоадером */
+        .loader-hub-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        .loader-hub-card .hub-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .loader-hub-card .hub-sub {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.4rem;
+        }
+
+        .key-terminal {
+            background: #09090b;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s ease;
+        }
+        .key-terminal:hover { border-color: rgba(255, 255, 255, 0.2); }
+        .key-terminal-content { display: flex; flex-direction: column; gap: 4px; }
+        .key-terminal-label { font-size: 0.6rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+        .key-terminal-value {
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+        .btn-copy-key {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
-        .cabinet-content .key-box:hover { border-color: var(--border-hover); }
-        .cabinet-content .key-box .copy-btn {
+        .btn-copy-key:hover { background: #fff; color: #000; }
+
+        .instruction-steps {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .step-item {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.9rem 1.1rem;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .step-num {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .step-text { font-size: 0.78rem; color: #888; line-height: 1.5; }
+
+        /* Вкладки истории */
+        .history-tabs-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.8rem;
+            backdrop-filter: blur(10px);
+        }
+        .history-tabs-header {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+        .tab-btn {
             background: none;
             border: none;
-            color: #444;
+            color: #555;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
             cursor: pointer;
-            font-size: 0.65rem;
-            font-family: 'Inter', sans-serif;
+            padding-bottom: 6px;
+            position: relative;
             transition: color 0.3s ease;
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
         }
-        .cabinet-content .key-box .copy-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.04); }
-        .cabinet-content .instruction-text {
-            color: #888;
-            font-size: 0.9rem;
-            line-height: 1.9;
+        .tab-btn.active { color: #fff; }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -0.85rem;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #fff;
         }
-        .cabinet-content .instruction-text .highlight { color: #fff; font-weight: 600; }
 
-        .cabinet-history-box { margin-top: 0.5rem; }
         .history-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.8rem 1rem;
+            padding: 0.85rem 1rem;
             background: rgba(255, 255, 255, 0.015);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            margin-bottom: 0.6rem;
             font-size: 0.8rem;
+            transition: border-color 0.3s ease;
         }
+        .history-item:hover { border-color: var(--border-hover); }
         .history-item .date { color: var(--text-secondary); font-size: 0.7rem; margin-top: 2px; }
         .history-tag {
             font-size: 0.6rem;
-            font-weight: 700;
-            padding: 0.2rem 0.6rem;
+            font-weight: 800;
+            padding: 0.25rem 0.75rem;
             border-radius: 20px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -1080,11 +1191,6 @@
             background: rgba(245, 200, 66, 0.1);
             color: var(--gold);
             border: 1px solid var(--gold);
-        }
-        .history-tag.moder {
-            background: var(--blue-dim);
-            color: var(--blue);
-            border: 1px solid var(--blue);
         }
         .history-tag.success {
             background: var(--green-dim);
@@ -1099,7 +1205,7 @@
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(14px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1113,11 +1219,11 @@
             background: #111;
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 2.8rem 3rem;
-            max-width: 520px;
+            padding: 2.5rem 2.8rem;
+            max-width: 500px;
             width: 100%;
             animation: slideUp 0.4s ease-out;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85);
         }
         .auth-modal { max-width: 400px; }
         @keyframes slideUp {
@@ -1127,9 +1233,9 @@
         .payment-modal h2,
         .auth-modal h2,
         .app-modal h2 {
-            font-size: 1.6rem;
-            font-weight: 300;
-            letter-spacing: 4px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            letter-spacing: 3px;
             color: #fff;
             text-align: center;
             margin-bottom: 0.3rem;
@@ -1138,40 +1244,44 @@
         .auth-modal .sub,
         .app-modal .sub {
             color: #666;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-align: center;
-            margin-bottom: 1.8rem;
+            margin-bottom: 1.5rem;
         }
 
-        .payment-details {
+        .split-bill-box {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1rem 1.2rem;
             margin-bottom: 1.5rem;
         }
-        .payment-details .row {
+        .split-bill-row {
             display: flex;
             justify-content: space-between;
-            padding: 0.3rem 0;
-            font-size: 0.85rem;
+            align-items: center;
+            padding: 0.4rem 0;
+            font-size: 0.82rem;
         }
-        .payment-details .row .label { color: #666; }
-        .payment-details .row .value { color: #fff; font-weight: 500; }
-        .payment-details .row .value.mono {
-            font-family: monospace;
-            font-weight: 400;
-            font-size: 0.75rem;
-            color: #888;
+        .split-bill-row.total {
+            border-top: 1px solid var(--border);
+            margin-top: 0.4rem;
+            padding-top: 0.6rem;
+            font-size: 0.95rem;
+            font-weight: 700;
         }
+        .split-bill-row .label { color: #777; }
+        .split-bill-row .val { color: #fff; font-weight: 600; }
+        .split-bill-row .val.green { color: var(--green); }
+        .split-bill-row .val.gold { color: var(--gold); }
 
         .btn-pay,
         .btn-submit-action {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.85rem;
             font-family: 'Inter', sans-serif;
             font-size: 0.75rem;
-            font-weight: 700;
+            font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
             border-radius: 10px;
@@ -1184,8 +1294,16 @@
         .btn-pay:hover,
         .btn-submit-action:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
         }
+        .btn-pay.full-balance {
+            background: var(--green);
+            color: #000;
+        }
+        .btn-pay.full-balance:hover {
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
+        }
+
         .btn-close-payment,
         .auth-modal .close-auth,
         .app-modal .close-modal-btn {
@@ -1218,13 +1336,12 @@
             color: #555;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.25rem;
         }
         .auth-modal .field input,
-        .app-modal .field input,
-        .app-modal .field textarea {
+        .app-modal .field input {
             width: 100%;
-            padding: 0.6rem 0.8rem;
+            padding: 0.7rem 0.9rem;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
             border-radius: 10px;
@@ -1234,16 +1351,8 @@
             outline: none;
             transition: border-color 0.3s ease;
         }
-        .app-modal .field textarea {
-            resize: vertical;
-            min-height: 70px;
-        }
         .auth-modal .field input:focus,
-        .app-modal .field input:focus,
-        .app-modal .field textarea:focus { border-color: rgba(255, 255, 255, 0.25); }
-        .auth-modal .field input::placeholder,
-        .app-modal .field input::placeholder,
-        .app-modal .field textarea::placeholder { color: #333; }
+        .app-modal .field input:focus { border-color: rgba(255, 255, 255, 0.3); }
         .auth-modal .auth-submit {
             width: 100%;
             padding: 0.75rem;
@@ -1259,20 +1368,13 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .auth-modal .auth-submit:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05); }
         .auth-modal .toggle-auth {
             text-align: center;
             margin-top: 1rem;
             font-size: 0.75rem;
             color: #444;
         }
-        .auth-modal .toggle-auth span {
-            color: #fff;
-            cursor: pointer;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-        .auth-modal .toggle-auth span:hover { color: #888; }
+        .auth-modal .toggle-auth span { color: #fff; cursor: pointer; font-weight: 600; }
         .auth-error {
             color: #ef4444;
             font-size: 0.7rem;
@@ -1299,28 +1401,16 @@
             background: #111;
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 1rem 1.5rem;
+            padding: 1rem 1.4rem;
             animation: notifSlideIn 0.5s ease-out;
             pointer-events: auto;
             backdrop-filter: blur(12px);
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
             border-left: 3px solid var(--gold);
         }
-        .notification .notif-title {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #fff;
-        }
-        .notification .notif-body {
-            font-size: 0.7rem;
-            color: #888;
-            margin-top: 0.2rem;
-        }
-        .notification .notif-time {
-            font-size: 0.55rem;
-            color: #444;
-            margin-top: 0.3rem;
-        }
+        .notification .notif-title { font-size: 0.8rem; font-weight: 700; color: #fff; }
+        .notification .notif-body { font-size: 0.7rem; color: #888; margin-top: 0.2rem; }
+        .notification .notif-time { font-size: 0.55rem; color: #444; margin-top: 0.3rem; }
         @keyframes notifSlideIn {
             from { opacity: 0; transform: translateX(100px); }
             to { opacity: 1; transform: translateX(0); }
@@ -1348,6 +1438,7 @@
             .features-grid { grid-template-columns: repeat(2, 1fr); }
             .hero h1 { font-size: 3.5rem; }
             .cabinet-grid { grid-template-columns: 1fr; }
+            .dashboard-metrics { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 768px) {
@@ -1356,36 +1447,12 @@
             .header-right { width: 100%; flex-wrap: wrap; justify-content: flex-start; }
             .nav { gap: 1.2rem; font-size: 0.7rem; flex-wrap: wrap; }
             .hero h1 { font-size: 2.8rem; letter-spacing: 2px; }
-            .hero h1 small { font-size: 1rem; letter-spacing: 4px; }
-            .hero p { font-size: 1rem; }
             .btn { padding: 0.7rem 1.8rem; font-size: 0.7rem; }
-            .section-title { font-size: 1.4rem; }
             .features-grid { grid-template-columns: 1fr; }
             .pricing-grid { grid-template-columns: 1fr; }
-            .auth-modal,
-            .payment-modal,
-            .app-modal { padding: 2rem 1.5rem; }
+            .instruction-steps { grid-template-columns: 1fr; }
+            .auth-modal, .payment-modal, .app-modal { padding: 2rem 1.5rem; }
             .footer { flex-direction: column; text-align: center; }
-            .footer-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
-            .cabinet-sidebar { padding: 1.5rem; }
-            .cabinet-content { padding: 1.5rem; }
-            .hwid-section { padding: 1.5rem; }
-            .hwid-section .hwid-header { flex-direction: column; align-items: flex-start; }
-            .feature-item { min-height: 200px; padding: 1.8rem 1.5rem; }
-            .feature-item h3 { font-size: 1.2rem; }
-            .notification-container { max-width: 300px; right: 10px; }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 { font-size: 2rem; letter-spacing: 1px; }
-            .hero h1 small { font-size: 0.8rem; letter-spacing: 2px; }
-            .btn-sm { padding: 0.2rem 0.8rem; font-size: 0.5rem; }
-            .lang-btn,
-            .currency-btn { padding: 0.15rem 0.5rem; font-size: 0.5rem; }
-            .btn { padding: 0.6rem 1.4rem; font-size: 0.65rem; }
-            .price-card .amount { font-size: 2.4rem; }
-            .feature-item .shape,
-            .feature-item .shape2 { display: none; }
         }
     </style>
 </head>
@@ -1533,8 +1600,8 @@
                         <h3>Сброс HWID</h3>
                         <span class="price-tag" id="hwidPrice">400 ₽</span>
                     </div>
-                    <p>Перенесите лицензию на другой компьютер. После оплаты вы сможете сбросить привязку к текущему устройству.</p>
-                    <button class="btn-hwid" id="hwidBtn">Сбросить HWID</button>
+                    <p>Перенесите лицензию на другой компьютер. Списание происходит с баланса кошелька или с доплатой.</p>
+                    <button class="btn-hwid" id="hwidBtn">Сбросить HWID (400 ₽)</button>
                 </div>
             </section>
         </div>
@@ -1543,7 +1610,7 @@
             <section class="section">
                 <div class="section-header">
                     <h2 class="section-title">Личный кабинет</h2>
-                    <span class="section-sub">управление аккаунтом и кошельком</span>
+                    <span class="section-sub">интеллектуальная панель управления</span>
                 </div>
                 <div id="cabinetContent"></div>
             </section>
@@ -1564,15 +1631,13 @@
             'use strict';
 
             // ============================================================
-            // НАСТРОЙКИ TELEGRAM-БОТА
-            // Вставьте токен вашего бота и ваш Telegram Chat ID
+            // TELEGRAM БОТ ДЛЯ ОПОВЕЩЕНИЙ
             // ============================================================
-            const TG_BOT_TOKEN = "ВАШ_ТОКЕН_БОТА"; // Пример: "123456789:AAFn_XXXXXXX"
-            const TG_CHAT_ID = "ВАШ_CHAT_ID";     // Пример: "123456789" или "-100123456789"
+            const TG_BOT_TOKEN = "ВАШ_ТОКЕН_БОТА";
+            const TG_CHAT_ID = "ВАШ_CHAT_ID";
 
             async function sendTelegramAlert(text) {
                 if (!TG_BOT_TOKEN || TG_BOT_TOKEN === "ВАШ_ТОКЕН_БОТА" || !TG_CHAT_ID || TG_CHAT_ID === "ВАШ_CHAT_ID") {
-                    console.warn("Telegram: токен бота или chat_id не указаны в коде!");
                     return false;
                 }
                 try {
@@ -1587,13 +1652,13 @@
                     });
                     return response.ok;
                 } catch (e) {
-                    console.error("Ошибка при отправке в Telegram:", e);
+                    console.error("Telegram API Error:", e);
                     return false;
                 }
             }
 
             // ============================================================
-            // ЗАЩИТА: ЭКРАНИРОВАНИЕ XSS (CWE-79 / CWE-94)
+            // ЗАЩИТА ОТ XSS (CWE-79 / CWE-94)
             // ============================================================
             function esc(val) {
                 if (val === null || val === undefined) return '';
@@ -1617,11 +1682,9 @@
 
                     if (url.origin === 'https://www.donationalerts.com') {
                         window.open(url.toString(), '_blank', 'noopener,noreferrer');
-                    } else {
-                        console.error('Попытка редиректа на небезопасный хост');
                     }
                 } catch (e) {
-                    console.error('Ошибка составления URL:', e);
+                    console.error('Ошибка URL:', e);
                 }
             }
 
@@ -1649,10 +1712,8 @@
             let users = JSON.parse(localStorage.getItem('lethal_users') || '{}');
             let currentUser = null;
             let currentUserEmail = null;
+            let activeCabinetTab = 'withdrawals';
 
-            // ============================================================
-            // ПЕРЕВОДЫ
-            // ============================================================
             const TRANSLATIONS = {
                 ru: {
                     login: 'Войти',
@@ -1680,14 +1741,12 @@
                     buy_subscription: 'Купить подписку',
                     your_key: 'Ваш активационный ключ',
                     key_not_found: 'Ключ не найден',
-                    copy_key: 'Скопировать ключ',
+                    copy_key: 'Скопировать',
                     copied: 'Скопировано!',
-                    install_instruction: 'Инструкция по установке:',
-                    step1: 'Скачайте лоадер по ссылке: lethaldlc.com/loader',
-                    step2: 'Запустите файл от имени администратора',
-                    step3: 'Введите активационный ключ (указан выше)',
-                    step4: 'Нажмите "Инжект" и запустите игру',
-                    after_activation: 'После активации лоадер автоматически обновляется.',
+                    step1: 'Скачайте лоадер по официальной ссылке: lethaldlc.com/loader',
+                    step2: 'Запустите исполняемый файл от имени администратора',
+                    step3: 'Введите ваш лицензионный ключ в терминале',
+                    step4: 'Нажмите "Inject" и запускайте игру',
                     download_loader: 'Скачать загрузчик',
                     add_to_cart: 'Купить',
                     popular: 'Популярный',
@@ -1698,19 +1757,7 @@
                     status_inactive: 'Неактивна',
                     status_preorder: 'Предзаказ',
                     key_count: 'Ключей',
-                    loader_install: 'Установка лоадера',
-                    buy_to_access: 'Приобретите подписку',
-                    amount: 'Сумма',
-                    method: 'Способ',
-                    details: 'Реквизиты',
-                    pay: 'Оплатить',
-                    checkout: 'Оформление заказа',
-                    your_id: 'Ваш ID',
-                    wallet: 'Кошелёк',
-                    balance: 'Баланс',
-                    topup: 'Пополнить',
-                    withdraw: 'Вывод средств',
-                    withdraw_history: 'История заявок на вывод'
+                    your_id: 'Ваш ID'
                 },
                 en: {
                     login: 'Login',
@@ -1738,14 +1785,12 @@
                     buy_subscription: 'Buy subscription',
                     your_key: 'Your activation key',
                     key_not_found: 'Key not found',
-                    copy_key: 'Copy key',
+                    copy_key: 'Copy',
                     copied: 'Copied!',
-                    install_instruction: 'Installation instructions:',
-                    step1: 'Download the loader from: lethaldlc.com/loader',
-                    step2: 'Run the file as administrator',
-                    step3: 'Enter the activation key (shown above)',
-                    step4: 'Click "Inject" and launch the game',
-                    after_activation: 'After activation, the loader updates automatically.',
+                    step1: 'Download loader: lethaldlc.com/loader',
+                    step2: 'Run loader as administrator',
+                    step3: 'Enter activation key above',
+                    step4: 'Click "Inject" and start game',
                     download_loader: 'Download loader',
                     add_to_cart: 'Buy',
                     popular: 'Popular',
@@ -1756,19 +1801,7 @@
                     status_inactive: 'Inactive',
                     status_preorder: 'Pre-order',
                     key_count: 'Keys',
-                    loader_install: 'Loader installation',
-                    buy_to_access: 'Buy subscription to access',
-                    amount: 'Amount',
-                    method: 'Method',
-                    details: 'Details',
-                    pay: 'Pay',
-                    checkout: 'Checkout',
-                    your_id: 'Your ID',
-                    wallet: 'Wallet',
-                    balance: 'Balance',
-                    topup: 'Top-up',
-                    withdraw: 'Withdraw',
-                    withdraw_history: 'Withdrawal History'
+                    your_id: 'Your ID'
                 }
             };
 
@@ -1805,7 +1838,6 @@
                 if (typeof user.balance !== 'number') user.balance = 0;
                 if (!Array.isArray(user.withdrawals)) user.withdrawals = [];
                 if (!Array.isArray(user.mediaApplications)) user.mediaApplications = [];
-                if (!Array.isArray(user.moderatorApplications)) user.moderatorApplications = [];
                 if (!user.id) user.id = generateUserId();
             }
 
@@ -1969,8 +2001,7 @@
                             keys: [],
                             hwid: null,
                             withdrawals: [],
-                            mediaApplications: [],
-                            moderatorApplications: []
+                            mediaApplications: []
                         };
                         saveUsers();
                         setSession(email);
@@ -2072,7 +2103,7 @@
                         const priceRub = parseInt(this.dataset.priceRub);
                         const planId = this.dataset.plan;
                         if (!currentUser) { showAuthModal('login'); return; }
-                        openPaymentModal(priceRub, planId);
+                        openSmartPaymentModal(priceRub, planId);
                     });
                 });
 
@@ -2080,97 +2111,7 @@
             }
 
             // ============================================================
-            // ОПЛАТА ПОДПИСКИ
-            // ============================================================
-            function openPaymentModal(priceRub, planId) {
-                const price = getPriceInCurrency(priceRub);
-                const priceStr = Number.isInteger(price) ? price : price.toFixed(2);
-                const sym = getSymbol();
-
-                const planLabels = { month: '1 месяц', quarter: '3 месяца', lifetime: 'Навсегда' };
-                const planLabel = planLabels[planId] || 'Подписка';
-
-                const overlay = document.createElement('div');
-                overlay.className = 'payment-overlay';
-
-                overlay.innerHTML = `
-                    <div class="payment-modal">
-                        <h2>${t('checkout')}</h2>
-                        <div class="sub">${esc(planLabel)} — ${sym}${priceStr}</div>
-
-                        <div style="background:rgba(255,200,50,0.05);border:1px solid var(--gold);border-radius:var(--radius);padding:1rem;margin-bottom:1.5rem;">
-                            <div style="color:var(--gold);font-weight:700;font-size:0.8rem;margin-bottom:0.3rem;">⚠️ ВАЖНАЯ ИНСТРУКЦИЯ</div>
-                            <div style="color:#aaa;font-size:0.8rem;line-height:1.6;">
-                                1. Ваш идентификатор: <strong style="color:#fff;">USER_${esc(currentUser.id)}</strong><br>
-                                2. Перейдите по кнопке ниже и оплатите <strong style="color:#fff;">${priceRub} ₽</strong><br>
-                                3. ID автоматически прикрепится к сообщению доната.
-                            </div>
-                        </div>
-
-                        <div class="payment-details">
-                            <div class="row"><span class="label">${t('method')}</span><span class="value">DonationAlerts</span></div>
-                            <div class="row"><span class="label">${t('amount')}</span><span class="value">${sym}${priceStr}</span></div>
-                            <div class="row"><span class="label">${t('your_id')}</span><span class="value" style="font-size:0.8rem;color:#fff;font-weight:700;">USER_${esc(currentUser.id)}</span></div>
-                        </div>
-
-                        <button class="btn-pay" id="payBtn">${t('pay')}</button>
-                        <button class="btn-close-payment" id="closePaymentBtn">${t('close')}</button>
-                    </div>
-                `;
-
-                document.body.appendChild(overlay);
-
-                overlay.querySelector('#closePaymentBtn').addEventListener('click', () => overlay.remove());
-                overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-
-                overlay.querySelector('#payBtn').addEventListener('click', function() {
-                    openSafeDonation(priceRub, `USER_${currentUser.id} ${planLabel} (${priceRub}RUB)`);
-
-                    overlay.innerHTML = `
-                        <div class="payment-modal" style="text-align:center;">
-                            <div style="font-size:2rem;color:#fff;font-weight:300;margin-bottom:0.5rem;">⏳</div>
-                            <h2>Ожидание оплаты</h2>
-                            <div class="sub">После подтверждения транзакции ключ появится в личном кабинете</div>
-                            <div style="margin:1.5rem 0;color:#666;font-size:0.8rem;">
-                                Мы проверяем поступление платежа...
-                            </div>
-                            <button class="btn-close-payment" id="cancelBtn">Закрыть</button>
-                        </div>
-                    `;
-
-                    overlay.querySelector('#cancelBtn').addEventListener('click', () => overlay.remove());
-
-                    let attempts = 0;
-                    const maxAttempts = 15;
-                    const checkPayment = setInterval(async () => {
-                        attempts++;
-                        try {
-                            const response = await fetch('/api/webhook', { method: 'POST' });
-                            if (response.ok) {
-                                const data = await response.json();
-                                if (data.activated_users && data.activated_users.length > 0) {
-                                    clearInterval(checkPayment);
-                                    const key = generateKey();
-                                    activateSubscription(currentUser, priceRub, key);
-                                    addNotification('✅ Оплата подтверждена!', `Ваш ключ: ${key}`);
-                                    overlay.remove();
-                                    navigateTo('cabinet');
-                                }
-                            }
-                        } catch (e) {
-                            console.error('Статус оплаты:', e);
-                        }
-
-                        if (attempts >= maxAttempts) {
-                            clearInterval(checkPayment);
-                            overlay.remove();
-                        }
-                    }, 8000);
-                });
-            }
-
-            // ============================================================
-            // УВЕДОМЛЕНИЯ (ЗАЩИТА ОТ XSS ЧЕРЕЗ textContent)
+            // УВЕДОМЛЕНИЯ
             // ============================================================
             function addNotification(title, body) {
                 const container = document.getElementById('notifications');
@@ -2206,15 +2147,160 @@
             }
 
             // ============================================================
-            // МОДАЛЬНЫЕ ОКНА: КОШЕЛЕК, МОДЕРКА, МЕДИА
+            // СИСТЕМА УМНОЙ ОПЛАТЫ: СПИСАНИЕ С БАЛАНСА ИЛИ ДОПЛАТА
+            // ============================================================
+            function openSmartPaymentModal(priceRub, planId, isHwid = false) {
+                ensureUserStructures(currentUser);
+
+                const planLabels = { month: '1 месяц', quarter: '3 месяца', lifetime: 'Навсегда', hwid: 'Сброс HWID' };
+                const planLabel = isHwid ? 'Сброс HWID' : (planLabels[planId] || 'Подписка');
+
+                const balance = currentUser.balance || 0;
+                const discount = Math.min(balance, priceRub);
+                const toPay = priceRub - discount;
+                const isFullBalance = toPay === 0;
+
+                const overlay = document.createElement('div');
+                overlay.className = 'payment-overlay';
+
+                overlay.innerHTML = `
+                    <div class="payment-modal">
+                        <h2>Оформление</h2>
+                        <div class="sub">${esc(planLabel)}</div>
+
+                        <div class="split-bill-box">
+                            <div class="split-bill-row">
+                                <span class="label">Стоимость услуги</span>
+                                <span class="val">${priceRub} ₽</span>
+                            </div>
+                            <div class="split-bill-row">
+                                <span class="label">Оплата с баланса</span>
+                                <span class="val green">-${discount} ₽</span>
+                            </div>
+                            <div class="split-bill-row total">
+                                <span class="label">Итого к доплате</span>
+                                <span class="val ${isFullBalance ? 'green' : 'gold'}">${toPay} ₽</span>
+                            </div>
+                        </div>
+
+                        ${isFullBalance ? `
+                            <button class="btn-pay full-balance" id="confirmSmartPayBtn">Списать с баланса (${priceRub} ₽)</button>
+                        ` : `
+                            <button class="btn-pay" id="confirmSmartPayBtn">Оплатить доплату (${toPay} ₽)</button>
+                        `}
+                        <button class="btn-close-payment" id="closeSmartPayBtn">Отмена</button>
+                    </div>
+                `;
+
+                document.body.appendChild(overlay);
+
+                overlay.querySelector('#closeSmartPayBtn').addEventListener('click', () => overlay.remove());
+                overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+                overlay.querySelector('#confirmSmartPayBtn').addEventListener('click', async function() {
+                    if (isFullBalance) {
+                        // Полная оплата с баланса кошелька
+                        currentUser.balance -= priceRub;
+                        saveUsers();
+
+                        if (isHwid) {
+                            currentUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
+                            saveUsers();
+                            addNotification('✅ Готово', 'HWID успешно сброшен за счёт баланса!');
+                        } else {
+                            const key = generateKey();
+                            activateSubscription(currentUser, priceRub, key);
+                            addNotification('✅ Успешно!', `Оплачено с кошелька. Ваш ключ: ${key}`);
+                        }
+
+                        // Уведомление в Telegram
+                        sendTelegramAlert(`🛍 <b>Покупка с баланса!</b>\n\n` +
+                                          `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
+                                          `📦 <b>Товар:</b> ${esc(planLabel)}\n` +
+                                          `💰 <b>Списано:</b> ${priceRub} ₽\n` +
+                                          `💳 <b>Остаток:</b> ${currentUser.balance} ₽`);
+
+                        overlay.remove();
+                        renderCabinet();
+                        return;
+                    }
+
+                    // Частичная оплата или оплата без баланса
+                    if (discount > 0) {
+                        currentUser.balance -= discount;
+                        saveUsers();
+                        addNotification('Кошелёк', `С вашего баланса учтено ${discount} ₽`);
+                    }
+
+                    const daMessage = `USER_${currentUser.id} ${planLabel} (С баланса:${discount}₽, Доплата:${toPay}₽)`;
+                    openSafeDonation(toPay, daMessage);
+
+                    overlay.innerHTML = `
+                        <div class="payment-modal" style="text-align:center;">
+                            <div style="font-size:2rem;color:#fff;font-weight:300;margin-bottom:0.5rem;">⏳</div>
+                            <h2>Ожидание оплаты</h2>
+                            <div class="sub">С баланса списано ${discount} ₽. Ожидаем доплату ${toPay} ₽</div>
+                            <div style="margin:1.5rem 0;color:#666;font-size:0.8rem;">
+                                Мы проверяем поступление доплаты на DonationAlerts...
+                            </div>
+                            <button class="btn-close-payment" id="cancelPayWaitBtn">Закрыть</button>
+                        </div>
+                    `;
+
+                    overlay.querySelector('#cancelPayWaitBtn').addEventListener('click', () => {
+                        overlay.remove();
+                        renderCabinet();
+                    });
+
+                    let attempts = 0;
+                    const maxAttempts = 15;
+                    const checkPayment = setInterval(async () => {
+                        attempts++;
+                        try {
+                            const response = await fetch('/api/webhook', { method: 'POST' });
+                            if (response.ok) {
+                                const data = await response.json();
+                                if (data.activated_users && data.activated_users.length > 0) {
+                                    clearInterval(checkPayment);
+                                    if (isHwid) {
+                                        currentUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
+                                        saveUsers();
+                                        addNotification('✅ Готово', 'HWID успешно сброшен!');
+                                    } else {
+                                        const key = generateKey();
+                                        activateSubscription(currentUser, priceRub, key);
+                                        addNotification('✅ Оплата подтверждена!', `Ваш ключ: ${key}`);
+                                    }
+                                    overlay.remove();
+                                    renderCabinet();
+                                }
+                            }
+                        } catch (e) {
+                            console.error('Статус оплаты:', e);
+                        }
+
+                        if (attempts >= maxAttempts) {
+                            clearInterval(checkPayment);
+                            overlay.remove();
+                            renderCabinet();
+                        }
+                    }, 8000);
+                });
+            }
+
+            // ============================================================
+            // МОДАЛЬНЫЕ ОКНА: КОШЕЛЕК И МЕДИА
             // ============================================================
             function openWalletManagerModal() {
                 const overlay = document.createElement('div');
                 overlay.className = 'app-overlay';
                 overlay.innerHTML = `
                     <div class="app-modal">
-                        <h2>Управление кошельком</h2>
-                        <div class="sub">Текущий баланс: <strong style="color:#22c55e;font-size:1.2rem;">${esc(currentUser.balance.toFixed(2))} ₽</strong></div>
+                        <h2>Кошелёк аккаунта</h2>
+                        <div class="sub">Доступно: <strong style="color:var(--green);font-size:1.3rem;">${esc(currentUser.balance.toFixed(2))} ₽</strong></div>
+                        <p style="font-size:0.75rem;color:#777;margin-bottom:1.5rem;text-align:center;">
+                            Баланс автоматически учитывается при покупке любых тарифов в виде мгновенной скидки.
+                        </p>
                         <div style="display:flex;gap:0.8rem;margin-bottom:1.5rem;">
                             <button class="btn-submit-action" id="subTopupBtn" style="background:var(--green);color:#000;">Пополнить</button>
                             <button class="btn-submit-action" id="subWithdrawBtn" style="background:#222;color:#fff;border:1px solid #444;">Вывести</button>
@@ -2242,8 +2328,8 @@
                 overlay.className = 'app-overlay';
                 overlay.innerHTML = `
                     <div class="app-modal">
-                        <h2>Пополнение счёта</h2>
-                        <div class="sub">Средства зачисляются на ваш внутренний баланс кошелька</div>
+                        <h2>Пополнение баланса</h2>
+                        <div class="sub">Средства моментально зачисляются на счёт личного кабинета</div>
                         <div class="field">
                             <label>Сумма пополнения (RUB):</label>
                             <input type="number" id="topupAmount" min="50" max="50000" placeholder="Например: 500">
@@ -2298,7 +2384,7 @@
                     const requisites = overlay.querySelector('#withdrawRequisites').value.trim();
 
                     if (isNaN(amount) || amount < 100) {
-                        addNotification('Ошибка', 'Минимальная сумма для вывода — 100 ₽');
+                        addNotification('Ошибка', 'Минимальная сумма вывода — 100 ₽');
                         return;
                     }
                     if (amount > currentUser.balance) {
@@ -2306,7 +2392,7 @@
                         return;
                     }
                     if (requisites.length < 8) {
-                        addNotification('Ошибка', 'Укажите корректные платёжные реквизиты');
+                        addNotification('Ошибка', 'Укажите корректные реквизиты');
                         return;
                     }
 
@@ -2321,102 +2407,30 @@
                     currentUser.withdrawals.unshift(withdrawItem);
                     saveUsers();
 
-                    // Отправка в Telegram бот
-                    const tgMsg = `💸 <b>Новая заявка на вывод!</b>\n\n` +
-                                  `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
-                                  `🆔 <b>ID:</b> USER_${esc(currentUser.id)}\n` +
-                                  `💰 <b>Сумма:</b> ${amount} ₽\n` +
-                                  `💳 <b>Реквизиты:</b> <code>${esc(requisites)}</code>\n` +
-                                  `📅 <b>Дата:</b> ${withdrawItem.date}`;
-                    await sendTelegramAlert(tgMsg);
+                    // Оповещение в Telegram
+                    sendTelegramAlert(`💸 <b>Новая заявка на вывод!</b>\n\n` +
+                                      `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
+                                      `🆔 <b>ID:</b> USER_${esc(currentUser.id)}\n` +
+                                      `💰 <b>Сумма:</b> ${amount} ₽\n` +
+                                      `💳 <b>Реквизиты:</b> <code>${esc(requisites)}</code>\n` +
+                                      `📅 <b>Дата:</b> ${withdrawItem.date}`);
 
                     overlay.remove();
-                    addNotification('Заявка создана', 'Отправлено администратору в Telegram!');
+                    addNotification('Заявка создана', 'Средства переданы на обработку');
                     renderCabinet();
                 });
             }
 
-            // Модалка: Заявка на модератора
-            function openModeratorModal() {
-                const overlay = document.createElement('div');
-                overlay.className = 'app-overlay';
-                overlay.innerHTML = `
-                    <div class="app-modal">
-                        <h2>Заявка на модерку</h2>
-                        <div class="sub">Вступите в команду администрации Lethal DLC</div>
-                        <div class="field">
-                            <label>Ваш Telegram / Discord для связи:</label>
-                            <input type="text" id="moderContact" placeholder="@telegram_nick или Discord tag">
-                        </div>
-                        <div class="field">
-                            <label>Возраст и часовой пояс:</label>
-                            <input type="text" id="moderAge" placeholder="Например: 19 лет, МСК">
-                        </div>
-                        <div class="field">
-                            <label>Опыт / Почему именно вы:</label>
-                            <textarea id="moderExp" placeholder="Расскажите о своем опыте модерирования..."></textarea>
-                        </div>
-                        <button class="btn-submit-action" id="submitModerBtn">Отправить анкету</button>
-                        <button class="close-modal-btn" id="closeModerBtn">${t('close')}</button>
-                    </div>
-                `;
-                document.body.appendChild(overlay);
-
-                overlay.querySelector('#closeModerBtn').addEventListener('click', () => overlay.remove());
-                overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-
-                overlay.querySelector('#submitModerBtn').addEventListener('click', async function() {
-                    const contact = overlay.querySelector('#moderContact').value.trim();
-                    const age = overlay.querySelector('#moderAge').value.trim();
-                    const exp = overlay.querySelector('#moderExp').value.trim();
-
-                    if (!contact || contact.length < 3) {
-                        addNotification('Ошибка', 'Укажите ваши контакты для связи');
-                        return;
-                    }
-                    if (!exp || exp.length < 10) {
-                        addNotification('Ошибка', 'Опишите ваш опыт подробнее (не менее 10 символов)');
-                        return;
-                    }
-
-                    const appItem = {
-                        id: 'MOD-' + Date.now().toString(36).toUpperCase(),
-                        contact: contact,
-                        age: age,
-                        exp: exp,
-                        status: 'На рассмотрении',
-                        date: new Date().toLocaleDateString()
-                    };
-                    currentUser.moderatorApplications.unshift(appItem);
-                    saveUsers();
-
-                    // Отправка в Telegram бот
-                    const tgMsg = `🛡 <b>Новая заявка на МОДЕРКУ!</b>\n\n` +
-                                  `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
-                                  `🆔 <b>ID:</b> USER_${esc(currentUser.id)}\n` +
-                                  `📞 <b>Связь:</b> ${esc(contact)}\n` +
-                                  `⏳ <b>Возраст / ЧП:</b> ${esc(age || 'Не указано')}\n` +
-                                  `📝 <b>Опыт:</b> ${esc(exp)}\n` +
-                                  `📅 <b>Дата:</b> ${appItem.date}`;
-                    await sendTelegramAlert(tgMsg);
-
-                    overlay.remove();
-                    addNotification('Заявка отправлена', 'Администрация рассмотрит заявку в Telegram!');
-                    renderCabinet();
-                });
-            }
-
-            // Модалка: Медиа-проект (TikTok)
             function openMediaModal() {
                 const overlay = document.createElement('div');
                 overlay.className = 'app-overlay';
                 overlay.innerHTML = `
                     <div class="app-modal">
                         <h2>Медиа Программа</h2>
-                        <div class="sub">Партнёрство для контент-мейкеров TikTok</div>
+                        <div class="sub">Сотрудничество для авторов контента в TikTok</div>
                         <div class="field">
-                            <label>Ссылка на TikTok профиль:</label>
-                            <input type="url" id="mediaTiktokUrl" placeholder="https://www.tiktok.com/@your_username">
+                            <label>Ссылка на ваш TikTok профиль:</label>
+                            <input type="url" id="mediaTiktokUrl" placeholder="https://www.tiktok.com/@username">
                         </div>
                         <div class="field">
                             <label>Желаемый промокод (3-12 латинских букв):</label>
@@ -2439,11 +2453,11 @@
                     const promoRegex = /^[A-Z0-9_]{3,12}$/;
 
                     if (!tiktokRegex.test(tiktokUrl)) {
-                        addNotification('Ошибка', 'Ссылка должна быть формата: https://www.tiktok.com/@username');
+                        addNotification('Ошибка', 'Введите ссылку на профиль: https://www.tiktok.com/@ник');
                         return;
                     }
                     if (!promoRegex.test(promo)) {
-                        addNotification('Ошибка', 'Промокод должен быть от 3 до 12 символов (только латиница и цифры)');
+                        addNotification('Ошибка', 'Промокод: 3-12 символов (латиница и цифры)');
                         return;
                     }
 
@@ -2457,23 +2471,22 @@
                     currentUser.mediaApplications.unshift(mediaItem);
                     saveUsers();
 
-                    // Отправка в Telegram бот
-                    const tgMsg = `🎬 <b>Новая заявка на МЕДИА (TikTok)!</b>\n\n` +
-                                  `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
-                                  `🆔 <b>ID:</b> USER_${esc(currentUser.id)}\n` +
-                                  `📱 <b>TikTok:</b> ${esc(tiktokUrl)}\n` +
-                                  `🏷 <b>Желаемый промокод:</b> <code>${esc(promo)}</code>\n` +
-                                  `📅 <b>Дата:</b> ${mediaItem.date}`;
-                    await sendTelegramAlert(tgMsg);
+                    // Оповещение в Telegram
+                    sendTelegramAlert(`🎬 <b>Новая заявка на TikTok Медиа!</b>\n\n` +
+                                      `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
+                                      `🆔 <b>ID:</b> USER_${esc(currentUser.id)}\n` +
+                                      `📱 <b>TikTok:</b> ${esc(tiktokUrl)}\n` +
+                                      `🏷 <b>Желаемый промокод:</b> <code>${esc(promo)}</code>\n` +
+                                      `📅 <b>Дата:</b> ${mediaItem.date}`);
 
                     overlay.remove();
-                    addNotification('Заявка отправлена', 'Администрация свяжется с вами!');
+                    addNotification('Заявка отправлена', 'Администрация рассмотрит заявку');
                     renderCabinet();
                 });
             }
 
             // ============================================================
-            // КАБИНЕТ (САЙДБАР С КНОПКАМИ И БЕЗОПАСНЫЙ РЕНДЕР)
+            // ДИНАМИЧЕСКИЙ РЕНДЕРИНГ ЛИЧНОГО КАБИНЕТА
             // ============================================================
             function renderCabinet() {
                 const container = document.getElementById('cabinetContent');
@@ -2512,13 +2525,13 @@
                     statusText = t('status_preorder');
                 }
 
-                // Сборка истории выводов
-                let withdrawalsHtml = `<div style="color:var(--text-secondary);font-size:0.8rem;">Заявок на вывод пока нет</div>`;
+                // Список выводов
+                let withdrawalsHtml = `<div style="color:var(--text-secondary);font-size:0.8rem;padding:0.5rem 0;">Заявок на вывод пока нет</div>`;
                 if (currentUser.withdrawals.length > 0) {
                     withdrawalsHtml = currentUser.withdrawals.map(w => `
                         <div class="history-item">
                             <div>
-                                <div style="color:#fff;font-weight:600;">${esc(w.amount)} ₽</div>
+                                <div style="color:#fff;font-weight:700;">${esc(w.amount)} ₽</div>
                                 <div class="date">${esc(w.requisites)} • ${esc(w.date)}</div>
                             </div>
                             <span class="history-tag pending">${esc(w.status)}</span>
@@ -2526,27 +2539,13 @@
                     `).join('');
                 }
 
-                // Сборка истории заявок на модератора
-                let modersHtml = `<div style="color:var(--text-secondary);font-size:0.8rem;">Заявок на модератора пока нет</div>`;
-                if (currentUser.moderatorApplications.length > 0) {
-                    modersHtml = currentUser.moderatorApplications.map(m => `
-                        <div class="history-item">
-                            <div>
-                                <div style="color:#fff;font-weight:600;">Контакт: ${esc(m.contact)}</div>
-                                <div class="date">${esc(m.age || 'Возраст не указан')} • ${esc(m.date)}</div>
-                            </div>
-                            <span class="history-tag moder">${esc(m.status)}</span>
-                        </div>
-                    `).join('');
-                }
-
-                // Сборка медиа-заявок
-                let mediaHtml = `<div style="color:var(--text-secondary);font-size:0.8rem;">Заявок на медиа пока нет</div>`;
+                // Список медиа
+                let mediaHtml = `<div style="color:var(--text-secondary);font-size:0.8rem;padding:0.5rem 0;">Заявок на медиа пока нет</div>`;
                 if (currentUser.mediaApplications.length > 0) {
                     mediaHtml = currentUser.mediaApplications.map(m => `
                         <div class="history-item">
                             <div>
-                                <div style="color:#fff;font-weight:600;">Промокод: ${esc(m.promo)}</div>
+                                <div style="color:#fff;font-weight:700;">Промокод: ${esc(m.promo)}</div>
                                 <div class="date">${esc(m.tiktok)} • ${esc(m.date)}</div>
                             </div>
                             <span class="history-tag success">${esc(m.status)}</span>
@@ -2556,46 +2555,43 @@
 
                 container.innerHTML = `
                     <div class="cabinet-grid">
+                        <!-- ЛЕВАЯ ПАНЕЛЬ -->
                         <div class="cabinet-sidebar">
                             <div class="avatar">${esc(currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U')}</div>
                             <div class="name">${esc(currentUser.name || 'Пользователь')}</div>
                             <div class="email">${esc(currentUser.email)}</div>
 
-                            <div style="margin-top:0.8rem;padding:0.5rem;background:rgba(255,200,50,0.05);border-radius:8px;border:1px solid var(--gold);text-align:center;">
-                                <div style="color:var(--gold);font-weight:700;font-size:0.7rem;">🔑 ${t('your_id')}</div>
+                            <div style="margin-top:0.9rem;padding:0.6rem;background:rgba(255,200,50,0.05);border-radius:10px;border:1px solid var(--gold);text-align:center;">
+                                <div style="color:var(--gold);font-weight:700;font-size:0.65rem;">🔑 ${t('your_id')}</div>
                                 <div style="font-family:monospace;font-size:0.9rem;color:#fff;font-weight:700;letter-spacing:1px;word-break:break-all;">USER_${esc(currentUser.id)}</div>
                             </div>
 
-                            <div class="status-badge ${statusClass}">${esc(statusText)}</div>
+                            <div class="pulse-status ${statusClass}">
+                                <span class="indicator"></span>
+                                ${esc(statusText)}
+                            </div>
+
                             <div class="divider"></div>
-                            <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${statusClass === 'active' ? 'green' : 'preorder' ? 'gold' : 'red'}">${esc(statusText)}</span></div>
+
+                            <div class="info-row"><span class="label">${t('subscription')}</span><span class="value ${statusClass === 'active' ? 'green' : 'gold'}">${esc(statusText)}</span></div>
                             ${isActive ? `
                             <div class="info-row"><span class="label">${t('ends')}</span><span class="value">${esc(dateStr)}</span></div>
                             <div class="info-row"><span class="label">Тариф</span><span class="value">${esc(sub.plan || '—')}</span></div>
-                            <div class="info-row"><span class="label">${t('license_key')}</span><span class="value" style="font-family:monospace;font-size:0.7rem;letter-spacing:0.5px;">${esc(lastKey ? lastKey.key : '—')}</span></div>
                             ` : `
-                            <div class="info-row"><span class="label">Статус</span><span class="value ${isPreorder ? 'gold' : 'red'}">${esc(isPreorder ? t('status_preorder') : t('no_subscription'))}</span></div>
+                            <div class="info-row"><span class="label">Тариф</span><span class="value gold">${isPreorder ? t('status_preorder') : t('no_subscription')}</span></div>
                             `}
                             <div class="info-row"><span class="label">${t('key_count')}</span><span class="value">${currentUser.keys?.length || 0}</span></div>
-                            <div class="info-row"><span class="label">HWID</span><span class="value" style="font-weight:400;color:#666;">${esc(currentUser.hwid || 'Не установлен')}</span></div>
-                            
+                            <div class="info-row"><span class="label">HWID</span><span class="value" style="font-weight:400;color:#666;font-family:monospace;">${esc(currentUser.hwid ? currentUser.hwid.substring(0, 14) + '...' : 'Не привязан')}</span></div>
+
                             <div class="divider"></div>
 
-                            <!-- ОТДЕЛЬНЫЕ КРАСИВЫЕ КНОПКИ В ЛЕВОЙ ПАНЕЛИ -->
+                            <!-- КНОПКИ В ЛЕВОЙ ПАНЕЛИ -->
                             <div class="sidebar-actions-group">
                                 <button class="sidebar-action-card wallet-btn" id="btnSideWallet">
                                     <div class="icon-box">💳</div>
                                     <div class="meta">
                                         <span class="meta-title">Кошелёк</span>
-                                        <span class="meta-sub" style="color:var(--green);">${esc(currentUser.balance.toFixed(2))} ₽</span>
-                                    </div>
-                                </button>
-
-                                <button class="sidebar-action-card moder-btn" id="btnSideModer">
-                                    <div class="icon-box">🛡</div>
-                                    <div class="meta">
-                                        <span class="meta-title">Заявка на модерку</span>
-                                        <span class="meta-sub">Набор в команду</span>
+                                        <span class="meta-sub" style="color:var(--green);font-weight:700;">${esc(currentUser.balance.toFixed(2))} ₽ (Управление)</span>
                                     </div>
                                 </button>
 
@@ -2612,64 +2608,114 @@
                             <button class="btn-sm" style="width:100%;font-size:0.6rem;border-color:#555;color:#aaa;" data-page="pricing">${t('buy_subscription')}</button>
                         </div>
 
+                        <!-- ПРАВАЯ ДИНАМИЧЕСКАЯ ЧАСТЬ -->
                         <div class="cabinet-content">
-                            <div>
-                                <h3>${isActive ? t('loader_install') : t('buy_to_access')}</h3>
-                                ${isActive ? `
-                                <div style="margin-bottom:1rem;">
-                                    <div style="color:#666;font-size:0.75rem;margin-bottom:0.3rem;">${t('your_key')}</div>
-                                    <div class="key-box">
-                                        <span>${esc(lastKey ? lastKey.key : t('key_not_found'))}</span>
-                                        <button class="copy-btn" id="copyKeyBtn">${t('copy_key')}</button>
+                            <!-- 1. Динамические плашки показателей -->
+                            <div class="dashboard-metrics">
+                                <div class="metric-card">
+                                    <div class="metric-header">
+                                        <span>Баланс</span>
+                                        <span style="color:var(--green);">● Онлайн</span>
+                                    </div>
+                                    <div class="metric-val" style="color:var(--green);">${esc(currentUser.balance.toFixed(2))} ₽</div>
+                                    <div class="metric-hint">Автоскидка при покупке</div>
+                                </div>
+
+                                <div class="metric-card">
+                                    <div class="metric-header">
+                                        <span>Статус чита</span>
+                                        <span>Подписка</span>
+                                    </div>
+                                    <div class="metric-val" style="font-size:1.3rem;line-height:2rem;">${isActive ? 'Активен' : 'Ожидание'}</div>
+                                    <div class="metric-hint">${isActive ? `Действует до ${esc(dateStr)}` : 'Тариф не активирован'}</div>
+                                </div>
+
+                                <div class="metric-card">
+                                    <div class="metric-header">
+                                        <span>Лицензии</span>
+                                        <span>Всего</span>
+                                    </div>
+                                    <div class="metric-val">${currentUser.keys?.length || 0}</div>
+                                    <div class="metric-hint">Активированных ключей</div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Хаб лицензии и лоадера -->
+                            <div class="loader-hub-card">
+                                <div class="hub-title">
+                                    <span>Центр загрузки и активации</span>
+                                </div>
+                                <div class="hub-sub">Используйте ваш ключ для авторизации в инжекторе</div>
+
+                                <div class="key-terminal">
+                                    <div class="key-terminal-content">
+                                        <span class="key-terminal-label">${t('your_key')}</span>
+                                        <span class="key-terminal-value" id="currentKeyValue">${esc(lastKey ? lastKey.key : t('key_not_found'))}</span>
+                                    </div>
+                                    <button class="btn-copy-key" id="copyKeyBtn">${t('copy_key')}</button>
+                                </div>
+
+                                <div class="instruction-steps">
+                                    <div class="step-item">
+                                        <div class="step-num">1</div>
+                                        <div class="step-text">${t('step1')}</div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-num">2</div>
+                                        <div class="step-text">${t('step2')}</div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-num">3</div>
+                                        <div class="step-text">${t('step3')}</div>
+                                    </div>
+                                    <div class="step-item">
+                                        <div class="step-num">4</div>
+                                        <div class="step-text">${t('step4')}</div>
                                     </div>
                                 </div>
-                                <div class="instruction-text">
-                                    <p><span class="highlight">${t('install_instruction')}</span></p>
-                                    <p style="color:#666;">▼ ${t('step1')}</p>
-                                    <p style="color:#666;">▼ ${t('step2')}</p>
-                                    <p style="color:#666;">▼ ${t('step3')}</p>
-                                    <p style="color:#666;">▼ ${t('step4')}</p>
-                                    <p style="color:#444;margin-top:0.5rem;">${t('after_activation')}</p>
+
+                                <button class="btn-sm primary" style="padding:0.7rem 2.2rem;font-size:0.7rem;" id="downloadLoaderBtn">${t('download_loader')}</button>
+                            </div>
+
+                            <!-- 3. История активности с переключением табов -->
+                            <div class="history-tabs-container">
+                                <div class="history-tabs-header">
+                                    <button class="tab-btn ${activeCabinetTab === 'withdrawals' ? 'active' : ''}" id="tabWithdrawalsBtn">Выводы средств</button>
+                                    <button class="tab-btn ${activeCabinetTab === 'media' ? 'active' : ''}" id="tabMediaBtn">Медиа Заявки</button>
                                 </div>
-                                <button class="btn-sm primary" style="margin-top:1rem;padding:0.5rem 1.8rem;font-size:0.7rem;">${t('download_loader')}</button>
-                                ` : `
-                                <div style="text-align:center;padding:1rem 0;">
-                                    <p style="color:#666;font-size:0.95rem;margin-bottom:1rem;">${t('no_subscription')}</p>
-                                    <button class="btn-sm primary" style="padding:0.6rem 2rem;font-size:0.7rem;" data-page="pricing">${t('buy_subscription')}</button>
+
+                                <div id="tabContentArea">
+                                    ${activeCabinetTab === 'withdrawals' ? withdrawalsHtml : mediaHtml}
                                 </div>
-                                `}
-                            </div>
-
-                            <div class="cabinet-history-box">
-                                <h3>${t('withdraw_history')}</h3>
-                                ${withdrawalsHtml}
-                            </div>
-
-                            <div class="cabinet-history-box">
-                                <h3>Заявки на должность модератора</h3>
-                                ${modersHtml}
-                            </div>
-
-                            <div class="cabinet-history-box">
-                                <h3>Медиа-заявки</h3>
-                                ${mediaHtml}
                             </div>
                         </div>
                     </div>
                 `;
 
-                // Слушатели боковых кнопок слева
+                // Обработчики событий
                 document.getElementById('btnSideWallet')?.addEventListener('click', openWalletManagerModal);
-                document.getElementById('btnSideModer')?.addEventListener('click', openModeratorModal);
                 document.getElementById('btnSideMedia')?.addEventListener('click', openMediaModal);
 
+                document.getElementById('tabWithdrawalsBtn')?.addEventListener('click', () => {
+                    activeCabinetTab = 'withdrawals';
+                    renderCabinet();
+                });
+                document.getElementById('tabMediaBtn')?.addEventListener('click', () => {
+                    activeCabinetTab = 'media';
+                    renderCabinet();
+                });
+
+                document.getElementById('downloadLoaderBtn')?.addEventListener('click', () => {
+                    addNotification('Загрузка', 'Скачивание последней версии лаунчера началось...');
+                });
+
                 document.getElementById('copyKeyBtn')?.addEventListener('click', function() {
-                    const keyEl = document.querySelector('.key-box span');
-                    if (keyEl && keyEl.textContent !== t('key_not_found')) {
-                        navigator.clipboard.writeText(keyEl.textContent).then(() => {
+                    const keyVal = document.getElementById('currentKeyValue')?.textContent;
+                    if (keyVal && keyVal !== t('key_not_found')) {
+                        navigator.clipboard.writeText(keyVal).then(() => {
                             this.textContent = t('copied');
                             setTimeout(() => this.textContent = t('copy_key'), 2000);
-                        }).catch(() => {});
+                        });
                     }
                 });
 
@@ -2679,18 +2725,15 @@
             }
 
             // ============================================================
-            // HWID СБРОС
+            // HWID СБРОС (С УЧЁТОМ БАЛАНСА И ДОПЛАТЫ)
             // ============================================================
             document.getElementById('hwidBtn')?.addEventListener('click', function() {
                 if (!currentUser) { showAuthModal('login'); return; }
-                currentUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
-                saveUsers();
-                addNotification('✅ HWID сброшен', 'Новый HWID: ' + currentUser.hwid);
-                renderCabinet();
+                openSmartPaymentModal(PRICE_HWID_RUB, 'hwid', true);
             });
 
             // ============================================================
-            // ОРИГИНАЛЬНАЯ АНИМАЦИЯ ЧАСТИЦ (CANVAS)
+            // ЧАСТИЦЫ НА CANVAS
             // ============================================================
             const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
