@@ -6,7 +6,7 @@
     <title>Lethal DLC — Premium Cheat</title>
     <style>
         /* ============================================================
-           ПОЛНЫЙ МОНОХРОМНЫЙ ДИЗАЙН (СТРОГО ЧЕРНО-БЕЛЫЙ)
+           СТРОГИЙ МОНОХРОМНЫЙ ДИЗАЙН (ЧЕРНО-БЕЛЫЙ)
            ============================================================ */
         * {
             margin: 0;
@@ -23,7 +23,6 @@
             --surface-hover: #17171a;
             --border: rgba(255, 255, 255, 0.08);
             --border-hover: rgba(255, 255, 255, 0.25);
-            --border-focus: #ffffff;
             --text-primary: #ffffff;
             --text-secondary: #888888;
             --text-muted: #444444;
@@ -973,7 +972,7 @@
             }
 
             function esc(val) {
-                if (!val) return '';
+                if (val === null || val === undefined) return '';
                 return String(val)
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
@@ -982,8 +981,16 @@
                     .replace(/'/g, '&#039;');
             }
 
+            function escTg(val) {
+                if (val === null || val === undefined) return '';
+                return String(val)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
             // ============================================================
-            // 2. ОТПРАВКА И СИНХРОНИЗАЦИЯ С TELEGRAM СЕРВЕРОМ
+            // 2. ОТПРАВКА И СИНХРОНИЗАЦИЯ С TELEGRAM
             // ============================================================
             async function sendTelegramAlert(text, actionId, type) {
                 try {
@@ -1012,7 +1019,7 @@
 
             async function checkTelegramApproval(actionId) {
                 try {
-                    const res = await fetch(`/api/telegram?check=${actionId}`);
+                    const res = await fetch(`/api/telegram?check=${encodeURIComponent(actionId)}`);
                     if (!res.ok) return null;
                     const data = await res.json();
                     return data.status || null;
@@ -1042,15 +1049,29 @@
 
             async function getValidSession() {
                 const email = localStorage.getItem('lethal_session');
+                const sessionToken = localStorage.getItem('lethal_session_token');
+
                 if (email && users[email]) {
                     const u = users[email];
+                    
+                    // Защита от подмены сессии в localStorage
+                    const expectedToken = await hashString(u.email + ':' + u.passwordHash);
+                    if (sessionToken !== expectedToken) {
+                        console.warn("Сессия недействительна или скомпрометирована.");
+                        localStorage.removeItem('lethal_session');
+                        localStorage.removeItem('lethal_session_token');
+                        currentUser = null;
+                        return false;
+                    }
+
+                    // Защита от накрутки баланса через консоль DevTools
                     const currentValidChecksum = await generateChecksum(u);
-                    // Защита: сброс баланса при ручном взломе через DevTools
                     if (u.checksum && u.checksum !== currentValidChecksum) {
                         console.warn("Попытка накрутки баланса! Сброс.");
                         u.balance = 0;
                         await verifyAndSaveUser(u);
                     }
+
                     currentUser = u;
                     return true;
                 }
@@ -1112,10 +1133,10 @@
                 wrap.className = 'modal-wrap';
 
                 function updateBillCalculation() {
-                    const priceAfterPromo = basePrice - promoDiscount;
+                    const priceAfterPromo = Math.max(0, basePrice - promoDiscount);
                     const balance = currentUser.balance || 0;
                     const balanceDeduction = Math.min(balance, priceAfterPromo);
-                    const finalToPay = priceAfterPromo - balanceDeduction;
+                    const finalToPay = Math.max(0, priceAfterPromo - balanceDeduction);
                     const isFullCover = finalToPay === 0;
 
                     const calcBox = wrap.querySelector('#calcDetailsBox');
@@ -1183,10 +1204,16 @@
                     }
 
                     if (promocodes[inputCode]) {
+                        // Защита от использования собственного промокода
+                        if (promocodes[inputCode].owner === currentUser.email) {
+                            addNotification('Ошибка', 'Нельзя использовать собственный промокод');
+                            return;
+                        }
+
                         appliedPromo = inputCode;
                         promoDiscount = Math.round(basePrice * 0.10);
                         updateBillCalculation();
-                        addNotification('Успешно', `Промокод применен! Скидка 10% (-${promoDiscount} ₽)`);
+                        addNotification('Успешно', `Промокод активирован! Скидка 10% (-${promoDiscount} ₽)`);
                         wrap.querySelector('#promoCodeInp').disabled = true;
                         wrap.querySelector('#applyPromoBtn').disabled = true;
                     } else {
@@ -1196,10 +1223,10 @@
 
                 // Подтверждение оплаты
                 wrap.querySelector('#confirmPurchaseBtn').addEventListener('click', async function() {
-                    const priceAfterPromo = basePrice - promoDiscount;
+                    const priceAfterPromo = Math.max(0, basePrice - promoDiscount);
                     const balance = currentUser.balance || 0;
                     const balanceDeduction = Math.min(balance, priceAfterPromo);
-                    const finalToPay = priceAfterPromo - balanceDeduction;
+                    const finalToPay = Math.max(0, priceAfterPromo - balanceDeduction);
                     const isFullCover = finalToPay === 0;
 
                     if (isFullCover) {
@@ -1230,9 +1257,9 @@
                         renderCabinet();
 
                         sendTelegramAlert(`⚡️ <b>Покупка с баланса!</b>\n\n` +
-                                          `👤 <b>Юзер:</b> ${esc(currentUser.email)}\n` +
-                                          `📦 <b>Услуга:</b> ${esc(planObj.label)}\n` +
-                                          `🏷 <b>Промокод:</b> ${appliedPromo ? esc(appliedPromo) : 'Не использован'}\n` +
+                                          `👤 <b>Юзер:</b> ${escTg(currentUser.email)}\n` +
+                                          `📦 <b>Услуга:</b> ${escTg(planObj.label)}\n` +
+                                          `🏷 <b>Промокод:</b> ${appliedPromo ? escTg(appliedPromo) : 'Не использован'}\n` +
                                           `💰 <b>Списано:</b> ${priceAfterPromo} ₽\n` +
                                           `💳 <b>Остаток:</b> ${currentUser.balance} ₽`, Date.now(), 'purchase');
                         return;
@@ -1257,7 +1284,10 @@
                     daUrl.searchParams.set('currency', 'RUB');
                     daUrl.searchParams.set('message', daMsg);
 
-                    window.open(daUrl.toString(), '_blank', 'noopener,noreferrer');
+                    if (daUrl.origin === 'https://www.donationalerts.com') {
+                        window.open(daUrl.toString(), '_blank', 'noopener,noreferrer');
+                    }
+
                     wrap.remove();
                     addNotification('Перенаправление', `С кошелька учтено ${balanceDeduction} ₽. Завершите доплату ${finalToPay} ₽`);
                     renderCabinet();
@@ -1307,8 +1337,14 @@
                             addNotification('Ошибка', 'Минимальная сумма пополнения — 50 ₽');
                             return;
                         }
-                        const url = `https://www.donationalerts.com/r/lethaldlc?amount=${amt}&currency=RUB&message=USER_${currentUser.id}%20TOPUP`;
-                        window.open(url, '_blank', 'noopener,noreferrer');
+                        const url = new URL('https://www.donationalerts.com/r/lethaldlc');
+                        url.searchParams.set('amount', String(amt));
+                        url.searchParams.set('currency', 'RUB');
+                        url.searchParams.set('message', `USER_${currentUser.id} TOPUP`);
+
+                        if (url.origin === 'https://www.donationalerts.com') {
+                            window.open(url.toString(), '_blank', 'noopener,noreferrer');
+                        }
                         wrap.remove();
                     });
                 });
@@ -1372,11 +1408,11 @@
                         await verifyAndSaveUser(currentUser);
 
                         const tgText = `💸 <b>ЗАЯВКА НА ВЫВОД СРЕДСТВ!</b>\n\n` +
-                                       `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
-                                       `🆔 <b>ID:</b> <code>USER_${esc(currentUser.id)}</code>\n` +
+                                       `👤 <b>Пользователь:</b> ${escTg(currentUser.email)}\n` +
+                                       `🆔 <b>ID:</b> <code>USER_${escTg(currentUser.id)}</code>\n` +
                                        `💰 <b>Сумма:</b> ${amt} ₽\n` +
-                                       `💳 <b>Реквизиты:</b> <code>${esc(req)}</code>\n` +
-                                       `📱 <b>Telegram:</b> ${esc(tgContact)}\n` +
+                                       `💳 <b>Реквизиты:</b> <code>${escTg(req)}</code>\n` +
+                                       `📱 <b>Telegram:</b> ${escTg(tgContact)}\n` +
                                        `📅 <b>Дата:</b> ${withRecord.date}`;
 
                         await sendTelegramAlert(tgText, reqId, 'payout');
@@ -1451,11 +1487,11 @@
                     await verifyAndSaveUser(currentUser);
 
                     const tgText = `🎬 <b>ЗАЯВКА НА МЕДИА (TIKTOK)!</b>\n\n` +
-                                   `👤 <b>Пользователь:</b> ${esc(currentUser.email)}\n` +
-                                   `🆔 <b>ID:</b> <code>USER_${esc(currentUser.id)}</code>\n` +
-                                   `📱 <b>TikTok:</b> ${esc(ttUrl)}\n` +
-                                   `🏷 <b>Желаемый промокод:</b> <code>${esc(promo)}</code>\n` +
-                                   `📞 <b>Telegram для связи:</b> ${esc(tgContact)}\n` +
+                                   `👤 <b>Пользователь:</b> ${escTg(currentUser.email)}\n` +
+                                   `🆔 <b>ID:</b> <code>USER_${escTg(currentUser.id)}</code>\n` +
+                                   `📱 <b>TikTok:</b> ${escTg(ttUrl)}\n` +
+                                   `🏷 <b>Желаемый промокод:</b> <code>${escTg(promo)}</code>\n` +
+                                   `📞 <b>Telegram для связи:</b> ${escTg(tgContact)}\n` +
                                    `📅 <b>Дата:</b> ${new Date().toLocaleDateString()}`;
 
                     await sendTelegramAlert(tgText, reqId, 'media');
@@ -1534,14 +1570,13 @@
                     return;
                 }
 
-                // Проверяем одобрение заявок на сервере Telegram
+                // Проверяем одобрение заявок через серверный шлюз Telegram
                 if (currentUser.mediaApplications && currentUser.mediaApplications.length > 0) {
                     for (let app of currentUser.mediaApplications) {
                         if (app.status === 'pending') {
                             const decision = await checkTelegramApproval(app.id);
                             if (decision === 'approved') {
                                 app.status = 'approved';
-                                // Активируем промокод в системе
                                 if (!promocodes[app.promo]) {
                                     promocodes[app.promo] = { owner: currentUser.email, uses: 0, volume: 0, reward: 0 };
                                     savePromocodes();
@@ -1566,7 +1601,7 @@
                     withListHtml = currentUser.withdrawals.map(w => `
                         <div class="history-row">
                             <div>
-                                <b style="color:#fff;">${w.amount} ₽</b>
+                                <b style="color:#fff;">${esc(w.amount)} ₽</b>
                                 <div style="font-size:0.7rem;color:#666;">${esc(w.requisites)} • TG: ${esc(w.telegram || '—')} • ${esc(w.date)}</div>
                             </div>
                             <span class="history-tag">В обработке</span>
@@ -1792,7 +1827,10 @@
                         };
                     }
 
+                    const token = await hashString(email + ':' + passHash);
                     localStorage.setItem('lethal_session', email);
+                    localStorage.setItem('lethal_session_token', token);
+
                     await getValidSession();
                     await verifyAndSaveUser(currentUser);
 
@@ -1858,6 +1896,7 @@
             document.getElementById('loginBtn')?.addEventListener('click', showAuthModal);
             document.getElementById('logoutBtn')?.addEventListener('click', () => {
                 localStorage.removeItem('lethal_session');
+                localStorage.removeItem('lethal_session_token');
                 currentUser = null;
                 updateUIState();
                 navigateTo('main');

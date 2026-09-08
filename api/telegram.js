@@ -1,81 +1,142 @@
 // api/telegram.js
-// Хранилище решений администратора (approved / rejected)
-const decisions = global.__tg_decisions || (global.__tg_decisions = {});
+import fs from 'fs';
+
+const BOT_TOKEN = "8861768227:AAFbmUHocOR0zatOere_DcXopW-7JYyZbc4";
+const CHAT_ID = "8488940016";
+const TMP_FILE = "/tmp/tg_decisions.json";
+
+function getLocalDecisions() {
+  try {
+    return JSON.parse(fs.readFileSync(TMP_FILE, 'utf8'));
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveLocalDecision(id, status) {
+  try {
+    const data = getLocalDecisions();
+    data[id] = status;
+    fs.writeFileSync(TMP_FILE, JSON.stringify(data));
+  } catch (e) {}
+}
+
+async function syncDecisionCloud(id, status) {
+  saveLocalDecision(id, status);
+  try {
+    await fetch(`https://kvdb.io/8861768227_lethal_dlc/${id}`, {
+      method: 'POST',
+      body: status
+    });
+  } catch (e) {}
+}
+
+async function getDecisionCloud(id) {
+  const local = getLocalDecisions();
+  if (local[id]) return local[id];
+  try {
+    const res = await fetch(`https://kvdb.io/8861768227_lethal_dlc/${id}`);
+    if (res.ok) {
+      const val = (await res.text()).trim();
+      if (val) {
+        saveLocalDecision(id, val);
+        return val;
+      }
+    }
+  } catch (e) {}
+  return null;
+}
 
 export default async function handler(req, res) {
-  const BOT_TOKEN = "8861768227:AAFbmUHocOR0zatOere_DcXopW-7JYyZbc4";
-  const CHAT_ID = "8488940016";
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // 1. Проверка статуса заявки с клиента (GET /api/telegram?checkId=ID)
-  if (req.method === "GET") {
-    const { checkId } = req.query;
-    if (checkId && decisions[checkId]) {
-      return res.status(200).json({ status: decisions[checkId] });
-    }
-    return res.status(200).json({ status: "pending" });
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
 
-  // 2. Обработка кликов по кнопкам в Telegram (Webhook Callback Query)
-  if (req.body && req.body.callback_query) {
+  // 1. Автоматическая привязка вебхука Telegram: /api/telegram?setup=webhook
+  if (req.method === 'GET' && req.query.setup === 'webhook') {
+    const host = req.headers.host;
+    const proto = req.headers['x-forwarded-proto'] || 'https';
+    const webhookUrl = `${proto}://${host}/api/telegram`;
+    const tgRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=${encodeURIComponent(webhookUrl)}`);
+    const tgData = await tgRes.json();
+    return res.status(200).json({ webhookUrl, tgResponse: tgData });
+  }
+
+  // 2. Проверка статуса заявки клиентом: /api/telegram?check=ACTION_ID
+  if (req.method === 'GET') {
+    const { check } = req.query;
+    if (check) {
+      const status = await getDecisionCloud(check);
+      return res.status(200).json({ id: check, status: status || 'pending' });
+    }
+    return res.status(200).json({ status: 'active' });
+  }
+
+  // 3. Обработка нажатий на инлайн-кнопки в Telegram (Webhook)
+  if (req.method === 'POST' && req.body && req.body.callback_query) {
     const cb = req.body.callback_query;
     const data = cb.data || "";
-    const messageId = cb.message.message_id;
-    const originalText = cb.message.text || "";
+    const messageId = cb.message?.message_id;
+    const originalText = cb.message?.text || "";
 
     let statusDecision = "ОБРАБОТАНО";
-    let isApproved = false;
+    let actionId = "";
+    let approved = false;
 
-    // Парсинг callback_data: accept_media_ID или reject_media_ID
-    const parts = data.split("_");
-    const action = parts[0];
-    const actionId = parts.slice(2).join("_");
-
-    if (action === "accept") {
+    if (data.startsWith("accept_")) {
       statusDecision = "✅ ОДОБРЕНО АДМИНИСТРАТОРОМ";
-      isApproved = true;
-      if (actionId) decisions[actionId] = "approved";
-    } else if (action === "reject") {
+      actionId = data.replace(/^accept_[^_]+_/, "");
+      approved = true;
+      if (actionId) await syncDecisionCloud(actionId, "approved");
+    } else if (data.startsWith("reject_")) {
       statusDecision = "❌ ОТКЛОНЕНО АДМИНИСТРАТОРОМ";
-      if (actionId) decisions[actionId] = "rejected";
+      actionId = data.replace(/^reject_[^_]+_/, "");
+      if (actionId) await syncDecisionCloud(actionId, "rejected");
     }
 
     const updatedText = `${originalText}\n\n📌 <b>РЕШЕНИЕ:</b> ${statusDecision}\n⏱ <i>${new Date().toLocaleString("ru-RU")}</i>`;
 
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageText`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        message_id: messageId,
-        text: updatedText,
-        parse_mode: "HTML"
-      })
-    });
+    if (messageId) {
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageText`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          message_id: messageId,
+          text: updatedText,
+          parse_mode: "HTML"
+        })
+      });
+    }
 
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         callback_query_id: cb.id,
-        text: `Статус: ${statusDecision}`
+        text: approved ? "Заявка успешно одобрена!" : "Заявка отклонена."
       })
     });
 
     return res.status(200).json({ status: "ok" });
   }
 
-  // 3. Отправка новой заявки с инлайн-кнопками «Принять» и «Отклонить»
-  if (req.method === "POST") {
+  // 4. Отправка новой заявки с сайта в Telegram
+  if (req.method === 'POST') {
     const { text, actionId, type } = req.body;
-    if (!text) {
-      return res.status(400).json({ error: "Текст сообщения отсутствует" });
+    if (!text || !actionId) {
+      return res.status(400).json({ error: "Некорректные параметры заявки" });
     }
 
     const replyMarkup = {
       inline_keyboard: [
         [
-          { text: "✅ Принять", callback_data: `accept_${type}_${actionId}` },
-          { text: "❌ Отклонить", callback_data: `reject_${type}_${actionId}` }
+          { text: "✅ Принять", callback_data: `accept_${type || 'req'}_${actionId}` },
+          { text: "❌ Отклонить", callback_data: `reject_${type || 'req'}_${actionId}` }
         ]
       ]
     };
@@ -99,5 +160,5 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, message_id: result.result.message_id });
   }
 
-  return res.status(405).json({ error: "Method Not Allowed" });
+  return res.status(405).json({ error: "Метод не поддерживается" });
 }
