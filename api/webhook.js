@@ -1,6 +1,6 @@
 // Хранилище обработанных транзакций в оперативной памяти инстанса
-// В продакшене используйте KV/Redis (например, Upstash Redis или Supabase)
-const processedAlertIds = new Set();
+// !!! ВНИМАНИЕ: Для production на Vercel используйте внешнее хранилище (Upstash Redis, Vercel KV, Supabase) !!!
+const processedAlertIds = new Map();
 
 export default async function handler(req, res) {
   // Разрешаем только POST-запросы
@@ -24,7 +24,6 @@ export default async function handler(req, res) {
     }
 
     // 3. Валидация сообщения: извлекаем email и тип операции
-    // Формат сообщения при пополнении: "USER_email@example.com BALANCE_DEPOSIT"
     const parsedData = message.trim().match(/^USER_([^\s]+)\s+(.+)$/);
     if (!parsedData) {
       return res.status(200).json({ status: 'ignored_unrecognized_message' });
@@ -39,9 +38,18 @@ export default async function handler(req, res) {
     }
 
     // 4. Фиксация транзакции
-    processedAlertIds.add(alertId);
+    // Сохраняем ID и время, через 10 минут запись будет удалена
+    processedAlertIds.set(alertId, Date.now());
+    
+    // Очищаем старые записи (чтобы избежать утечки памяти)
+    const now = Date.now();
+    for (const [key, time] of processedAlertIds.entries()) {
+      if (now - time > 600000) { // 10 минут в миллисекундах
+        processedAlertIds.delete(key);
+      }
+    }
 
-    // Логирование успешного зачисления (для связки с постоянной базой данных)
+    // Логирование успешного зачисления
     console.log(`[PAYMENT CONFIRMED] User: ${userEmail}, Amount: ${creditedAmount} ${currency}, Action: ${actionType}`);
 
     return res.status(200).json({

@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lethal DLC — Premium Cheat</title>
+    <!-- Подключаем DOMPurify для безопасности -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
     <style>
         /* ============================================================
            СТРОГИЙ МОНОХРОМНЫЙ ДИЗАЙН (ЧЕРНО-БЕЛЫЙ)
@@ -984,6 +986,52 @@
             'use strict';
 
             // ============================================================
+            // 0. БЕЗОПАСНАЯ РАБОТА С HTML (ЗАЩИТА ОТ XSS)
+            // ============================================================
+            function sanitizeHTML(dirtyHTML) {
+                if (!dirtyHTML) return '';
+                // Очищаем HTML от потенциально опасных тегов и атрибутов
+                return DOMPurify.sanitize(dirtyHTML, {
+                    USE_PROFILES: { html: true },
+                    ADD_TAGS: ['b', 'i', 'u', 's', 'code', 'pre', 'span', 'div', 'p', 'br', 'h2', 'h3', 'h4'],
+                    ADD_ATTR: ['style', 'class', 'data-*', 'id']
+                });
+            }
+
+            function setSafeHTML(element, htmlContent) {
+                if (!element) return;
+                if (htmlContent === undefined || htmlContent === null) {
+                    element.innerHTML = '';
+                    return;
+                }
+                element.innerHTML = sanitizeHTML(htmlContent);
+            }
+
+            function createSafeText(text) {
+                return document.createTextNode(text !== undefined && text !== null ? String(text) : '');
+            }
+
+            function createSafeElement(tag, className, text) {
+                const el = document.createElement(tag);
+                if (className) el.className = className;
+                if (text !== undefined && text !== null) {
+                    el.appendChild(createSafeText(text));
+                }
+                return el;
+            }
+
+            // Безопасное чтение из localStorage
+            function safeJSONParse(jsonString, fallback) {
+                try {
+                    const result = JSON.parse(jsonString);
+                    return result !== null && result !== undefined ? result : fallback;
+                } catch (e) {
+                    console.warn("Ошибка парсинга JSON, возвращаем fallback:", e);
+                    return fallback;
+                }
+            }
+
+            // ============================================================
             // 1. КРИПТОГРАФИЧЕСКАЯ ЗАЩИТА (SHA-256 + HMAC ANTI-TAMPER)
             // ============================================================
             const SECRET_SALT = "LETHAL_STRICT_SALT_2027";
@@ -1059,8 +1107,8 @@
             // ============================================================
             // 3. БАЗА ДАННЫХ, ПРОМОКОДЫ И СЕССИИ
             // ============================================================
-            let users = JSON.parse(localStorage.getItem('lethal_users') || '{}');
-            let promocodes = JSON.parse(localStorage.getItem('lethal_promocodes') || '{}');
+            let users = safeJSONParse(localStorage.getItem('lethal_users'), {});
+            let promocodes = safeJSONParse(localStorage.getItem('lethal_promocodes'), {});
             let currentUser = null;
             let currentTab = 'withdrawals';
 
@@ -1113,17 +1161,38 @@
                 const grid = document.getElementById('pricingGrid');
                 if (!grid) return;
 
-                grid.innerHTML = PLANS.map(p => `
-                    <div class="price-card">
-                        ${p.popular ? '<div class="badge">Популярный</div>' : ''}
-                        <div class="amount">${p.price} ₽</div>
-                        <div class="period">${esc(p.label)}</div>
-                        <div class="desc">${esc(p.desc)}</div>
-                        <button class="btn-buy" data-plan-id="${esc(p.id)}" data-price="${p.price}">Купить</button>
-                    </div>
-                `).join('');
+                grid.innerHTML = '';
+                PLANS.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'price-card';
 
-                grid.querySelectorAll('.btn-buy').forEach(btn => {
+                    if (p.popular) {
+                        const badge = document.createElement('div');
+                        badge.className = 'badge';
+                        badge.textContent = 'Популярный';
+                        card.appendChild(badge);
+                    }
+
+                    const amount = document.createElement('div');
+                    amount.className = 'amount';
+                    amount.textContent = `${p.price} ₽`;
+                    card.appendChild(amount);
+
+                    const period = document.createElement('div');
+                    period.className = 'period';
+                    period.textContent = p.label;
+                    card.appendChild(period);
+
+                    const desc = document.createElement('div');
+                    desc.className = 'desc';
+                    desc.textContent = p.desc;
+                    card.appendChild(desc);
+
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-buy';
+                    btn.dataset.planId = p.id;
+                    btn.dataset.price = p.price;
+                    btn.textContent = 'Купить';
                     btn.addEventListener('click', function() {
                         if (!currentUser) {
                             showAuthModal('login');
@@ -1133,11 +1202,14 @@
                         const planId = this.dataset.planId;
                         openSmartPurchaseModal(price, planId);
                     });
+                    card.appendChild(btn);
+
+                    grid.appendChild(card);
                 });
             }
 
             // ============================================================
-            // 5. МОДАЛКА ОПЛАТЫ (СКИДКА 10% ПО ПРОМОКОДУ + СПИСАНИЕ БАЛАНСА)
+            // 5. МОДАЛКА ОПЛАТЫ (БЕЗОПАСНАЯ)
             // ============================================================
             function openSmartPurchaseModal(basePrice, planId, isHwid = false) {
                 const planObj = isHwid ? { label: 'Сброс HWID' } : (PLANS.find(p => p.id === planId) || { label: 'Подписка' });
@@ -1148,67 +1220,114 @@
                 const wrap = document.createElement('div');
                 wrap.className = 'modal-wrap';
 
+                const card = document.createElement('div');
+                card.className = 'modal-card';
+                wrap.appendChild(card);
+
+                // Заголовок
+                const title = document.createElement('h2');
+                title.textContent = 'Оформление тарифа';
+                card.appendChild(title);
+
+                // Подзаголовок
+                const subtitle = document.createElement('div');
+                subtitle.className = 'sub';
+                subtitle.textContent = planObj.label;
+                card.appendChild(subtitle);
+
+                // Поле промокода
+                const promoRow = document.createElement('div');
+                promoRow.className = 'promo-input-row';
+                
+                const promoInput = document.createElement('input');
+                promoInput.type = 'text';
+                promoInput.id = 'promoCodeInp';
+                promoInput.placeholder = 'Промокод (скидка 10%)';
+                promoInput.maxLength = 16;
+                promoRow.appendChild(promoInput);
+
+                const applyBtn = document.createElement('button');
+                applyBtn.id = 'applyPromoBtn';
+                applyBtn.textContent = 'Применить';
+                promoRow.appendChild(applyBtn);
+
+                card.appendChild(promoRow);
+
+                // Блок с расчетом
+                const calcBox = document.createElement('div');
+                calcBox.className = 'split-calculation-box';
+                calcBox.id = 'calcDetailsBox';
+                card.appendChild(calcBox);
+
+                // Кнопки
+                const confirmBtn = document.createElement('button');
+                confirmBtn.className = 'btn-modal-action';
+                confirmBtn.id = 'confirmPurchaseBtn';
+                confirmBtn.textContent = 'Оплатить';
+                card.appendChild(confirmBtn);
+
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'btn-modal-cancel';
+                cancelBtn.id = 'cancelPurchaseBtn';
+                cancelBtn.textContent = 'Отмена';
+                card.appendChild(cancelBtn);
+
+                document.body.appendChild(wrap);
+
                 function updateBillCalculation() {
                     const priceAfterPromo = Math.max(0, basePrice - promoDiscount);
-                    const balance = currentUser.balance || 0;
+                    const balance = currentUser ? (currentUser.balance || 0) : 0;
                     const balanceDeduction = Math.min(balance, priceAfterPromo);
                     const finalToPay = Math.max(0, priceAfterPromo - balanceDeduction);
                     const isFullCover = finalToPay === 0;
 
-                    const calcBox = wrap.querySelector('#calcDetailsBox');
-                    calcBox.innerHTML = `
-                        <div class="split-row">
-                            <span>Начальная стоимость</span>
-                            <span>${basePrice} ₽</span>
-                        </div>
-                        ${appliedPromo ? `
-                        <div class="split-row">
-                            <span>Промокод [${esc(appliedPromo)}] (-10%)</span>
-                            <span style="color:#ffffff;">-${promoDiscount} ₽</span>
-                        </div>
-                        ` : ''}
-                        <div class="split-row">
-                            <span>Списание с кошелька</span>
-                            <span style="color:#ffffff;">-${balanceDeduction} ₽</span>
-                        </div>
-                        <div class="split-row total">
-                            <span>К оплате</span>
-                            <span>${finalToPay} ₽</span>
-                        </div>
-                    `;
+                    calcBox.innerHTML = '';
+                    
+                    const row1 = document.createElement('div');
+                    row1.className = 'split-row';
+                    row1.appendChild(createSafeText('Начальная стоимость'));
+                    const span1 = document.createElement('span');
+                    span1.textContent = `${basePrice} ₽`;
+                    row1.appendChild(span1);
+                    calcBox.appendChild(row1);
 
-                    const actionBtn = wrap.querySelector('#confirmPurchaseBtn');
-                    if (isFullCover) {
-                        actionBtn.textContent = `Оплатить с баланса (${priceAfterPromo} ₽)`;
-                    } else {
-                        actionBtn.textContent = `Оплатить доплату (${finalToPay} ₽)`;
+                    if (appliedPromo) {
+                        const rowPromo = document.createElement('div');
+                        rowPromo.className = 'split-row';
+                        rowPromo.appendChild(createSafeText(`Промокод [${appliedPromo}] (-10%)`));
+                        const promoVal = document.createElement('span');
+                        promoVal.style.color = '#ffffff';
+                        promoVal.textContent = `-${promoDiscount} ₽`;
+                        rowPromo.appendChild(promoVal);
+                        calcBox.appendChild(rowPromo);
                     }
+
+                    const rowBalance = document.createElement('div');
+                    rowBalance.className = 'split-row';
+                    rowBalance.appendChild(createSafeText('Списание с кошелька'));
+                    const balanceVal = document.createElement('span');
+                    balanceVal.style.color = '#ffffff';
+                    balanceVal.textContent = `-${balanceDeduction} ₽`;
+                    rowBalance.appendChild(balanceVal);
+                    calcBox.appendChild(rowBalance);
+
+                    const rowTotal = document.createElement('div');
+                    rowTotal.className = 'split-row total';
+                    rowTotal.appendChild(createSafeText('К оплате'));
+                    const totalSpan = document.createElement('span');
+                    totalSpan.textContent = `${finalToPay} ₽`;
+                    rowTotal.appendChild(totalSpan);
+                    calcBox.appendChild(rowTotal);
+
+                    confirmBtn.textContent = isFullCover ? `Оплатить с баланса (${priceAfterPromo} ₽)` : `Оплатить доплату (${finalToPay} ₽)`;
                 }
-
-                wrap.innerHTML = `
-                    <div class="modal-card">
-                        <h2>Оформление тарифа</h2>
-                        <div class="sub">${esc(planObj.label)}</div>
-
-                        <div class="promo-input-row">
-                            <input type="text" id="promoCodeInp" placeholder="Промокод (скидка 10%)" maxlength="16">
-                            <button id="applyPromoBtn">Применить</button>
-                        </div>
-
-                        <div class="split-calculation-box" id="calcDetailsBox"></div>
-
-                        <button class="btn-modal-action" id="confirmPurchaseBtn">Оплатить</button>
-                        <button class="btn-modal-cancel" id="cancelPurchaseBtn">Отмена</button>
-                    </div>
-                `;
-                document.body.appendChild(wrap);
 
                 updateBillCalculation();
 
-                wrap.querySelector('#cancelPurchaseBtn').addEventListener('click', () => wrap.remove());
+                cancelBtn.addEventListener('click', () => wrap.remove());
 
-                wrap.querySelector('#applyPromoBtn').addEventListener('click', () => {
-                    const inputCode = wrap.querySelector('#promoCodeInp').value.trim().toUpperCase();
+                applyBtn.addEventListener('click', () => {
+                    const inputCode = promoInput.value.trim().toUpperCase();
                     if (!inputCode) {
                         addNotification('Ошибка', 'Введите промокод');
                         return;
@@ -1228,14 +1347,14 @@
                         promoDiscount = Math.round(basePrice * 0.10);
                         updateBillCalculation();
                         addNotification('Успешно', `Промокод активирован! Скидка 10% (-${promoDiscount} ₽)`);
-                        wrap.querySelector('#promoCodeInp').disabled = true;
-                        wrap.querySelector('#applyPromoBtn').disabled = true;
+                        promoInput.disabled = true;
+                        applyBtn.disabled = true;
                     } else {
                         addNotification('Ошибка', 'Указанный промокод не найден или не одобрен');
                     }
                 });
 
-                wrap.querySelector('#confirmPurchaseBtn').addEventListener('click', async function() {
+                confirmBtn.addEventListener('click', async function() {
                     const priceAfterPromo = Math.max(0, basePrice - promoDiscount);
                     const balance = currentUser.balance || 0;
                     const balanceDeduction = Math.min(balance, priceAfterPromo);
@@ -1311,38 +1430,93 @@
             function openWalletModal() {
                 const wrap = document.createElement('div');
                 wrap.className = 'modal-wrap';
-                wrap.innerHTML = `
-                    <div class="modal-card">
-                        <h2>Кошелёк</h2>
-                        <div class="sub">Текущий баланс: <b style="color:#fff;">${esc(currentUser.balance.toFixed(2))} ₽</b></div>
-                        
-                        <div style="display:flex;gap:0.8rem;margin-bottom:1.5rem;">
-                            <button class="btn-modal-action" id="btnDepositFlow">Пополнить</button>
-                            <button class="btn-modal-action" style="background:#000;color:#fff;" id="btnWithdrawFlow">Вывести</button>
-                        </div>
-                        <button class="btn-modal-cancel" id="closeWalletBtn">Закрыть</button>
-                    </div>
-                `;
+
+                const card = document.createElement('div');
+                card.className = 'modal-card';
+                wrap.appendChild(card);
+
+                const title = document.createElement('h2');
+                title.textContent = 'Кошелёк';
+                card.appendChild(title);
+
+                const sub = document.createElement('div');
+                sub.className = 'sub';
+                sub.innerHTML = `Текущий баланс: <b style="color:#fff;">${currentUser.balance.toFixed(2)} ₽</b>`;
+                card.appendChild(sub);
+
+                const btnGroup = document.createElement('div');
+                btnGroup.style.cssText = 'display:flex;gap:0.8rem;margin-bottom:1.5rem;';
+                
+                const depositBtn = document.createElement('button');
+                depositBtn.className = 'btn-modal-action';
+                depositBtn.textContent = 'Пополнить';
+                depositBtn.id = 'btnDepositFlow';
+                btnGroup.appendChild(depositBtn);
+
+                const withdrawBtn = document.createElement('button');
+                withdrawBtn.className = 'btn-modal-action';
+                withdrawBtn.style.cssText = 'background:#000;color:#fff;';
+                withdrawBtn.textContent = 'Вывести';
+                withdrawBtn.id = 'btnWithdrawFlow';
+                btnGroup.appendChild(withdrawBtn);
+
+                card.appendChild(btnGroup);
+
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'btn-modal-cancel';
+                closeBtn.textContent = 'Закрыть';
+                closeBtn.id = 'closeWalletBtn';
+                card.appendChild(closeBtn);
+
                 document.body.appendChild(wrap);
 
-                wrap.querySelector('#closeWalletBtn').addEventListener('click', () => wrap.remove());
+                closeBtn.addEventListener('click', () => wrap.remove());
 
-                wrap.querySelector('#btnDepositFlow').addEventListener('click', () => {
-                    wrap.innerHTML = `
-                        <div class="modal-card">
-                            <h2>Пополнение</h2>
-                            <div class="sub">Средства сразу учитываются при покупке тарифов</div>
-                            <div class="field-group">
-                                <label>Сумма в рублях</label>
-                                <input type="number" id="depAmountInp" min="50" placeholder="От 50 ₽">
-                            </div>
-                            <button class="btn-modal-action" id="submitDepositBtn">Перейти к оплате</button>
-                            <button class="btn-modal-cancel" id="cancelDepBtn">Назад</button>
-                        </div>
-                    `;
-                    wrap.querySelector('#cancelDepBtn').addEventListener('click', () => wrap.remove());
-                    wrap.querySelector('#submitDepositBtn').addEventListener('click', () => {
-                        const amt = parseFloat(wrap.querySelector('#depAmountInp').value);
+                depositBtn.addEventListener('click', () => {
+                    wrap.innerHTML = '';
+                    
+                    const newCard = document.createElement('div');
+                    newCard.className = 'modal-card';
+                    wrap.appendChild(newCard);
+
+                    const depTitle = document.createElement('h2');
+                    depTitle.textContent = 'Пополнение';
+                    newCard.appendChild(depTitle);
+
+                    const depSub = document.createElement('div');
+                    depSub.className = 'sub';
+                    depSub.textContent = 'Средства сразу учитываются при покупке тарифов';
+                    newCard.appendChild(depSub);
+
+                    const fieldGroup = document.createElement('div');
+                    fieldGroup.className = 'field-group';
+                    const label = document.createElement('label');
+                    label.textContent = 'Сумма в рублях';
+                    fieldGroup.appendChild(label);
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.id = 'depAmountInp';
+                    input.min = '50';
+                    input.placeholder = 'От 50 ₽';
+                    fieldGroup.appendChild(input);
+                    newCard.appendChild(fieldGroup);
+
+                    const submitBtn = document.createElement('button');
+                    submitBtn.className = 'btn-modal-action';
+                    submitBtn.id = 'submitDepositBtn';
+                    submitBtn.textContent = 'Перейти к оплате';
+                    newCard.appendChild(submitBtn);
+
+                    const backBtn = document.createElement('button');
+                    backBtn.className = 'btn-modal-cancel';
+                    backBtn.id = 'cancelDepBtn';
+                    backBtn.textContent = 'Назад';
+                    newCard.appendChild(backBtn);
+
+                    backBtn.addEventListener('click', () => wrap.remove());
+
+                    submitBtn.addEventListener('click', () => {
+                        const amt = parseFloat(document.getElementById('depAmountInp').value);
                         if (!amt || amt < 50) {
                             addNotification('Ошибка', 'Минимальная сумма пополнения — 50 ₽');
                             return;
@@ -1359,32 +1533,80 @@
                     });
                 });
 
-                wrap.querySelector('#btnWithdrawFlow').addEventListener('click', () => {
-                    wrap.innerHTML = `
-                        <div class="modal-card">
-                            <h2>Заявка на вывод</h2>
-                            <div class="sub">Доступно: ${esc(currentUser.balance.toFixed(2))} ₽</div>
-                            <div class="field-group">
-                                <label>Сумма вывода</label>
-                                <input type="number" id="withAmountInp" min="100" placeholder="От 100 ₽">
-                            </div>
-                            <div class="field-group">
-                                <label>Реквизиты (Карта / СБП)</label>
-                                <input type="text" id="withReqInp" placeholder="Номер карты или телефон СБП">
-                            </div>
-                            <div class="field-group">
-                                <label>Ваш Telegram для связи</label>
-                                <input type="text" id="withTgInp" placeholder="@username">
-                            </div>
-                            <button class="btn-modal-action" id="submitWithBtn">Отправить заявку</button>
-                            <button class="btn-modal-cancel" id="cancelWithBtn">Назад</button>
-                        </div>
-                    `;
-                    wrap.querySelector('#cancelWithBtn').addEventListener('click', () => wrap.remove());
-                    wrap.querySelector('#submitWithBtn').addEventListener('click', async () => {
-                        const amt = parseFloat(wrap.querySelector('#withAmountInp').value);
-                        const req = wrap.querySelector('#withReqInp').value.trim();
-                        const tgContact = wrap.querySelector('#withTgInp').value.trim();
+                withdrawBtn.addEventListener('click', () => {
+                    wrap.innerHTML = '';
+                    
+                    const newCard = document.createElement('div');
+                    newCard.className = 'modal-card';
+                    wrap.appendChild(newCard);
+
+                    const wdTitle = document.createElement('h2');
+                    wdTitle.textContent = 'Заявка на вывод';
+                    newCard.appendChild(wdTitle);
+
+                    const wdSub = document.createElement('div');
+                    wdSub.className = 'sub';
+                    wdSub.textContent = `Доступно: ${currentUser.balance.toFixed(2)} ₽`;
+                    newCard.appendChild(wdSub);
+
+                    // Сумма
+                    const fg1 = document.createElement('div');
+                    fg1.className = 'field-group';
+                    const l1 = document.createElement('label');
+                    l1.textContent = 'Сумма вывода';
+                    fg1.appendChild(l1);
+                    const inp1 = document.createElement('input');
+                    inp1.type = 'number';
+                    inp1.id = 'withAmountInp';
+                    inp1.min = '100';
+                    inp1.placeholder = 'От 100 ₽';
+                    fg1.appendChild(inp1);
+                    newCard.appendChild(fg1);
+
+                    // Реквизиты
+                    const fg2 = document.createElement('div');
+                    fg2.className = 'field-group';
+                    const l2 = document.createElement('label');
+                    l2.textContent = 'Реквизиты (Карта / СБП)';
+                    fg2.appendChild(l2);
+                    const inp2 = document.createElement('input');
+                    inp2.type = 'text';
+                    inp2.id = 'withReqInp';
+                    inp2.placeholder = 'Номер карты или телефон СБП';
+                    fg2.appendChild(inp2);
+                    newCard.appendChild(fg2);
+
+                    // Telegram
+                    const fg3 = document.createElement('div');
+                    fg3.className = 'field-group';
+                    const l3 = document.createElement('label');
+                    l3.textContent = 'Ваш Telegram для связи';
+                    fg3.appendChild(l3);
+                    const inp3 = document.createElement('input');
+                    inp3.type = 'text';
+                    inp3.id = 'withTgInp';
+                    inp3.placeholder = '@username';
+                    fg3.appendChild(inp3);
+                    newCard.appendChild(fg3);
+
+                    const submitBtn = document.createElement('button');
+                    submitBtn.className = 'btn-modal-action';
+                    submitBtn.id = 'submitWithBtn';
+                    submitBtn.textContent = 'Отправить заявку';
+                    newCard.appendChild(submitBtn);
+
+                    const backBtn = document.createElement('button');
+                    backBtn.className = 'btn-modal-cancel';
+                    backBtn.id = 'cancelWithBtn';
+                    backBtn.textContent = 'Назад';
+                    newCard.appendChild(backBtn);
+
+                    backBtn.addEventListener('click', () => wrap.remove());
+
+                    submitBtn.addEventListener('click', async () => {
+                        const amt = parseFloat(document.getElementById('withAmountInp').value);
+                        const req = document.getElementById('withReqInp').value.trim();
+                        const tgContact = document.getElementById('withTgInp').value.trim();
 
                         if (!amt || amt < 100) {
                             addNotification('Ошибка', 'Минимум для вывода: 100 ₽');
@@ -1439,33 +1661,80 @@
             function openMediaApplyModal() {
                 const wrap = document.createElement('div');
                 wrap.className = 'modal-wrap';
-                wrap.innerHTML = `
-                    <div class="modal-card">
-                        <h2>TikTok Медиа</h2>
-                        <div class="sub">Партнёрская программа и промокоды</div>
-                        <div class="field-group">
-                            <label>Ссылка на аккаунт TikTok</label>
-                            <input type="url" id="ttUrlInp" placeholder="https://www.tiktok.com/@username">
-                        </div>
-                        <div class="field-group">
-                            <label>Желаемый промокод (3-12 символов)</label>
-                            <input type="text" id="ttPromoInp" maxlength="12" placeholder="Например: STREAM2027">
-                        </div>
-                        <div class="field-group">
-                            <label>Ваш Telegram для связи</label>
-                            <input type="text" id="ttTgContactInp" placeholder="@username">
-                        </div>
-                        <button class="btn-modal-action" id="submitMediaBtn">Подать заявку</button>
-                        <button class="btn-modal-cancel" id="cancelMediaBtn">Отмена</button>
-                    </div>
-                `;
+
+                const card = document.createElement('div');
+                card.className = 'modal-card';
+                wrap.appendChild(card);
+
+                const title = document.createElement('h2');
+                title.textContent = 'TikTok Медиа';
+                card.appendChild(title);
+
+                const sub = document.createElement('div');
+                sub.className = 'sub';
+                sub.textContent = 'Партнёрская программа и промокоды';
+                card.appendChild(sub);
+
+                // Ссылка TikTok
+                const fg1 = document.createElement('div');
+                fg1.className = 'field-group';
+                const l1 = document.createElement('label');
+                l1.textContent = 'Ссылка на аккаунт TikTok';
+                fg1.appendChild(l1);
+                const inp1 = document.createElement('input');
+                inp1.type = 'url';
+                inp1.id = 'ttUrlInp';
+                inp1.placeholder = 'https://www.tiktok.com/@username';
+                fg1.appendChild(inp1);
+                card.appendChild(fg1);
+
+                // Промокод
+                const fg2 = document.createElement('div');
+                fg2.className = 'field-group';
+                const l2 = document.createElement('label');
+                l2.textContent = 'Желаемый промокод (3-12 символов)';
+                fg2.appendChild(l2);
+                const inp2 = document.createElement('input');
+                inp2.type = 'text';
+                inp2.id = 'ttPromoInp';
+                inp2.maxLength = '12';
+                inp2.placeholder = 'Например: STREAM2027';
+                fg2.appendChild(inp2);
+                card.appendChild(fg2);
+
+                // Telegram
+                const fg3 = document.createElement('div');
+                fg3.className = 'field-group';
+                const l3 = document.createElement('label');
+                l3.textContent = 'Ваш Telegram для связи';
+                fg3.appendChild(l3);
+                const inp3 = document.createElement('input');
+                inp3.type = 'text';
+                inp3.id = 'ttTgContactInp';
+                inp3.placeholder = '@username';
+                fg3.appendChild(inp3);
+                card.appendChild(fg3);
+
+                const submitBtn = document.createElement('button');
+                submitBtn.className = 'btn-modal-action';
+                submitBtn.id = 'submitMediaBtn';
+                submitBtn.textContent = 'Подать заявку';
+                card.appendChild(submitBtn);
+
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'btn-modal-cancel';
+                cancelBtn.id = 'cancelMediaBtn';
+                cancelBtn.textContent = 'Отмена';
+                card.appendChild(cancelBtn);
+
                 document.body.appendChild(wrap);
 
-                wrap.querySelector('#cancelMediaBtn').addEventListener('click', () => wrap.remove());
-                wrap.querySelector('#submitMediaBtn').addEventListener('click', async () => {
-                    const ttUrl = wrap.querySelector('#ttUrlInp').value.trim();
-                    const promo = wrap.querySelector('#ttPromoInp').value.trim().toUpperCase();
-                    const tgContact = wrap.querySelector('#ttTgContactInp').value.trim();
+                cancelBtn.addEventListener('click', () => wrap.remove());
+
+                submitBtn.addEventListener('click', async () => {
+                    const ttUrl = document.getElementById('ttUrlInp').value.trim();
+                    const promo = document.getElementById('ttPromoInp').value.trim().toUpperCase();
+                    const tgContact = document.getElementById('ttTgContactInp').value.trim();
 
                     const ttRegex = /^https:\/\/(www\.)?tiktok\.com\/@[a-zA-Z0-9._]+(\/)?$/i;
                     const promoRegex = /^[A-Z0-9_]{3,12}$/;
@@ -1519,48 +1788,84 @@
 
                 const wrap = document.createElement('div');
                 wrap.className = 'modal-wrap';
-                wrap.innerHTML = `
-                    <div class="modal-card">
-                        <h2>Медиа Аналитика</h2>
-                        <div class="sub">Партнёрский промокод: <b style="color:#fff;">${esc(promoCode)}</b></div>
 
-                        <div class="split-calculation-box">
-                            <div class="split-row">
-                                <span>Покупок по коду</span>
-                                <span style="color:#fff; font-weight:700;">${stat.uses || 0}</span>
-                            </div>
-                            <div class="split-row">
-                                <span>Сгенерированный оборот</span>
-                                <span style="color:#fff; font-weight:700;">${stat.volume || 0} ₽</span>
-                            </div>
-                            <div class="split-row total">
-                                <span>Доход партнёра (15%)</span>
-                                <span>${stat.reward || 0} ₽</span>
-                            </div>
-                        </div>
+                const card = document.createElement('div');
+                card.className = 'modal-card';
+                wrap.appendChild(card);
 
-                        ${(stat.reward && stat.reward > 0) ? `
-                        <button class="btn-modal-action" id="claimRewardBtn">Перевести ${stat.reward} ₽ на баланс</button>
-                        ` : `
-                        <p style="text-align:center; font-size:0.75rem; color:#666; margin-bottom:1rem;">У вас пока нет накопленных реферальных средств</p>
-                        `}
-                        <button class="btn-modal-cancel" id="closeStatsBtn">Закрыть</button>
-                    </div>
-                `;
+                const title = document.createElement('h2');
+                title.textContent = 'Медиа Аналитика';
+                card.appendChild(title);
+
+                const sub = document.createElement('div');
+                sub.className = 'sub';
+                sub.innerHTML = `Партнёрский промокод: <b style="color:#fff;">${esc(promoCode)}</b>`;
+                card.appendChild(sub);
+
+                const calcBox = document.createElement('div');
+                calcBox.className = 'split-calculation-box';
+
+                const row1 = document.createElement('div');
+                row1.className = 'split-row';
+                row1.appendChild(createSafeText('Покупок по коду'));
+                const span1 = document.createElement('span');
+                span1.style.cssText = 'color:#fff;font-weight:700;';
+                span1.textContent = stat.uses || 0;
+                row1.appendChild(span1);
+                calcBox.appendChild(row1);
+
+                const row2 = document.createElement('div');
+                row2.className = 'split-row';
+                row2.appendChild(createSafeText('Сгенерированный оборот'));
+                const span2 = document.createElement('span');
+                span2.style.cssText = 'color:#fff;font-weight:700;';
+                span2.textContent = `${stat.volume || 0} ₽`;
+                row2.appendChild(span2);
+                calcBox.appendChild(row2);
+
+                const row3 = document.createElement('div');
+                row3.className = 'split-row total';
+                row3.appendChild(createSafeText('Доход партнёра (15%)'));
+                const span3 = document.createElement('span');
+                span3.textContent = `${stat.reward || 0} ₽`;
+                row3.appendChild(span3);
+                calcBox.appendChild(row3);
+
+                card.appendChild(calcBox);
+
+                if (stat.reward && stat.reward > 0) {
+                    const claimBtn = document.createElement('button');
+                    claimBtn.className = 'btn-modal-action';
+                    claimBtn.id = 'claimRewardBtn';
+                    claimBtn.textContent = `Перевести ${stat.reward} ₽ на баланс`;
+                    card.appendChild(claimBtn);
+
+                    claimBtn.addEventListener('click', async () => {
+                        const amount = stat.reward;
+                        currentUser.balance += amount;
+                        stat.reward = 0;
+                        savePromocodes();
+                        await verifyAndSaveUser(currentUser);
+                        addNotification('Успешно', `Зачислено ${amount} ₽ на ваш основной баланс!`);
+                        wrap.remove();
+                        renderCabinet();
+                    });
+                } else {
+                    const msg = document.createElement('p');
+                    msg.style.cssText = 'text-align:center;font-size:0.75rem;color:#666;margin-bottom:1rem;';
+                    msg.textContent = 'У вас пока нет накопленных реферальных средств';
+                    card.appendChild(msg);
+                }
+
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'btn-modal-cancel';
+                closeBtn.id = 'closeStatsBtn';
+                closeBtn.textContent = 'Закрыть';
+                card.appendChild(closeBtn);
+
                 document.body.appendChild(wrap);
 
-                wrap.querySelector('#closeStatsBtn').addEventListener('click', () => wrap.remove());
-
-                wrap.querySelector('#claimRewardBtn')?.addEventListener('click', async () => {
-                    const amount = stat.reward;
-                    currentUser.balance += amount;
-                    stat.reward = 0;
-                    savePromocodes();
-                    await verifyAndSaveUser(currentUser);
-                    addNotification('Успешно', `Зачислено ${amount} ₽ на ваш основной баланс!`);
-                    wrap.remove();
-                    renderCabinet();
-                });
+                closeBtn.addEventListener('click', () => wrap.remove());
             }
 
             // ============================================================
@@ -1569,16 +1874,27 @@
             async function renderCabinet() {
                 const container = document.getElementById('cabinetWrapper');
                 if (!currentUser) {
-                    container.innerHTML = `
-                        <div style="text-align:center;padding:4rem 0;">
-                            <h3 style="margin-bottom:1rem;color:#888;">Требуется авторизация</h3>
-                            <button class="btn" id="cabLoginTrigger">Войти в аккаунт</button>
-                        </div>
-                    `;
-                    document.getElementById('cabLoginTrigger')?.addEventListener('click', () => showAuthModal('login'));
+                    container.innerHTML = '';
+                    const placeholder = document.createElement('div');
+                    placeholder.style.cssText = 'text-align:center;padding:4rem 0;';
+                    
+                    const msg = document.createElement('h3');
+                    msg.style.cssText = 'margin-bottom:1rem;color:#888;';
+                    msg.textContent = 'Требуется авторизация';
+                    placeholder.appendChild(msg);
+                    
+                    const btn = document.createElement('button');
+                    btn.className = 'btn';
+                    btn.id = 'cabLoginTrigger';
+                    btn.textContent = 'Войти в аккаунт';
+                    btn.addEventListener('click', () => showAuthModal('login'));
+                    placeholder.appendChild(btn);
+                    
+                    container.appendChild(placeholder);
                     return;
                 }
 
+                // Проверка статуса медиа-заявок
                 if (currentUser.mediaApplications && currentUser.mediaApplications.length > 0) {
                     for (let app of currentUser.mediaApplications) {
                         if (app.status === 'pending') {
@@ -1600,166 +1916,226 @@
                 }
 
                 const approvedMedia = currentUser.mediaApplications?.find(a => a.status === 'approved');
-
                 const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
                 const isSubActive = currentUser.subscription?.active;
 
-                let withListHtml = '<div style="color:#555;font-size:0.8rem;">Заявок на вывод пока нет.</div>';
-                if (currentUser.withdrawals?.length > 0) {
-                    withListHtml = currentUser.withdrawals.map(w => `
-                        <div class="history-row">
-                            <div>
-                                <b style="color:#fff;">${esc(w.amount)} ₽</b>
-                                <div style="font-size:0.7rem;color:#666;">${esc(w.requisites)} • TG: ${esc(w.telegram || '—')} • ${esc(w.date)}</div>
-                            </div>
-                            <span class="history-tag">В обработке</span>
-                        </div>
-                    `).join('');
+                container.innerHTML = '';
+
+                const grid = document.createElement('div');
+                grid.className = 'cabinet-grid';
+
+                // --- ЛЕВАЯ ПАНЕЛЬ ---
+                const sidebar = document.createElement('div');
+                sidebar.className = 'cabinet-sidebar';
+
+                // Аватар
+                const avatar = document.createElement('div');
+                avatar.className = 'avatar-box';
+                avatar.textContent = (currentUser.name ? currentUser.name[0].toUpperCase() : 'U');
+                sidebar.appendChild(avatar);
+
+                // Имя
+                const nameEl = document.createElement('div');
+                nameEl.className = 'user-name-title';
+                nameEl.textContent = currentUser.name;
+                sidebar.appendChild(nameEl);
+
+                // Email
+                const emailEl = document.createElement('div');
+                emailEl.className = 'user-email-sub';
+                emailEl.textContent = currentUser.email;
+                sidebar.appendChild(emailEl);
+
+                // ID
+                const idBadge = document.createElement('div');
+                idBadge.className = 'id-badge';
+                idBadge.textContent = `USER_${currentUser.id}`;
+                sidebar.appendChild(idBadge);
+
+                // Статус
+                const statusPill = document.createElement('div');
+                statusPill.className = `status-pill ${isSubActive ? 'active' : ''}`;
+                statusPill.textContent = isSubActive ? '● Подписка активна' : '○ Нет подписки';
+                sidebar.appendChild(statusPill);
+
+                const divider1 = document.createElement('div');
+                divider1.className = 'sidebar-divider';
+                sidebar.appendChild(divider1);
+
+                // Информационные строки
+                const infoRows = [
+                    { label: 'Ключей', value: currentUser.keys?.length || 0 },
+                    { label: 'Тариф', value: currentUser.subscription?.plan || 'Отсутствует' },
+                    { label: 'HWID', value: currentUser.hwid ? currentUser.hwid.substring(0, 10) + '...' : 'Не привязан' }
+                ];
+                infoRows.forEach(row => {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'info-row';
+                    const labelSpan = document.createElement('span');
+                    labelSpan.className = 'label';
+                    labelSpan.textContent = row.label;
+                    const valSpan = document.createElement('span');
+                    valSpan.className = 'val';
+                    if (row.label === 'HWID') {
+                        valSpan.style.cssText = 'font-family:monospace;font-size:0.75rem;';
+                    }
+                    valSpan.textContent = row.value;
+                    rowDiv.appendChild(labelSpan);
+                    rowDiv.appendChild(valSpan);
+                    sidebar.appendChild(rowDiv);
+                });
+
+                const divider2 = document.createElement('div');
+                divider2.className = 'sidebar-divider';
+                sidebar.appendChild(divider2);
+
+                // Кнопки в левой панели
+                const btnContainer = document.createElement('div');
+                btnContainer.className = 'sidebar-buttons-container';
+
+                // Кошелек
+                const walletBtn = document.createElement('button');
+                walletBtn.className = 'btn-side-tile';
+                walletBtn.id = 'openWalletBtn';
+                const icon1 = document.createElement('div');
+                icon1.className = 'icon-tag';
+                icon1.textContent = '₽';
+                walletBtn.appendChild(icon1);
+                const tg1 = document.createElement('div');
+                tg1.className = 'text-group';
+                const t1 = document.createElement('span');
+                t1.className = 'title';
+                t1.textContent = 'Кошелёк';
+                tg1.appendChild(t1);
+                const st1 = document.createElement('span');
+                st1.className = 'subtitle';
+                st1.textContent = `${currentUser.balance.toFixed(2)} ₽ (Баланс)`;
+                tg1.appendChild(st1);
+                walletBtn.appendChild(tg1);
+                walletBtn.addEventListener('click', openWalletModal);
+                btnContainer.appendChild(walletBtn);
+
+                // Медиа
+                if (approvedMedia) {
+                    const mediaBtn = document.createElement('button');
+                    mediaBtn.className = 'btn-side-tile';
+                    mediaBtn.style.borderColor = '#ffffff';
+                    mediaBtn.id = 'openMediaStatsBtn';
+                    const icon2 = document.createElement('div');
+                    icon2.className = 'icon-tag';
+                    icon2.textContent = '★';
+                    mediaBtn.appendChild(icon2);
+                    const tg2 = document.createElement('div');
+                    tg2.className = 'text-group';
+                    const t2 = document.createElement('span');
+                    t2.className = 'title';
+                    t2.textContent = 'Медиа статистика';
+                    tg2.appendChild(t2);
+                    const st2 = document.createElement('span');
+                    st2.className = 'subtitle';
+                    st2.textContent = `Код: ${approvedMedia.promo}`;
+                    tg2.appendChild(st2);
+                    mediaBtn.appendChild(tg2);
+                    mediaBtn.addEventListener('click', () => openMediaStatsModal(approvedMedia.promo));
+                    btnContainer.appendChild(mediaBtn);
+                } else {
+                    const mediaBtn = document.createElement('button');
+                    mediaBtn.className = 'btn-side-tile';
+                    mediaBtn.id = 'openMediaApplyBtn';
+                    const icon2 = document.createElement('div');
+                    icon2.className = 'icon-tag';
+                    icon2.textContent = '★';
+                    mediaBtn.appendChild(icon2);
+                    const tg2 = document.createElement('div');
+                    tg2.className = 'text-group';
+                    const t2 = document.createElement('span');
+                    t2.className = 'title';
+                    t2.textContent = 'Медиа проект';
+                    tg2.appendChild(t2);
+                    const st2 = document.createElement('span');
+                    st2.className = 'subtitle';
+                    st2.textContent = 'TikTok & Промокоды';
+                    tg2.appendChild(st2);
+                    mediaBtn.appendChild(tg2);
+                    mediaBtn.addEventListener('click', openMediaApplyModal);
+                    btnContainer.appendChild(mediaBtn);
                 }
 
-                let mediaListHtml = '<div style="color:#555;font-size:0.8rem;">Медиа заявок пока нет.</div>';
-                if (currentUser.mediaApplications?.length > 0) {
-                    mediaListHtml = currentUser.mediaApplications.map(m => `
-                        <div class="history-row">
-                            <div>
-                                <b style="color:#fff;">Промокод: ${esc(m.promo)}</b>
-                                <div style="font-size:0.7rem;color:#666;">${esc(m.tiktok)} • TG: ${esc(m.telegram || '—')} • ${esc(m.date)}</div>
-                            </div>
-                            <span class="history-tag">${m.status === 'approved' ? 'ОДОБРЕНО' : (m.status === 'rejected' ? 'ОТКЛОНЕНО' : 'НА ПРОВЕРКЕ')}</span>
-                        </div>
-                    `).join('');
-                }
+                sidebar.appendChild(btnContainer);
 
-                container.innerHTML = `
-                    <div class="cabinet-grid">
-                        <!-- ЛЕВАЯ ПАНЕЛЬ -->
-                        <div class="cabinet-sidebar">
-                            <div class="avatar-box">${esc(currentUser.name ? currentUser.name[0].toUpperCase() : 'U')}</div>
-                            <div class="user-name-title">${esc(currentUser.name)}</div>
-                            <div class="user-email-sub">${esc(currentUser.email)}</div>
+                const divider3 = document.createElement('div');
+                divider3.className = 'sidebar-divider';
+                sidebar.appendChild(divider3);
 
-                            <div class="id-badge">USER_${esc(currentUser.id)}</div>
+                const buyBtn = document.createElement('button');
+                buyBtn.className = 'btn-sm';
+                buyBtn.style.width = '100%';
+                buyBtn.dataset.page = 'pricing';
+                buyBtn.textContent = 'Купить ключ';
+                buyBtn.addEventListener('click', () => navigateTo('pricing'));
+                sidebar.appendChild(buyBtn);
 
-                            <div class="status-pill ${isSubActive ? 'active' : ''}">
-                                ${isSubActive ? '● Подписка активна' : '○ Нет подписки'}
-                            </div>
+                grid.appendChild(sidebar);
 
-                            <div class="sidebar-divider"></div>
+                // --- ПРАВАЯ ОБЛАСТЬ ---
+                const main = document.createElement('div');
+                main.className = 'cabinet-main';
 
-                            <div class="info-row">
-                                <span class="label">Ключей</span>
-                                <span class="val">${currentUser.keys?.length || 0}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="label">Тариф</span>
-                                <span class="val">${esc(currentUser.subscription?.plan || 'Отсутствует')}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="label">HWID</span>
-                                <span class="val" style="font-family:monospace;font-size:0.75rem;">${esc(currentUser.hwid ? currentUser.hwid.substring(0, 10) + '...' : 'Не привязан')}</span>
-                            </div>
+                // Метрики
+                const metricsRow = document.createElement('div');
+                metricsRow.className = 'metric-cards-row';
 
-                            <div class="sidebar-divider"></div>
-
-                            <!-- КНОПКИ В ЛЕВОЙ ПАНЕЛИ -->
-                            <div class="sidebar-buttons-container">
-                                <button class="btn-side-tile" id="openWalletBtn">
-                                    <div class="icon-tag">₽</div>
-                                    <div class="text-group">
-                                        <span class="title">Кошелёк</span>
-                                        <span class="subtitle">${esc(currentUser.balance.toFixed(2))} ₽ (Баланс)</span>
-                                    </div>
-                                </button>
-
-                                ${approvedMedia ? `
-                                <button class="btn-side-tile" id="openMediaStatsBtn" style="border-color:#ffffff;">
-                                    <div class="icon-tag">★</div>
-                                    <div class="text-group">
-                                        <span class="title">Медиа статистика</span>
-                                        <span class="subtitle">Код: ${esc(approvedMedia.promo)}</span>
-                                    </div>
-                                </button>
-                                ` : `
-                                <button class="btn-side-tile" id="openMediaApplyBtn">
-                                    <div class="icon-tag">★</div>
-                                    <div class="text-group">
-                                        <span class="title">Медиа проект</span>
-                                        <span class="subtitle">TikTok & Промокоды</span>
-                                    </div>
-                                </button>
-                                `}
-                            </div>
-
-                            <div class="sidebar-divider"></div>
-                            <button class="btn-sm" style="width:100%;" data-page="pricing">Купить ключ</button>
-                        </div>
-
-                        <!-- ПРАВАЯ ОБЛАСТЬ -->
-                        <div class="cabinet-main">
-                            <div class="metric-cards-row">
-                                <div class="dash-card">
-                                    <div class="card-head">Баланс кошелька</div>
-                                    <div class="card-val">${esc(currentUser.balance.toFixed(2))} ₽</div>
-                                    <div class="card-sub">Автоматическая скидка при покупке</div>
-                                </div>
-                                <div class="dash-card">
-                                    <div class="card-head">Статус лицензии</div>
-                                    <div class="card-val" style="font-size:1.4rem;">${isSubActive ? 'Активна' : 'Неактивна'}</div>
-                                    <div class="card-sub">${isSubActive ? 'Доступ открыт' : 'Оформите подписку'}</div>
-                                </div>
-                                <div class="dash-card">
-                                    <div class="card-head">Всего ключей</div>
-                                    <div class="card-val">${currentUser.keys?.length || 0}</div>
-                                    <div class="card-sub">В вашем инвентаре</div>
-                                </div>
-                            </div>
-
-                            <div class="key-hub">
-                                <h3>Лицензионный терминал</h3>
-                                <p>Скопируйте ваш ключ и введите его в инжекторе</p>
-
-                                <div class="key-display">
-                                    <span id="keyValueBox">${esc(lastKey ? lastKey.key : 'КЛЮЧ_НЕ_НАЙДЕН')}</span>
-                                    <button class="btn-sm primary" id="copyKeyTrigger">Копировать</button>
-                                </div>
-
-                                <div class="instructions-grid">
-                                    <div class="inst-box"><b>1.</b> Скачайте лоадер: lethaldlc.com/loader</div>
-                                    <div class="inst-box"><b>2.</b> Запустите от имени администратора</div>
-                                    <div class="inst-box"><b>3.</b> Вставьте ваш лицензионный ключ</div>
-                                    <div class="inst-box"><b>4.</b> Нажмите "Inject" и войдите в игру</div>
-                                </div>
-                            </div>
-
-                            <div class="tabs-hub">
-                                <div class="tabs-nav">
-                                    <button class="tab-trigger ${currentTab === 'withdrawals' ? 'active' : ''}" id="tabWithTrigger">Выводы средств</button>
-                                    <button class="tab-trigger ${currentTab === 'media' ? 'active' : ''}" id="tabMediaTrigger">Медиа заявки</button>
-                                </div>
-                                <div>
-                                    ${currentTab === 'withdrawals' ? withListHtml : mediaListHtml}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById('openWalletBtn')?.addEventListener('click', openWalletModal);
-                document.getElementById('openMediaApplyBtn')?.addEventListener('click', openMediaApplyModal);
-                document.getElementById('openMediaStatsBtn')?.addEventListener('click', () => {
-                    openMediaStatsModal(approvedMedia.promo);
+                const metrics = [
+                    { head: 'Баланс кошелька', val: `${currentUser.balance.toFixed(2)} ₽`, sub: 'Автоматическая скидка при покупке' },
+                    { head: 'Статус лицензии', val: isSubActive ? 'Активна' : 'Неактивна', sub: isSubActive ? 'Доступ открыт' : 'Оформите подписку' },
+                    { head: 'Всего ключей', val: currentUser.keys?.length || 0, sub: 'В вашем инвентаре' }
+                ];
+                metrics.forEach(m => {
+                    const card = document.createElement('div');
+                    card.className = 'dash-card';
+                    const head = document.createElement('div');
+                    head.className = 'card-head';
+                    head.textContent = m.head;
+                    card.appendChild(head);
+                    const val = document.createElement('div');
+                    val.className = 'card-val';
+                    if (m.head === 'Статус лицензии') {
+                        val.style.fontSize = '1.4rem';
+                    }
+                    val.textContent = m.val;
+                    card.appendChild(val);
+                    const sub = document.createElement('div');
+                    sub.className = 'card-sub';
+                    sub.textContent = m.sub;
+                    card.appendChild(sub);
+                    metricsRow.appendChild(card);
                 });
 
-                document.getElementById('tabWithTrigger')?.addEventListener('click', () => {
-                    currentTab = 'withdrawals';
-                    renderCabinet();
-                });
-                document.getElementById('tabMediaTrigger')?.addEventListener('click', () => {
-                    currentTab = 'media';
-                    renderCabinet();
-                });
+                main.appendChild(metricsRow);
 
-                document.getElementById('copyKeyTrigger')?.addEventListener('click', function() {
+                // Ключ
+                const keyHub = document.createElement('div');
+                keyHub.className = 'key-hub';
+
+                const khTitle = document.createElement('h3');
+                khTitle.textContent = 'Лицензионный терминал';
+                keyHub.appendChild(khTitle);
+
+                const khDesc = document.createElement('p');
+                khDesc.textContent = 'Скопируйте ваш ключ и введите его в инжекторе';
+                keyHub.appendChild(khDesc);
+
+                const keyDisplay = document.createElement('div');
+                keyDisplay.className = 'key-display';
+                const keySpan = document.createElement('span');
+                keySpan.id = 'keyValueBox';
+                keySpan.textContent = lastKey ? lastKey.key : 'КЛЮЧ_НЕ_НАЙДЕН';
+                keyDisplay.appendChild(keySpan);
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'btn-sm primary';
+                copyBtn.id = 'copyKeyTrigger';
+                copyBtn.textContent = 'Копировать';
+                copyBtn.addEventListener('click', function() {
                     const text = document.getElementById('keyValueBox')?.textContent;
                     if (text && text !== 'КЛЮЧ_НЕ_НАЙДЕН') {
                         navigator.clipboard.writeText(text);
@@ -1767,7 +2143,124 @@
                         setTimeout(() => this.textContent = 'Копировать', 2000);
                     }
                 });
+                keyDisplay.appendChild(copyBtn);
+                keyHub.appendChild(keyDisplay);
 
+                const instGrid = document.createElement('div');
+                instGrid.className = 'instructions-grid';
+                const insts = [
+                    'Скачайте лоадер: lethaldlc.com/loader',
+                    'Запустите от имени администратора',
+                    'Вставьте ваш лицензионный ключ',
+                    'Нажмите "Inject" и войдите в игру'
+                ];
+                insts.forEach((text, index) => {
+                    const box = document.createElement('div');
+                    box.className = 'inst-box';
+                    const b = document.createElement('b');
+                    b.textContent = `${index + 1}.`;
+                    box.appendChild(b);
+                    box.appendChild(createSafeText(text));
+                    instGrid.appendChild(box);
+                });
+                keyHub.appendChild(instGrid);
+
+                main.appendChild(keyHub);
+
+                // Вкладки
+                const tabsHub = document.createElement('div');
+                tabsHub.className = 'tabs-hub';
+
+                const tabsNav = document.createElement('div');
+                tabsNav.className = 'tabs-nav';
+                
+                const tab1 = document.createElement('button');
+                tab1.className = `tab-trigger ${currentTab === 'withdrawals' ? 'active' : ''}`;
+                tab1.id = 'tabWithTrigger';
+                tab1.textContent = 'Выводы средств';
+                tab1.addEventListener('click', () => {
+                    currentTab = 'withdrawals';
+                    renderCabinet();
+                });
+                tabsNav.appendChild(tab1);
+
+                const tab2 = document.createElement('button');
+                tab2.className = `tab-trigger ${currentTab === 'media' ? 'active' : ''}`;
+                tab2.id = 'tabMediaTrigger';
+                tab2.textContent = 'Медиа заявки';
+                tab2.addEventListener('click', () => {
+                    currentTab = 'media';
+                    renderCabinet();
+                });
+                tabsNav.appendChild(tab2);
+
+                tabsHub.appendChild(tabsNav);
+
+                const tabContent = document.createElement('div');
+
+                if (currentTab === 'withdrawals') {
+                    if (currentUser.withdrawals?.length > 0) {
+                        currentUser.withdrawals.forEach(w => {
+                            const row = document.createElement('div');
+                            row.className = 'history-row';
+                            const left = document.createElement('div');
+                            const b = document.createElement('b');
+                            b.style.color = '#fff';
+                            b.textContent = `${w.amount} ₽`;
+                            left.appendChild(b);
+                            const details = document.createElement('div');
+                            details.style.cssText = 'font-size:0.7rem;color:#666;';
+                            details.textContent = `${w.requisites} • TG: ${w.telegram || '—'} • ${w.date}`;
+                            left.appendChild(details);
+                            row.appendChild(left);
+                            const tag = document.createElement('span');
+                            tag.className = 'history-tag';
+                            tag.textContent = 'В обработке';
+                            row.appendChild(tag);
+                            tabContent.appendChild(row);
+                        });
+                    } else {
+                        const empty = document.createElement('div');
+                        empty.style.cssText = 'color:#555;font-size:0.8rem;';
+                        empty.textContent = 'Заявок на вывод пока нет.';
+                        tabContent.appendChild(empty);
+                    }
+                } else {
+                    if (currentUser.mediaApplications?.length > 0) {
+                        currentUser.mediaApplications.forEach(m => {
+                            const row = document.createElement('div');
+                            row.className = 'history-row';
+                            const left = document.createElement('div');
+                            const b = document.createElement('b');
+                            b.style.color = '#fff';
+                            b.textContent = `Промокод: ${m.promo}`;
+                            left.appendChild(b);
+                            const details = document.createElement('div');
+                            details.style.cssText = 'font-size:0.7rem;color:#666;';
+                            details.textContent = `${m.tiktok} • TG: ${m.telegram || '—'} • ${m.date}`;
+                            left.appendChild(details);
+                            row.appendChild(left);
+                            const tag = document.createElement('span');
+                            tag.className = 'history-tag';
+                            tag.textContent = m.status === 'approved' ? 'ОДОБРЕНО' : (m.status === 'rejected' ? 'ОТКЛОНЕНО' : 'НА ПРОВЕРКЕ');
+                            row.appendChild(tag);
+                            tabContent.appendChild(row);
+                        });
+                    } else {
+                        const empty = document.createElement('div');
+                        empty.style.cssText = 'color:#555;font-size:0.8rem;';
+                        empty.textContent = 'Медиа заявок пока нет.';
+                        tabContent.appendChild(empty);
+                    }
+                }
+
+                tabsHub.appendChild(tabContent);
+                main.appendChild(tabsHub);
+
+                grid.appendChild(main);
+                container.appendChild(grid);
+
+                // Навигация
                 document.querySelectorAll('[data-page]').forEach(el => {
                     el.addEventListener('click', function(e) {
                         e.preventDefault();
@@ -1777,7 +2270,7 @@
             }
 
             // ============================================================
-            // 10. АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ (С ПОДДЕРЖКОЙ СТАРЫХ И НОВЫХ АККАУНТОВ)
+            // 10. АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ
             // ============================================================
             function showAuthModal(mode = 'login') {
                 const wrap = document.createElement('div');
@@ -1785,75 +2278,145 @@
                 let isLogin = mode === 'login';
 
                 function renderAuthContent() {
-                    wrap.innerHTML = `
-                        <div class="modal-card">
-                            <div style="display:flex; gap:1.5rem; border-bottom:1px solid var(--border); padding-bottom:0.8rem; margin-bottom:1.5rem; justify-content:center;">
-                                <button class="tab-trigger ${isLogin ? 'active' : ''}" id="tabAuthLoginBtn" style="font-size:0.85rem;">Вход</button>
-                                <button class="tab-trigger ${!isLogin ? 'active' : ''}" id="tabAuthRegisterBtn" style="font-size:0.85rem;">Регистрация</button>
-                            </div>
+                    wrap.innerHTML = '';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'modal-card';
+                    wrap.appendChild(card);
 
-                            <h2>${isLogin ? 'Авторизация' : 'Регистрация'}</h2>
-                            <div class="sub">${isLogin ? 'Войдите в личный кабинет' : 'Создайте новый аккаунт'}</div>
-                            
-                            <div class="auth-error" id="authError"></div>
-                            
-                            ${!isLogin ? `
-                            <div class="field-group">
-                                <label>Имя пользователя</label>
-                                <input type="text" id="authNameInp" placeholder="Ваше имя">
-                            </div>` : ''}
-
-                            <div class="field-group">
-                                <label>Email адрес</label>
-                                <input type="email" id="authEmailInp" placeholder="your@email.com">
-                            </div>
-                            <div class="field-group">
-                                <label>Пароль</label>
-                                <input type="password" id="authPassInp" placeholder="••••••••">
-                            </div>
-                            
-                            <button class="btn-modal-action" id="submitAuthBtn">${isLogin ? 'Войти' : 'Зарегистрироваться'}</button>
-                            
-                            <div class="toggle-auth">
-                                ${isLogin ? 'Нет аккаунта? <span id="toggleToRegBtn">Создать аккаунт</span>' : 'Уже зарегистрированы? <span id="toggleToLogBtn">Войти</span>'}
-                            </div>
-                            
-                            <button class="btn-modal-cancel" id="cancelAuthBtn">Отмена</button>
-                        </div>
-                    `;
-
-                    wrap.querySelector('#cancelAuthBtn').addEventListener('click', () => wrap.remove());
-
-                    wrap.querySelector('#tabAuthLoginBtn')?.addEventListener('click', () => {
+                    // Вкладки
+                    const tabsContainer = document.createElement('div');
+                    tabsContainer.style.cssText = 'display:flex;gap:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0.8rem;margin-bottom:1.5rem;justify-content:center;';
+                    
+                    const loginTab = document.createElement('button');
+                    loginTab.className = `tab-trigger ${isLogin ? 'active' : ''}`;
+                    loginTab.id = 'tabAuthLoginBtn';
+                    loginTab.style.fontSize = '0.85rem';
+                    loginTab.textContent = 'Вход';
+                    loginTab.addEventListener('click', () => {
                         if (!isLogin) { isLogin = true; renderAuthContent(); }
                     });
-                    wrap.querySelector('#tabAuthRegisterBtn')?.addEventListener('click', () => {
+                    tabsContainer.appendChild(loginTab);
+
+                    const registerTab = document.createElement('button');
+                    registerTab.className = `tab-trigger ${!isLogin ? 'active' : ''}`;
+                    registerTab.id = 'tabAuthRegisterBtn';
+                    registerTab.style.fontSize = '0.85rem';
+                    registerTab.textContent = 'Регистрация';
+                    registerTab.addEventListener('click', () => {
                         if (isLogin) { isLogin = false; renderAuthContent(); }
                     });
+                    tabsContainer.appendChild(registerTab);
 
-                    wrap.querySelector('#toggleToRegBtn')?.addEventListener('click', () => {
+                    card.appendChild(tabsContainer);
+
+                    // Заголовок
+                    const title = document.createElement('h2');
+                    title.textContent = isLogin ? 'Авторизация' : 'Регистрация';
+                    card.appendChild(title);
+
+                    const sub = document.createElement('div');
+                    sub.className = 'sub';
+                    sub.textContent = isLogin ? 'Войдите в личный кабинет' : 'Создайте новый аккаунт';
+                    card.appendChild(sub);
+
+                    // Ошибка
+                    const errorEl = document.createElement('div');
+                    errorEl.className = 'auth-error';
+                    errorEl.id = 'authError';
+                    card.appendChild(errorEl);
+
+                    // Имя (только для регистрации)
+                    if (!isLogin) {
+                        const fg = document.createElement('div');
+                        fg.className = 'field-group';
+                        const label = document.createElement('label');
+                        label.textContent = 'Имя пользователя';
+                        fg.appendChild(label);
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.id = 'authNameInp';
+                        input.placeholder = 'Ваше имя';
+                        fg.appendChild(input);
+                        card.appendChild(fg);
+                    }
+
+                    // Email
+                    const fg1 = document.createElement('div');
+                    fg1.className = 'field-group';
+                    const l1 = document.createElement('label');
+                    l1.textContent = 'Email адрес';
+                    fg1.appendChild(l1);
+                    const inp1 = document.createElement('input');
+                    inp1.type = 'email';
+                    inp1.id = 'authEmailInp';
+                    inp1.placeholder = 'your@email.com';
+                    fg1.appendChild(inp1);
+                    card.appendChild(fg1);
+
+                    // Пароль
+                    const fg2 = document.createElement('div');
+                    fg2.className = 'field-group';
+                    const l2 = document.createElement('label');
+                    l2.textContent = 'Пароль';
+                    fg2.appendChild(l2);
+                    const inp2 = document.createElement('input');
+                    inp2.type = 'password';
+                    inp2.id = 'authPassInp';
+                    inp2.placeholder = '••••••••';
+                    fg2.appendChild(inp2);
+                    card.appendChild(fg2);
+
+                    // Кнопка
+                    const submitBtn = document.createElement('button');
+                    submitBtn.className = 'btn-modal-action';
+                    submitBtn.id = 'submitAuthBtn';
+                    submitBtn.textContent = isLogin ? 'Войти' : 'Зарегистрироваться';
+                    card.appendChild(submitBtn);
+
+                    // Переключение
+                    const toggle = document.createElement('div');
+                    toggle.className = 'toggle-auth';
+                    if (isLogin) {
+                        toggle.innerHTML = 'Нет аккаунта? <span id="toggleToRegBtn">Создать аккаунт</span>';
+                    } else {
+                        toggle.innerHTML = 'Уже зарегистрированы? <span id="toggleToLogBtn">Войти</span>';
+                    }
+                    card.appendChild(toggle);
+
+                    // Отмена
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.className = 'btn-modal-cancel';
+                    cancelBtn.id = 'cancelAuthBtn';
+                    cancelBtn.textContent = 'Отмена';
+                    card.appendChild(cancelBtn);
+
+                    // Обработчики
+                    cancelBtn.addEventListener('click', () => wrap.remove());
+
+                    document.getElementById('toggleToRegBtn')?.addEventListener('click', () => {
                         isLogin = false;
                         renderAuthContent();
                     });
-                    wrap.querySelector('#toggleToLogBtn')?.addEventListener('click', () => {
+                    document.getElementById('toggleToLogBtn')?.addEventListener('click', () => {
                         isLogin = true;
                         renderAuthContent();
                     });
 
-                    // Поддержка нажатия Enter
-                    wrap.querySelectorAll('input').forEach(inp => {
+                    // Enter
+                    card.querySelectorAll('input').forEach(inp => {
                         inp.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter') wrap.querySelector('#submitAuthBtn').click();
+                            if (e.key === 'Enter') document.getElementById('submitAuthBtn').click();
                         });
                     });
 
-                    wrap.querySelector('#submitAuthBtn').addEventListener('click', async () => {
-                        const errEl = wrap.querySelector('#authError');
+                    document.getElementById('submitAuthBtn').addEventListener('click', async () => {
+                        const errEl = document.getElementById('authError');
                         errEl.classList.remove('show');
                         
-                        const email = wrap.querySelector('#authEmailInp').value.trim().toLowerCase();
-                        const pass = wrap.querySelector('#authPassInp').value;
-                        const name = !isLogin ? wrap.querySelector('#authNameInp').value.trim() : '';
+                        const email = document.getElementById('authEmailInp').value.trim().toLowerCase();
+                        const pass = document.getElementById('authPassInp').value;
+                        const name = !isLogin ? document.getElementById('authNameInp').value.trim() : '';
 
                         if (!email.includes('@') || email.length < 5) {
                             errEl.textContent = 'Введите корректный адрес email';
@@ -1880,7 +2443,6 @@
                                 return;
                             }
 
-                            // Проверка с автоматической миграцией старых паролей без хеша
                             const storedHash = users[email].passwordHash;
                             const storedPlain = users[email].password;
 
@@ -1892,7 +2454,6 @@
                                 return;
                             }
 
-                            // Миграция старого аккаунта на безопасный хеш
                             users[email].passwordHash = passHash;
                             delete users[email].password;
                             await verifyAndSaveUser(users[email]);

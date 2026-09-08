@@ -56,7 +56,7 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // 1. Автоматическая привязка вебхука Telegram: /api/telegram?setup=webhook
+  // 1. Автоматическая привязка вебхука Telegram
   if (req.method === 'GET' && req.query.setup === 'webhook') {
     const host = req.headers.host;
     const proto = req.headers['x-forwarded-proto'] || 'https';
@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ webhookUrl, tgResponse: tgData });
   }
 
-  // 2. Проверка статуса заявки клиентом: /api/telegram?check=ACTION_ID
+  // 2. Проверка статуса заявки клиентом
   if (req.method === 'GET') {
     const { check } = req.query;
     if (check) {
