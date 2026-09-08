@@ -430,7 +430,7 @@
             gap: 1rem;
         }
 
-        /* ===== ЛИЧНЫЙ КАБИНЕТ (ЧЕРНО-БЕЛЫЙ) ===== */
+        /* ===== ЛИЧНЫЙ КАБИНЕТ ===== */
         .cabinet-grid {
             display: grid;
             grid-template-columns: 320px 1fr;
@@ -501,7 +501,6 @@
         .info-row .label { color: #666666; }
         .info-row .val { color: #ffffff; font-weight: 600; }
 
-        /* ДВЕ ГЛАВНЫЕ КНОПКИ В САЙДБАРЕ */
         .sidebar-buttons-container {
             display: flex;
             flex-direction: column;
@@ -544,7 +543,6 @@
         .btn-side-tile .title { font-size: 0.78rem; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
         .btn-side-tile .subtitle { font-size: 0.68rem; color: #888888; margin-top: 2px; }
 
-        /* ПРАВАЯ ОБЛАСТЬ КАБИНЕТА */
         .cabinet-main { display: flex; flex-direction: column; gap: 1.5rem; }
 
         .metric-cards-row {
@@ -603,7 +601,6 @@
         }
         .inst-box b { color: #ffffff; }
 
-        /* Вкладки истории */
         .tabs-hub {
             background: var(--surface-card);
             border: 1px solid var(--border);
@@ -651,7 +648,7 @@
             color: #ffffff;
         }
 
-        /* ===== МОДАЛКИ (СТРОГО МОНОХРОМ) ===== */
+        /* ===== МОДАЛКИ ===== */
         .modal-wrap {
             position: fixed;
             inset: 0;
@@ -687,6 +684,34 @@
             text-align: center;
             margin-bottom: 1.5rem;
         }
+
+        .auth-error {
+            color: #ffffff;
+            background: #18181b;
+            border: 1px solid #3f3f46;
+            padding: 0.6rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+            display: none;
+            text-align: center;
+        }
+        .auth-error.show { display: block; }
+
+        .toggle-auth {
+            text-align: center;
+            margin-top: 1.2rem;
+            font-size: 0.75rem;
+            color: #777777;
+        }
+        .toggle-auth span {
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 700;
+            text-decoration: underline;
+            transition: var(--transition);
+        }
+        .toggle-auth span:hover { color: #aaaaaa; }
 
         .split-calculation-box {
             background: #000000;
@@ -860,6 +885,7 @@
                 <div class="auth-buttons">
                     <span class="user-email-tag" id="userEmailBadge"></span>
                     <button class="btn-sm primary" id="loginBtn">Войти</button>
+                    <button class="btn-sm" id="registerBtn">Регистрация</button>
                     <button class="btn-sm" id="logoutBtn" style="display:none;">Выход</button>
                 </div>
             </div>
@@ -1054,7 +1080,6 @@
                 if (email && users[email]) {
                     const u = users[email];
                     
-                    // Защита от подмены сессии в localStorage
                     const expectedToken = await hashString(u.email + ':' + u.passwordHash);
                     if (sessionToken !== expectedToken) {
                         console.warn("Сессия недействительна или скомпрометирована.");
@@ -1064,7 +1089,6 @@
                         return false;
                     }
 
-                    // Защита от накрутки баланса через консоль DevTools
                     const currentValidChecksum = await generateChecksum(u);
                     if (u.checksum && u.checksum !== currentValidChecksum) {
                         console.warn("Попытка накрутки баланса! Сброс.");
@@ -1110,7 +1134,7 @@
                 grid.querySelectorAll('.btn-buy').forEach(btn => {
                     btn.addEventListener('click', function() {
                         if (!currentUser) {
-                            showAuthModal();
+                            showAuthModal('login');
                             return;
                         }
                         const price = parseInt(this.dataset.price);
@@ -1191,7 +1215,6 @@
 
                 wrap.querySelector('#cancelPurchaseBtn').addEventListener('click', () => wrap.remove());
 
-                // Применение промокода
                 wrap.querySelector('#applyPromoBtn').addEventListener('click', () => {
                     const inputCode = wrap.querySelector('#promoCodeInp').value.trim().toUpperCase();
                     if (!inputCode) {
@@ -1204,7 +1227,6 @@
                     }
 
                     if (promocodes[inputCode]) {
-                        // Защита от использования собственного промокода
                         if (promocodes[inputCode].owner === currentUser.email) {
                             addNotification('Ошибка', 'Нельзя использовать собственный промокод');
                             return;
@@ -1221,7 +1243,6 @@
                     }
                 });
 
-                // Подтверждение оплаты
                 wrap.querySelector('#confirmPurchaseBtn').addEventListener('click', async function() {
                     const priceAfterPromo = Math.max(0, basePrice - promoDiscount);
                     const balance = currentUser.balance || 0;
@@ -1245,7 +1266,6 @@
                             addNotification('Успешно', `Тариф активирован! Ключ: ${key}`);
                         }
 
-                        // Фиксация статистики для владельца промокода
                         if (appliedPromo && promocodes[appliedPromo]) {
                             promocodes[appliedPromo].uses = (promocodes[appliedPromo].uses || 0) + 1;
                             promocodes[appliedPromo].volume = (promocodes[appliedPromo].volume || 0) + priceAfterPromo;
@@ -1265,7 +1285,6 @@
                         return;
                     }
 
-                    // Частичное покрытие балансом + доплата через DonationAlerts
                     if (balanceDeduction > 0) {
                         currentUser.balance -= balanceDeduction;
                         await verifyAndSaveUser(currentUser);
@@ -1316,7 +1335,6 @@
 
                 wrap.querySelector('#closeWalletBtn').addEventListener('click', () => wrap.remove());
 
-                // Пополнение
                 wrap.querySelector('#btnDepositFlow').addEventListener('click', () => {
                     wrap.innerHTML = `
                         <div class="modal-card">
@@ -1349,7 +1367,6 @@
                     });
                 });
 
-                // Вывод средств
                 wrap.querySelector('#btnWithdrawFlow').addEventListener('click', () => {
                     wrap.innerHTML = `
                         <div class="modal-card">
@@ -1566,11 +1583,10 @@
                             <button class="btn" id="cabLoginTrigger">Войти в аккаунт</button>
                         </div>
                     `;
-                    document.getElementById('cabLoginTrigger')?.addEventListener('click', showAuthModal);
+                    document.getElementById('cabLoginTrigger')?.addEventListener('click', () => showAuthModal('login'));
                     return;
                 }
 
-                // Проверяем одобрение заявок через серверный шлюз Telegram
                 if (currentUser.mediaApplications && currentUser.mediaApplications.length > 0) {
                     for (let app of currentUser.mediaApplications) {
                         if (app.status === 'pending') {
@@ -1769,15 +1785,25 @@
             }
 
             // ============================================================
-            // 10. АВТОРИЗАЦИЯ С ХЕШИРОВАНИЕМ (SHA-256)
+            // 10. АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ С ХЕШИРОВАНИЕМ (SHA-256)
             // ============================================================
-            function showAuthModal() {
+            function showAuthModal(mode = 'login') {
                 const wrap = document.createElement('div');
                 wrap.className = 'modal-wrap';
+                const isLogin = mode === 'login';
+
                 wrap.innerHTML = `
                     <div class="modal-card">
-                        <h2>Авторизация</h2>
-                        <div class="sub">Вход или мгновенная регистрация</div>
+                        <h2>${isLogin ? 'Вход' : 'Регистрация'}</h2>
+                        <div class="sub">${isLogin ? 'Войдите в свой аккаунт' : 'Создайте новый аккаунт'}</div>
+                        <div class="auth-error" id="authError"></div>
+                        
+                        ${!isLogin ? `
+                        <div class="field-group">
+                            <label>Ваше имя</label>
+                            <input type="text" id="authNameInp" placeholder="Имя пользователя">
+                        </div>` : ''}
+
                         <div class="field-group">
                             <label>Email</label>
                             <input type="email" id="authEmailInp" placeholder="your@email.com">
@@ -1786,38 +1812,70 @@
                             <label>Пароль</label>
                             <input type="password" id="authPassInp" placeholder="••••••••">
                         </div>
-                        <button class="btn-modal-action" id="submitAuthBtn">Войти / Создать</button>
+                        <button class="btn-modal-action" id="submitAuthBtn">${isLogin ? 'Войти' : 'Зарегистрироваться'}</button>
+                        
+                        <div class="toggle-auth">
+                            ${isLogin ? 'Нет аккаунта? <span id="toggleAuthBtn">Зарегистрироваться</span>' : 'Уже есть аккаунт? <span id="toggleAuthBtn">Войти</span>'}
+                        </div>
+                        
                         <button class="btn-modal-cancel" id="cancelAuthBtn">Отмена</button>
                     </div>
                 `;
                 document.body.appendChild(wrap);
 
+                const errEl = wrap.querySelector('#authError');
+
                 wrap.querySelector('#cancelAuthBtn').addEventListener('click', () => wrap.remove());
 
+                wrap.querySelector('#toggleAuthBtn').addEventListener('click', () => {
+                    wrap.remove();
+                    showAuthModal(isLogin ? 'register' : 'login');
+                });
+
                 wrap.querySelector('#submitAuthBtn').addEventListener('click', async () => {
+                    errEl.classList.remove('show');
                     const email = wrap.querySelector('#authEmailInp').value.trim().toLowerCase();
                     const pass = wrap.querySelector('#authPassInp').value;
+                    const name = !isLogin ? wrap.querySelector('#authNameInp').value.trim() : '';
 
                     if (!email.includes('@') || email.length < 5) {
-                        addNotification('Ошибка', 'Введите корректный адрес email');
+                        errEl.textContent = 'Введите корректный адрес email';
+                        errEl.classList.add('show');
                         return;
                     }
                     if (pass.length < 6) {
-                        addNotification('Ошибка', 'Пароль должен содержать от 6 символов');
+                        errEl.textContent = 'Пароль должен содержать от 6 символов';
+                        errEl.classList.add('show');
+                        return;
+                    }
+                    if (!isLogin && !name) {
+                        errEl.textContent = 'Укажите ваше имя';
+                        errEl.classList.add('show');
                         return;
                     }
 
                     const passHash = await hashString(pass);
 
-                    if (users[email]) {
+                    if (isLogin) {
+                        if (!users[email]) {
+                            errEl.textContent = 'Пользователь не найден';
+                            errEl.classList.add('show');
+                            return;
+                        }
                         if (users[email].passwordHash !== passHash) {
-                            addNotification('Ошибка', 'Неверный пароль');
+                            errEl.textContent = 'Неверный пароль';
+                            errEl.classList.add('show');
                             return;
                         }
                     } else {
+                        if (users[email]) {
+                            errEl.textContent = 'Пользователь с таким email уже зарегистрирован';
+                            errEl.classList.add('show');
+                            return;
+                        }
                         users[email] = {
                             email: email,
-                            name: email.split('@')[0],
+                            name: name || email.split('@')[0],
                             id: Math.random().toString(36).substring(2, 8).toUpperCase(),
                             passwordHash: passHash,
                             balance: 0,
@@ -1837,7 +1895,7 @@
                     wrap.remove();
                     updateUIState();
                     renderCabinet();
-                    addNotification('Успешно', `Добро пожаловать, ${currentUser.name}`);
+                    addNotification('Успешно', `Добро пожаловать, ${currentUser.name}!`);
                 });
             }
 
@@ -1879,21 +1937,25 @@
             function updateUIState() {
                 const badge = document.getElementById('userEmailBadge');
                 const loginBtn = document.getElementById('loginBtn');
+                const registerBtn = document.getElementById('registerBtn');
                 const logoutBtn = document.getElementById('logoutBtn');
 
                 if (currentUser) {
                     badge.textContent = currentUser.email;
                     badge.style.display = 'inline-block';
-                    loginBtn.style.display = 'none';
-                    logoutBtn.style.display = 'inline-block';
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    if (registerBtn) registerBtn.style.display = 'none';
+                    if (logoutBtn) logoutBtn.style.display = 'inline-block';
                 } else {
                     badge.style.display = 'none';
-                    loginBtn.style.display = 'inline-block';
-                    logoutBtn.style.display = 'none';
+                    if (loginBtn) loginBtn.style.display = 'inline-block';
+                    if (registerBtn) registerBtn.style.display = 'inline-block';
+                    if (logoutBtn) logoutBtn.style.display = 'none';
                 }
             }
 
-            document.getElementById('loginBtn')?.addEventListener('click', showAuthModal);
+            document.getElementById('loginBtn')?.addEventListener('click', () => showAuthModal('login'));
+            document.getElementById('registerBtn')?.addEventListener('click', () => showAuthModal('register'));
             document.getElementById('logoutBtn')?.addEventListener('click', () => {
                 localStorage.removeItem('lethal_session');
                 localStorage.removeItem('lethal_session_token');
@@ -1904,7 +1966,7 @@
 
             document.getElementById('hwidResetBtn')?.addEventListener('click', () => {
                 if (!currentUser) {
-                    showAuthModal();
+                    showAuthModal('login');
                     return;
                 }
                 openSmartPurchaseModal(400, 'hwid', true);
