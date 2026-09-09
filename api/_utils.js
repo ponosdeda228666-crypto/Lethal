@@ -3,7 +3,6 @@ import fs from 'fs';
 
 const USERS_FILE = '/tmp/users.json';
 const PROMO_FILE = '/tmp/promocodes.json';
-const SECRET = 'lethal-super-secret-2026';
 
 export function loadUsers() {
   try {
@@ -33,12 +32,10 @@ export function savePromocodes(data) {
   try { fs.writeFileSync(PROMO_FILE, JSON.stringify(data, null, 2)); } catch {}
 }
 
-// ПРОСТОЙ ТОКЕН
 export function generateToken() {
   return crypto.randomBytes(32).toString('hex');
 }
 
-// Проверка токена - ищем пользователя с таким токеном
 export function verifyToken(token) {
   try {
     if (!token) return null;

@@ -13,25 +13,18 @@ export default async function handler(req, res) {
     if (!token) {
       return res.status(401).json({ error: 'Нет токена' });
     }
-    
     const email = verifyToken(token);
     if (!email) {
       return res.status(401).json({ error: 'Неверный токен' });
     }
-
     const users = loadUsers();
     const user = users[email];
     if (!user) {
       return res.status(401).json({ error: 'Пользователь не найден' });
     }
-
     return res.status(200).json({
       success: true,
-      user: {
-        email: email,
-        name: user.name || 'User',
-        balance: user.balance || 0
-      }
+      user: { email, name: user.name || 'User', balance: user.balance || 0 }
     });
   }
 
@@ -40,17 +33,40 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, password, name, action } = req.body;
+    // ⚠️ РУЧНОЙ ПАРСИНГ ТЕЛА
+    let body = '';
+    for await (const chunk of req) {
+      body += chunk;
+    }
+    
+    let parsedBody;
+    try {
+      parsedBody = JSON.parse(body);
+    } catch (e) {
+      console.error('❌ Ошибка парсинга JSON:', e);
+      return res.status(400).json({ error: 'Неверный формат JSON' });
+    }
+
+    const { email, password, name, action } = parsedBody;
+    console.log('📌 Получен запрос:', { email, action });
+
+    if (!email || !action) {
+      return res.status(400).json({ error: 'Email и action обязательны' });
+    }
+
     const normalizedEmail = email.toLowerCase().trim();
     const users = loadUsers();
 
+    // РЕГИСТРАЦИЯ
     if (action === 'register') {
       if (users[normalizedEmail]) {
         return res.status(400).json({ error: 'Пользователь уже существует' });
       }
+      if (!password || password.length < 6) {
+        return res.status(400).json({ error: 'Пароль должен быть минимум 6 символов' });
+      }
       
       const token = generateToken();
-      
       users[normalizedEmail] = {
         email: normalizedEmail,
         name: name || normalizedEmail.split('@')[0],
@@ -71,11 +87,15 @@ export default async function handler(req, res) {
       });
     }
 
+    // ЛОГИН
     if (action === 'login') {
       const user = users[normalizedEmail];
-      if (!user) return res.status(401).json({ error: 'Пользователь не найден' });
-      if (user.password !== password) return res.status(401).json({ error: 'Неверный пароль' });
-      
+      if (!user) {
+        return res.status(401).json({ error: 'Пользователь не найден' });
+      }
+      if (user.password !== password) {
+        return res.status(401).json({ error: 'Неверный пароль' });
+      }
       const token = generateToken();
       user.token = token;
       users[normalizedEmail] = user;
@@ -88,9 +108,9 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.status(400).json({ error: 'Неизвестное действие' });
+    return res.status(400).json({ error: 'Неизвестное действие: ' + action });
   } catch (error) {
     console.error('❌ Ошибка auth:', error);
-    return res.status(500).json({ error: 'Внутренняя ошибка' });
+    return res.status(500).json({ error: 'Внутренняя ошибка: ' + error.message });
   }
 }
