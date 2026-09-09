@@ -2638,7 +2638,7 @@
                 });
             });
 
-            // === ФИКС СЕССИИ ===
+            // === СУПЕР ФИКС 401 ===
             async function fixSession() {
                 const token = localStorage.getItem('auth_token');
                 if (!token) return false;
@@ -2650,11 +2650,14 @@
                     const data = await response.json();
                     if (data.success) {
                         currentUser = data.user;
+                        authToken = token;
                         updateUI();
                         renderCabinet();
+                        addNotification('✅ Сессия восстановлена', 'Добро пожаловать!', 'success');
                         return true;
                     } else {
                         localStorage.removeItem('auth_token');
+                        authToken = null;
                         currentUser = null;
                         updateUI();
                         renderCabinet();
@@ -2665,28 +2668,51 @@
                 }
             }
 
+            // Перехват fetch для обработки 401
             const originalFetch = window.fetch;
             window.fetch = function(...args) {
                 return originalFetch.apply(this, args).then(async response => {
-                    const clonedResponse = response.clone();
-                    try {
-                        const data = await clonedResponse.json();
-                        if (data.error && (
-                                data.error.includes('пользователь не найден') ||
-                                data.error.includes('Пользователь не найден') ||
-                                data.error.includes('Недействительный токен')
-                            )) {
-                            console.log('🔴 Ошибка авторизации, восстанавливаем сессию...');
-                            setTimeout(() => fixSession(), 500);
+                    if (response.status === 401) {
+                        console.log('🔴 401 - Пробуем восстановить сессию...');
+                        const token = localStorage.getItem('auth_token');
+                        if (token) {
+                            try {
+                                const check = await fetch('/api/auth', {
+                                    headers: { 'X-Auth-Token': token }
+                                });
+                                const data = await check.json();
+                                if (data.success) {
+                                    currentUser = data.user;
+                                    authToken = token;
+                                    updateUI();
+                                    renderCabinet();
+                                    addNotification('✅ Сессия восстановлена', 'Добро пожаловать!',
+                                    'success');
+                                    return response;
+                                }
+                            } catch (e) {}
                         }
-                    } catch (e) {}
+                        localStorage.removeItem('auth_token');
+                        authToken = null;
+                        currentUser = null;
+                        updateUI();
+                        renderCabinet();
+                        showAuthModal('login');
+                        addNotification('⏰ Сессия истекла', 'Пожалуйста, войдите заново', 'error');
+                    }
                     return response;
                 });
             };
 
+            // Принудительная проверка при загрузке
             setTimeout(async function() {
-                await fixSession();
-            }, 1000);
+                const token = localStorage.getItem('auth_token');
+                if (token) {
+                    await fixSession();
+                } else {
+                    setTimeout(() => showAuthModal('login'), 1000);
+                }
+            }, 1500);
 
             // === СТАРТ ===
             (async function init() {
@@ -2703,6 +2729,8 @@
                 renderPricing();
                 navigateTo('main');
             })();
+
+            console.log('✅ Приложение запущено!');
 
         })();
     </script>

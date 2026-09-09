@@ -83,15 +83,11 @@ export default async function handler(req, res) {
 
   try {
     const token = req.headers['x-auth-token'];
-    console.log('🔍 /api/media - Токен:', token ? 'Есть' : 'Нет');
-    
     if (!token) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
     const email = verifyToken(token);
-    console.log('🔍 /api/media - Email из токена:', email);
-    
     if (!email) {
       return res.status(401).json({ error: 'Неверный токен' });
     }
@@ -100,15 +96,11 @@ export default async function handler(req, res) {
     const user = users[email];
     
     if (!user) {
-      console.log('❌ /api/media - Пользователь не найден:', email);
       return res.status(401).json({ 
         error: 'Пользователь не найден. Перезайдите в аккаунт.'
       });
     }
 
-    console.log('✅ /api/media - Пользователь найден:', email);
-
-    // GET - получение заявок
     if (req.method === 'GET') {
       return res.status(200).json({
         success: true,
@@ -116,7 +108,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // POST - подача заявки
     if (req.method === 'POST') {
       const { tiktokUrl, promoCode, telegramContact } = req.body;
 
@@ -124,7 +115,6 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Заполните все поля' });
       }
 
-      // Валидация
       const tiktokRegex = /^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/@[a-zA-Z0-9._]+(\/)?$/i;
       if (!tiktokRegex.test(tiktokUrl)) {
         return res.status(400).json({ error: 'Некорректная ссылка TikTok' });
@@ -140,7 +130,6 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Некорректный Telegram (@username)' });
       }
 
-      // Проверка на дубликат
       for (const [key, u] of Object.entries(users)) {
         if (u.mediaApplications) {
           for (const app of u.mediaApplications) {
