@@ -1,21 +1,4 @@
-import fs from 'fs';
-import { loadUsers, saveUsers, verifyToken, setCors } from '../_utils.js';
-
-const PROMO_FILE = '/tmp/promocodes.json';
-
-function loadPromocodes() {
-  try {
-    if (!fs.existsSync(PROMO_FILE)) {
-      fs.writeFileSync(PROMO_FILE, JSON.stringify({}, null, 2));
-      return {};
-    }
-    return JSON.parse(fs.readFileSync(PROMO_FILE, 'utf8'));
-  } catch { return {}; }
-}
-
-function savePromocodes(promocodes) {
-  try { fs.writeFileSync(PROMO_FILE, JSON.stringify(promocodes, null, 2)); } catch {}
-}
+import { loadUsers, saveUsers, loadPromocodes, savePromocodes, verifyToken, setCors } from '../_utils.js';
 
 export default async function handler(req, res) {
   setCors(res);

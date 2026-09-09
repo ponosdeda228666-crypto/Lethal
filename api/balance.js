@@ -1,4 +1,4 @@
-import { loadUsers, loadPromocodes, verifyToken, setCors } from '../_utils.js';
+import { loadUsers, verifyToken, setCors } from './_utils.js';
 
 export default async function handler(req, res) {
   setCors(res);
@@ -28,29 +28,13 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Пользователь не найден' });
     }
 
-    const { promo } = req.query;
-    if (!promo) {
-      return res.status(400).json({ error: 'Укажите промокод' });
-    }
-
-    const hasAccess = user.mediaApplications?.some(app => 
-      app.status === 'approved' && app.promoCode === promo
-    );
-
-    if (!hasAccess) {
-      return res.status(403).json({ error: 'Доступ запрещен' });
-    }
-
-    const promocodes = loadPromocodes();
-    const stats = promocodes[promo] || { uses: 0, volume: 0, reward: 0 };
-
     return res.status(200).json({
       success: true,
-      stats: stats
+      balance: user.balance || 0
     });
 
   } catch (error) {
-    console.error('❌ Ошибка stats:', error);
+    console.error('❌ Ошибка balance:', error);
     return res.status(500).json({ error: 'Внутренняя ошибка' });
   }
 }
