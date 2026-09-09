@@ -1,6 +1,43 @@
 import crypto from 'crypto';
-import { loadUsers, saveUsers, verifyToken, setCors } from './_utils.js';
+import fs from 'fs';
 
+const USERS_FILE = '/tmp/users.json';
+
+function loadUsers() {
+  try {
+    if (!fs.existsSync(USERS_FILE)) {
+      fs.writeFileSync(USERS_FILE, JSON.stringify({}, null, 2));
+      return {};
+    }
+    return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+  } catch { return {}; }
+}
+
+function saveUsers(users) {
+  try { fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2)); } catch {}
+}
+
+// ===== ОДИНАКОВАЯ ФУНКЦИЯ ВЕРИФИКАЦИИ =====
+function verifyToken(token) {
+  try {
+    if (!token) return null;
+    const users = loadUsers();
+    for (const [email, user] of Object.entries(users)) {
+      if (user.token === token) {
+        return email;
+      }
+    }
+    return null;
+  } catch { return null; }
+}
+
+function setCors(res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, X-Requested-With');
+}
+
+// Уведомление в Telegram
 async function sendTelegramNotification(application, userEmail) {
   const BOT_TOKEN = process.env.BOT_TOKEN;
   const CHAT_ID = process.env.CHAT_ID;
@@ -49,11 +86,15 @@ export default async function handler(req, res) {
 
   try {
     const token = req.headers['x-auth-token'];
+    console.log('📌 media.js - Получен токен:', token ? 'ЕСТЬ' : 'НЕТ');
+    
     if (!token) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
     const email = verifyToken(token);
+    console.log('📌 media.js - Email из токена:', email);
+    
     if (!email) {
       return res.status(401).json({ error: 'Неверный токен' });
     }
@@ -62,9 +103,10 @@ export default async function handler(req, res) {
     const user = users[email];
     
     if (!user) {
-      return res.status(401).json({ error: 'Пользователь не найден. Перезайдите в аккаунт.' });
+      return res.status(401).json({ error: 'Пользователь не найден' });
     }
 
+    // GET - список заявок
     if (req.method === 'GET') {
       return res.status(200).json({
         success: true,
@@ -72,6 +114,7 @@ export default async function handler(req, res) {
       });
     }
 
+    // POST - новая заявка
     if (req.method === 'POST') {
       const { tiktokUrl, promoCode, telegramContact } = req.body;
 
@@ -94,6 +137,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Некорректный Telegram (@username)' });
       }
 
+      // Проверяем, не используется ли промокод
       for (const [key, u] of Object.entries(users)) {
         if (u.mediaApplications) {
           for (const app of u.mediaApplications) {
@@ -135,6 +179,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('❌ Ошибка media:', error);
-    return res.status(500).json({ error: 'Внутренняя ошибка' });
+    return res.status(500).json({ error: 'Внутренняя ошибка: ' + error.message });
   }
 }
