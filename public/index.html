@@ -6,22 +6,990 @@
     <title>Lethal DLC — Premium Cheat</title>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
     <style>
-        /* ВСЕ СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        /* ... все стили из предыдущей версии ... */
+        /* ============================================================
+           СТРОГИЙ МОНОХРОМНЫЙ ДИЗАЙН (ЧЕРНО-БЕЛЫЙ)
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        input, textarea {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap');
+
+        :root {
+            --bg: #000000;
+            --surface: #09090b;
+            --surface-card: #0f0f11;
+            --surface-hover: #17171a;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.25);
+            --border-focus: #ffffff;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --text-muted: #444444;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.95);
+            --radius: 12px;
+            --radius-lg: 18px;
+            --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            background: #000000;
+        }
+        .bg-gradient {
+            position: absolute;
+            inset: -50%;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(255, 255, 255, 0.02) 0%, transparent 45%),
+                radial-gradient(ellipse at 40% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 40%);
+            animation: gradientShift 30s ease-in-out infinite alternate;
+            transform-origin: center;
+        }
+        .bg-gradient2 {
+            position: absolute;
+            inset: -50%;
+            background:
+                radial-gradient(ellipse at 60% 40%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 70%, rgba(255, 255, 255, 0.015) 0%, transparent 45%);
+            animation: gradientShift2 35s ease-in-out infinite alternate;
+            transform-origin: center;
+        }
+        @keyframes gradientShift {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        @keyframes gradientShift2 {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(-180deg) scale(1.15); }
+            100% { transform: rotate(-360deg) scale(1); }
+        }
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 55px 55px;
+        }
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            animation: orbFloat 25s ease-in-out infinite alternate;
+        }
+        .bg-orb.orb1 {
+            width: 450px;
+            height: 450px;
+            background: rgba(255, 255, 255, 0.02);
+            top: -10%;
+            left: -5%;
+            animation-duration: 28s;
+        }
+        .bg-orb.orb2 {
+            width: 550px;
+            height: 550px;
+            background: rgba(255, 255, 255, 0.015);
+            bottom: -15%;
+            right: -10%;
+            animation-duration: 32s;
+            animation-delay: -6s;
+        }
+        .bg-orb.orb3 {
+            width: 380px;
+            height: 380px;
+            background: rgba(255, 255, 255, 0.02);
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-duration: 24s;
+            animation-delay: -12s;
+        }
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, -40px) scale(1.08); }
+            100% { transform: translate(-30px, 50px) scale(0.95); }
+        }
+
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            display: block;
+            opacity: 0.5;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem 3rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0 2rem;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #ffffff;
+            cursor: pointer;
+        }
+        .logo span { color: #555555; font-weight: 300; }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .language-selector {
+            display: flex;
+            gap: 0.2rem;
+            background: var(--surface);
+            padding: 0.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: #666666;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+        }
+        .lang-btn.active { background: #ffffff; color: #000000; }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+        .nav a {
+            color: #777777;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            padding-bottom: 4px;
+        }
+        .nav a:hover, .nav a.active-link { color: #ffffff; }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+        }
+        .user-email-tag {
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 600;
+            background: #111111;
+            padding: 0.35rem 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 1.2rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-radius: 8px;
+            border: 1px solid #333333;
+            background: transparent;
+            color: #ffffff;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-sm:hover { border-color: #ffffff; background: #ffffff; color: #000000; }
+        .btn-sm.primary { background: #ffffff; color: #000000; border-color: #ffffff; }
+        .btn-sm.primary:hover { background: #cccccc; border-color: #cccccc; }
+
+        .page { display: none; }
+        .page.active { display: block; animation: pageFade 0.4s ease-out; }
+        @keyframes pageFade {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero {
+            padding: 4.5rem 0 2.5rem;
+            min-height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .hero-tag {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #888888;
+            border: 1px solid var(--border);
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            margin-bottom: 1.5rem;
+            width: fit-content;
+            background: #080808;
+        }
+        .hero h1 {
+            font-size: 4.2rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            line-height: 1.05;
+            color: #ffffff;
+            margin-bottom: 0.8rem;
+        }
+        .hero h1 small {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #666666;
+            letter-spacing: 6px;
+            margin-top: 0.3rem;
+        }
+        .hero p {
+            font-size: 1.05rem;
+            color: #888888;
+            max-width: 540px;
+            margin-bottom: 2.2rem;
+            line-height: 1.8;
+        }
+        .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn {
+            padding: 0.85rem 2.6rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 10px;
+            border: 1px solid #ffffff;
+            background: #ffffff;
+            color: #000000;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn:hover { background: #000000; color: #ffffff; }
+        .btn-outline { background: transparent; color: #ffffff; border-color: #333333; }
+        .btn-outline:hover { border-color: #ffffff; background: transparent; }
+
+        .section { padding: 3rem 0 2rem; border-top: 1px solid var(--border); }
+        .section-header { margin-bottom: 2rem; }
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #ffffff;
+            border-left: 3px solid #ffffff;
+            padding-left: 1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
+        }
+        .feature-item {
+            position: relative;
+            padding: 2.2rem 1.8rem;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            transition: var(--transition);
+        }
+        .feature-item:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+        .feature-item .index { font-size: 0.6rem; font-weight: 800; color: #444444; margin-bottom: 0.5rem; display: block; }
+        .feature-item h3 { font-size: 1.25rem; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem; }
+        .feature-item p { color: #888888; font-size: 0.85rem; line-height: 1.7; }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+        .price-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem 1.8rem;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+        }
+        .price-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        .price-card .badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ffffff;
+            color: #000000;
+            font-size: 0.55rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+        }
+        .price-card .amount {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-top: 0.5rem;
+        }
+        .price-card .period {
+            color: #666666;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .price-card .desc {
+            color: #888888;
+            font-size: 0.85rem;
+            margin: 1.5rem 0 2rem;
+            line-height: 1.7;
+        }
+        .btn-buy {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-radius: 8px;
+            border: 1px solid #333333;
+            background: transparent;
+            color: #ffffff;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-buy:hover { background: #ffffff; color: #000000; border-color: #ffffff; }
+
+        .hwid-box {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .cabinet-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+        }
+        .cabinet-sidebar {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .avatar-box {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: #111111;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+        .user-name-title { font-size: 1.15rem; font-weight: 700; color: #ffffff; }
+        .user-email-sub { color: #666666; font-size: 0.8rem; margin-bottom: 1rem; word-break: break-all; }
+
+        .id-badge {
+            background: #000000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem;
+            text-align: center;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            border: 1px solid #333333;
+            width: fit-content;
+            color: #ffffff;
+            margin-bottom: 1.2rem;
+        }
+        .status-pill.active { border-color: #ffffff; background: #ffffff; color: #000000; }
+
+        .sidebar-divider { height: 1px; background: var(--border); margin: 1rem 0; }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            padding: 0.4rem 0;
+        }
+        .info-row .label { color: #666666; }
+        .info-row .val { color: #ffffff; font-weight: 600; }
+
+        .sidebar-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin: 1.4rem 0;
+        }
+        .btn-side-tile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            background: #0a0a0a;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+            width: 100%;
+        }
+        .btn-side-tile:hover {
+            border-color: #ffffff;
+            background: #141414;
+            transform: translateX(4px);
+        }
+        .btn-side-tile .icon-tag {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: #181818;
+            border: 1px solid #333333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #ffffff;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .btn-side-tile .text-group { display: flex; flex-direction: column; }
+        .btn-side-tile .title { font-size: 0.78rem; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-side-tile .subtitle { font-size: 0.68rem; color: #888888; margin-top: 2px; }
+
+        .cabinet-main { display: flex; flex-direction: column; gap: 1.5rem; }
+
+        .metric-cards-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+        }
+        .dash-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.3rem;
+            transition: var(--transition);
+        }
+        .dash-card:hover { border-color: var(--border-hover); }
+        .dash-card .card-head { font-size: 0.65rem; font-weight: 800; color: #666666; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.4rem; }
+        .dash-card .card-val { font-size: 1.8rem; font-weight: 900; color: #ffffff; }
+        .dash-card .card-sub { font-size: 0.68rem; color: #888888; margin-top: 0.3rem; }
+
+        .key-hub {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+        }
+        .key-hub h3 { font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-bottom: 0.4rem; }
+        .key-hub p { font-size: 0.8rem; color: #888888; margin-bottom: 1.5rem; }
+
+        .key-display {
+            background: #000000;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .key-display span { font-family: monospace; font-size: 1.1rem; font-weight: 700; letter-spacing: 2px; }
+
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .inst-box {
+            background: #050505;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            display: flex;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: #888888;
+        }
+        .inst-box b { color: #ffffff; }
+
+        .tabs-hub {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.8rem;
+        }
+        .tabs-nav {
+            display: flex;
+            gap: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+        .tab-trigger {
+            background: none;
+            border: none;
+            color: #666666;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .tab-trigger.active { color: #ffffff; border-bottom: 2px solid #ffffff; padding-bottom: 4px; }
+
+        .history-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 1rem;
+            background: #050505;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 0.6rem;
+            font-size: 0.8rem;
+        }
+        .history-tag {
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            border: 1px solid #444444;
+            color: #ffffff;
+        }
+
+        .modal-wrap {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 1.5rem;
+        }
+        .modal-card {
+            background: #0a0a0a;
+            border: 1px solid #333333;
+            border-radius: var(--radius-lg);
+            padding: 2.4rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: var(--shadow);
+        }
+        .modal-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+            text-align: center;
+        }
+        .modal-card .sub {
+            font-size: 0.8rem;
+            color: #777777;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-error {
+            color: #ffffff;
+            background: #141414;
+            border: 1px solid #ffffff;
+            padding: 0.6rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+            display: none;
+            text-align: center;
+            font-weight: 600;
+        }
+        .auth-error.show { display: block; }
+
+        .toggle-auth {
+            text-align: center;
+            margin-top: 1.2rem;
+            font-size: 0.75rem;
+            color: #777777;
+        }
+        .toggle-auth span {
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: 700;
+            text-decoration: underline;
+            transition: var(--transition);
+        }
+        .toggle-auth span:hover { color: #aaaaaa; }
+
+        .split-calculation-box {
+            background: #000000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 1.4rem;
+        }
+        .split-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            padding: 0.35rem 0;
+            color: #888888;
+        }
+        .split-row.total {
+            border-top: 1px solid var(--border);
+            padding-top: 0.6rem;
+            margin-top: 0.4rem;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .promo-input-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+        }
+        .promo-input-row input {
+            flex: 1;
+            padding: 0.75rem 0.9rem;
+            background: #000000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+        .promo-input-row input:focus { border-color: #ffffff; }
+        .promo-input-row button {
+            padding: 0 1.2rem;
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #ffffff;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+        .promo-input-row button:hover { background: #000000; color: #ffffff; }
+
+        .field-group { margin-bottom: 1.2rem; }
+        .field-group label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #777777;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.3rem;
+        }
+        .field-group input {
+            width: 100%;
+            padding: 0.75rem 0.9rem;
+            background: #000000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+            transition: var(--transition);
+        }
+        .field-group input:focus { border-color: #ffffff; }
+
+        .btn-modal-action {
+            width: 100%;
+            padding: 0.85rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 8px;
+            border: 1px solid #ffffff;
+            background: #ffffff;
+            color: #000000;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-modal-action:hover { background: #000000; color: #ffffff; }
+        .btn-modal-cancel {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #555555;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 0.8rem;
+            cursor: pointer;
+        }
+        .btn-modal-cancel:hover { color: #ffffff; }
+
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 360px;
+            width: 100%;
+        }
+        .notification {
+            background: #0a0a0a;
+            border: 1px solid #ffffff;
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            box-shadow: var(--shadow);
+            color: #ffffff;
+        }
+        .notification .notif-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
+        .notification .notif-body { font-size: 0.72rem; color: #888888; margin-top: 4px; }
+
+        @media (max-width: 900px) {
+            .cabinet-grid { grid-template-columns: 1fr; }
+            .metric-cards-row { grid-template-columns: 1fr; }
+            .instructions-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <!-- ВСЕ HTML БЕЗ ИЗМЕНЕНИЙ -->
-    <!-- ... -->
+
+    <div class="bg-container">
+        <div class="bg-gradient"></div>
+        <div class="bg-gradient2"></div>
+        <div class="bg-grid"></div>
+        <div class="bg-orb orb1"></div>
+        <div class="bg-orb orb2"></div>
+        <div class="bg-orb orb3"></div>
+    </div>
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="notification-container" id="notifications"></div>
+
+    <div class="container">
+
+        <header class="header">
+            <div class="logo" data-page="main">Lethal <span>DLC</span></div>
+            <div class="header-right">
+                <div class="language-selector">
+                    <button class="lang-btn active" data-lang="ru">Ru</button>
+                    <button class="lang-btn" data-lang="en">En</button>
+                </div>
+                <nav class="nav">
+                    <a data-page="main" class="active-link">Главная</a>
+                    <a data-page="pricing">Тарифы</a>
+                    <a data-page="cabinet">Кабинет</a>
+                </nav>
+                <div class="auth-buttons">
+                    <span class="user-email-tag" id="userEmailBadge"></span>
+                    <button class="btn-sm primary" id="loginBtn">Войти</button>
+                    <button class="btn-sm" id="registerBtn">Регистрация</button>
+                    <button class="btn-sm" id="logoutBtn" style="display:none;">Выход</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="page active" id="page-main">
+            <section class="hero">
+                <div class="hero-tag">Strict Monochrome Edition</div>
+                <h1>
+                    Lethal DLC
+                    <small>абсолютный контроль над игровой механикой</small>
+                </h1>
+                <p>
+                    Бескомпромиссная система скрытности, мгновенный расчёт баланса и аппаратная привязка нового поколения.
+                </p>
+                <div class="btn-group">
+                    <button class="btn" data-page="pricing">Приобрести подписку</button>
+                    <button class="btn btn-outline" data-page="cabinet">Личный кабинет</button>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Возможности</h2>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span class="index">01 / COMBAT</span>
+                        <h3>Боевой модуль</h3>
+                        <p>Адаптивный аимбот с контролем отдачи, сглаживанием траектории и приоритетом уязвимых зон.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="index">02 / SECURITY</span>
+                        <h3>Анти-детект</h3>
+                        <p>Изоляция в Ring-0, очистка системных логов и защита от сигнатурного анализа античитов.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="index">03 / VISUALS</span>
+                        <h3>ESP терминал</h3>
+                        <p>Контуры скелетов, дистанция, линии прицела и радар с частотой синхронизации 144+ FPS.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="index">04 / MISC</span>
+                        <h3>Дополнительно</h3>
+                        <p>Бесконечная выносливость, отсутствие разброса и мгновенное взаимодействие с игровым миром.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="index">05 / ANALYTICS</span>
+                        <h3>Статистика</h3>
+                        <p>Логирование сессий, фиксация попаданий и детальный трекинг эффективности в реальном времени.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="index">06 / UPDATES</span>
+                        <h3>Облачные патчи</h3>
+                        <p>Автоматическая доставка обновлений без необходимости повторного скачивания загрузчика.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="page" id="page-pricing">
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Тарифные планы</h2>
+                </div>
+                <div class="pricing-grid" id="pricingGrid"></div>
+
+                <div class="hwid-box">
+                    <div>
+                        <h3 style="font-size:1.1rem; margin-bottom:4px;">Сброс HWID</h3>
+                        <p style="color:#888; font-size:0.85rem;">Перепривязка ключа к новому железу. Оплата с баланса или доплата.</p>
+                    </div>
+                    <button class="btn" id="hwidResetBtn">Сбросить за 400 ₽</button>
+                </div>
+            </section>
+        </div>
+
+        <div class="page" id="page-cabinet">
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Панель управления</h2>
+                </div>
+                <div id="cabinetWrapper"></div>
+            </section>
+        </div>
+
+    </div>
 
     <script>
         (function() {
             'use strict';
 
-            // ЗАЩИТА ОТ ДЕВТУЛС
+            // ============================================================
+            // ЗАЩИТА ОТ DEVTOOLS
+            // ============================================================
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) || 
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) || 
                     (e.ctrlKey && (e.key === 'U' || e.key === 'u')) ||
                     (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) ||
                     (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c'))) {
@@ -29,16 +997,31 @@
                     return false;
                 }
             });
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                return false;
-            });
+            document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
             console.clear();
             console.log = function() {};
             console.warn = function() {};
             console.error = function() {};
 
+            // ============================================================
+            // БЕЗОПАСНАЯ РАБОТА С HTML
+            // ============================================================
+            function sanitizeHTML(dirtyHTML) {
+                if (!dirtyHTML) return '';
+                return DOMPurify.sanitize(dirtyHTML, {
+                    USE_PROFILES: { html: true },
+                    ADD_TAGS: ['b', 'i', 'u', 's', 'code', 'pre', 'span', 'div', 'p', 'br', 'h2', 'h3', 'h4'],
+                    ADD_ATTR: ['style', 'class', 'data-*', 'id']
+                });
+            }
+
+            function createSafeText(text) {
+                return document.createTextNode(text !== undefined && text !== null ? String(text) : '');
+            }
+
+            // ============================================================
             // API КЛИЕНТ
+            // ============================================================
             const API_URL = '';
             let authToken = localStorage.getItem('auth_token');
             let currentUser = null;
@@ -46,9 +1029,7 @@
 
             async function apiRequest(endpoint, data, method = 'POST') {
                 const headers = { 'Content-Type': 'application/json' };
-                if (authToken) {
-                    headers['X-Auth-Token'] = authToken;
-                }
+                if (authToken) headers['X-Auth-Token'] = authToken;
                 const response = await fetch(API_URL + endpoint, {
                     method: method,
                     headers: headers,
@@ -57,10 +1038,9 @@
                 return await response.json();
             }
 
-            // ВСЯ ОСТАЛЬНАЯ ЛОГИКА (рендеринг, модалки) - ТОЛЬКО ВИЗУАЛ
-            // Все операции с деньгами и ключами - ТОЛЬКО через apiRequest
-
-            // ЛОГИН
+            // ============================================================
+            // АВТОРИЗАЦИЯ
+            // ============================================================
             async function login(email, password) {
                 const result = await apiRequest('/api/auth', { email, password, action: 'login' });
                 if (result.success) {
@@ -76,7 +1056,6 @@
                 return false;
             }
 
-            // РЕГИСТРАЦИЯ
             async function register(email, password, name) {
                 const result = await apiRequest('/api/auth', { email, password, name, action: 'register' });
                 if (result.success) {
@@ -92,7 +1071,9 @@
                 return false;
             }
 
+            // ============================================================
             // ПОКУПКА
+            // ============================================================
             async function purchasePlan(planId, promoCode = null) {
                 const result = await apiRequest('/api/purchase', { planId, promoCode });
                 if (result.success) {
@@ -105,7 +1086,9 @@
                 return null;
             }
 
+            // ============================================================
             // БАЛАНС
+            // ============================================================
             async function getBalance() {
                 const result = await apiRequest('/api/balance', {}, 'GET');
                 if (result.balance !== undefined) {
@@ -115,9 +1098,843 @@
                 return result;
             }
 
-            // ВСЕ ФУНКЦИИ РЕНДЕРИНГА И МОДАЛОК (БЕЗ ИЗМЕНЕНИЙ)
-            // ... весь визуальный код из предыдущей версии ...
-            // Все вызовы типа openSmartPurchaseModal используют purchasePlan()
+            // ============================================================
+            // УВЕДОМЛЕНИЯ
+            // ============================================================
+            function addNotification(title, body) {
+                const container = document.getElementById('notifications');
+                const notif = document.createElement('div');
+                notif.className = 'notification';
+                const t = document.createElement('div');
+                t.className = 'notif-title';
+                t.textContent = title;
+                const b = document.createElement('div');
+                b.className = 'notif-body';
+                b.textContent = body;
+                notif.appendChild(t);
+                notif.appendChild(b);
+                container.prepend(notif);
+                setTimeout(() => notif.remove(), 4000);
+            }
+
+            // ============================================================
+            // НАВИГАЦИЯ
+            // ============================================================
+            function navigateTo(page) {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.nav a').forEach(a => {
+                    a.classList.toggle('active-link', a.dataset.page === page);
+                });
+                const target = document.getElementById('page-' + page);
+                if (target) target.classList.add('active');
+                if (page === 'cabinet') renderCabinet();
+                if (page === 'pricing') renderPricing();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function updateUI() {
+                const badge = document.getElementById('userEmailBadge');
+                const loginBtn = document.getElementById('loginBtn');
+                const registerBtn = document.getElementById('registerBtn');
+                const logoutBtn = document.getElementById('logoutBtn');
+
+                if (currentUser) {
+                    badge.textContent = currentUser.email;
+                    badge.style.display = 'inline-block';
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    if (registerBtn) registerBtn.style.display = 'none';
+                    if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                    if (loginBtn) loginBtn.style.display = 'inline-block';
+                    if (registerBtn) registerBtn.style.display = 'inline-block';
+                    if (logoutBtn) logoutBtn.style.display = 'none';
+                }
+            }
+
+            // ============================================================
+            // ТАРИФЫ
+            // ============================================================
+            const PLANS = [
+                { id: 'month', label: '1 Месяц', price: 250, desc: 'Полный функционал, автоматические обновления и обход защиты.' },
+                { id: 'quarter', label: '3 Месяца', price: 400, desc: 'Приоритетная линия обновлений и круглосуточная поддержка.', popular: true },
+                { id: 'lifetime', label: 'Навсегда', price: 600, desc: 'Пожизненный доступ ко всем последующим версиям чита.' }
+            ];
+
+            function renderPricing() {
+                const grid = document.getElementById('pricingGrid');
+                if (!grid) return;
+
+                grid.innerHTML = '';
+                PLANS.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'price-card';
+
+                    if (p.popular) {
+                        const badge = document.createElement('div');
+                        badge.className = 'badge';
+                        badge.textContent = 'Популярный';
+                        card.appendChild(badge);
+                    }
+
+                    const amount = document.createElement('div');
+                    amount.className = 'amount';
+                    amount.textContent = `${p.price} ₽`;
+                    card.appendChild(amount);
+
+                    const period = document.createElement('div');
+                    period.className = 'period';
+                    period.textContent = p.label;
+                    card.appendChild(period);
+
+                    const desc = document.createElement('div');
+                    desc.className = 'desc';
+                    desc.textContent = p.desc;
+                    card.appendChild(desc);
+
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-buy';
+                    btn.dataset.planId = p.id;
+                    btn.dataset.price = p.price;
+                    btn.textContent = 'Купить';
+                    btn.addEventListener('click', function() {
+                        if (!currentUser) {
+                            showAuthModal('login');
+                            return;
+                        }
+                        const price = parseInt(this.dataset.price);
+                        const planId = this.dataset.planId;
+                        openSmartPurchaseModal(price, planId);
+                    });
+                    card.appendChild(btn);
+                    grid.appendChild(card);
+                });
+            }
+
+            // ============================================================
+            // МОДАЛКА ПОКУПКИ
+            // ============================================================
+            function openSmartPurchaseModal(basePrice, planId, isHwid = false) {
+                const planObj = isHwid ? { label: 'Сброс HWID' } : (PLANS.find(p => p.id === planId) || { label: 'Подписка' });
+
+                let appliedPromo = null;
+                let promoDiscount = 0;
+
+                const wrap = document.createElement('div');
+                wrap.className = 'modal-wrap';
+
+                const card = document.createElement('div');
+                card.className = 'modal-card';
+                wrap.appendChild(card);
+
+                const title = document.createElement('h2');
+                title.textContent = 'Оформление тарифа';
+                card.appendChild(title);
+
+                const subtitle = document.createElement('div');
+                subtitle.className = 'sub';
+                subtitle.textContent = planObj.label;
+                card.appendChild(subtitle);
+
+                const promoRow = document.createElement('div');
+                promoRow.className = 'promo-input-row';
+                const promoInput = document.createElement('input');
+                promoInput.type = 'text';
+                promoInput.id = 'promoCodeInp';
+                promoInput.placeholder = 'Промокод (скидка 10%)';
+                promoInput.maxLength = 16;
+                promoRow.appendChild(promoInput);
+                const applyBtn = document.createElement('button');
+                applyBtn.id = 'applyPromoBtn';
+                applyBtn.textContent = 'Применить';
+                promoRow.appendChild(applyBtn);
+                card.appendChild(promoRow);
+
+                const calcBox = document.createElement('div');
+                calcBox.className = 'split-calculation-box';
+                calcBox.id = 'calcDetailsBox';
+                card.appendChild(calcBox);
+
+                const confirmBtn = document.createElement('button');
+                confirmBtn.className = 'btn-modal-action';
+                confirmBtn.id = 'confirmPurchaseBtn';
+                confirmBtn.textContent = 'Оплатить';
+                card.appendChild(confirmBtn);
+
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'btn-modal-cancel';
+                cancelBtn.id = 'cancelPurchaseBtn';
+                cancelBtn.textContent = 'Отмена';
+                card.appendChild(cancelBtn);
+
+                document.body.appendChild(wrap);
+
+                function updateBillCalculation() {
+                    const priceAfterPromo = Math.max(0, basePrice - promoDiscount);
+                    const balance = currentUser ? (currentUser.balance || 0) : 0;
+                    const balanceDeduction = Math.min(balance, priceAfterPromo);
+                    const finalToPay = Math.max(0, priceAfterPromo - balanceDeduction);
+                    const isFullCover = finalToPay === 0;
+
+                    calcBox.innerHTML = '';
+
+                    const row1 = document.createElement('div');
+                    row1.className = 'split-row';
+                    row1.appendChild(createSafeText('Начальная стоимость'));
+                    const span1 = document.createElement('span');
+                    span1.textContent = `${basePrice} ₽`;
+                    row1.appendChild(span1);
+                    calcBox.appendChild(row1);
+
+                    if (appliedPromo) {
+                        const rowPromo = document.createElement('div');
+                        rowPromo.className = 'split-row';
+                        rowPromo.appendChild(createSafeText(`Промокод [${appliedPromo}] (-10%)`));
+                        const promoVal = document.createElement('span');
+                        promoVal.style.color = '#ffffff';
+                        promoVal.textContent = `-${promoDiscount} ₽`;
+                        rowPromo.appendChild(promoVal);
+                        calcBox.appendChild(rowPromo);
+                    }
+
+                    const rowBalance = document.createElement('div');
+                    rowBalance.className = 'split-row';
+                    rowBalance.appendChild(createSafeText('Списание с кошелька'));
+                    const balanceVal = document.createElement('span');
+                    balanceVal.style.color = '#ffffff';
+                    balanceVal.textContent = `-${balanceDeduction} ₽`;
+                    rowBalance.appendChild(balanceVal);
+                    calcBox.appendChild(rowBalance);
+
+                    const rowTotal = document.createElement('div');
+                    rowTotal.className = 'split-row total';
+                    rowTotal.appendChild(createSafeText('К оплате'));
+                    const totalSpan = document.createElement('span');
+                    totalSpan.textContent = `${finalToPay} ₽`;
+                    rowTotal.appendChild(totalSpan);
+                    calcBox.appendChild(rowTotal);
+
+                    confirmBtn.textContent = isFullCover ? `Оплатить с баланса (${priceAfterPromo} ₽)` : `Оплатить доплату (${finalToPay} ₽)`;
+                }
+
+                updateBillCalculation();
+
+                cancelBtn.addEventListener('click', () => wrap.remove());
+
+                applyBtn.addEventListener('click', () => {
+                    const inputCode = promoInput.value.trim().toUpperCase();
+                    if (!inputCode) {
+                        addNotification('Ошибка', 'Введите промокод');
+                        return;
+                    }
+                    if (appliedPromo) {
+                        addNotification('Внимание', 'Промокод уже применен');
+                        return;
+                    }
+                    addNotification('Инфо', 'Промокоды временно недоступны через API');
+                });
+
+                confirmBtn.addEventListener('click', async function() {
+                    const priceAfterPromo = Math.max(0, basePrice - promoDiscount);
+                    const finalToPay = Math.max(0, priceAfterPromo - (currentUser.balance || 0));
+                    
+                    if (finalToPay === 0) {
+                        // Полная оплата с баланса
+                        const result = await purchasePlan(planId, appliedPromo);
+                        if (result) {
+                            wrap.remove();
+                        }
+                    } else {
+                        // Частичная оплата - перенаправление на DonationAlerts
+                        const daMsg = `USER_${currentUser.id} ${planId} (Promo:${appliedPromo || 'none'})`;
+                        const daUrl = new URL('https://www.donationalerts.com/r/lethaldlc');
+                        daUrl.searchParams.set('amount', String(finalToPay));
+                        daUrl.searchParams.set('currency', 'RUB');
+                        daUrl.searchParams.set('message', daMsg);
+                        window.open(daUrl.toString(), '_blank', 'noopener,noreferrer');
+                        wrap.remove();
+                        addNotification('Перенаправление', `Завершите оплату ${finalToPay} ₽ через DonationAlerts`);
+                    }
+                });
+            }
+
+            // ============================================================
+            // МОДАЛКА: КОШЕЛЁК
+            // ============================================================
+            function openWalletModal() {
+                const wrap = document.createElement('div');
+                wrap.className = 'modal-wrap';
+
+                const card = document.createElement('div');
+                card.className = 'modal-card';
+                wrap.appendChild(card);
+
+                const title = document.createElement('h2');
+                title.textContent = 'Кошелёк';
+                card.appendChild(title);
+
+                const sub = document.createElement('div');
+                sub.className = 'sub';
+                const balanceText = document.createTextNode('Текущий баланс: ');
+                sub.appendChild(balanceText);
+                const bold = document.createElement('b');
+                bold.style.color = '#fff';
+                bold.textContent = `${currentUser ? currentUser.balance.toFixed(2) : '0.00'} ₽`;
+                sub.appendChild(bold);
+                card.appendChild(sub);
+
+                const btnGroup = document.createElement('div');
+                btnGroup.style.cssText = 'display:flex;gap:0.8rem;margin-bottom:1.5rem;';
+
+                const depositBtn = document.createElement('button');
+                depositBtn.className = 'btn-modal-action';
+                depositBtn.textContent = 'Пополнить';
+                depositBtn.id = 'btnDepositFlow';
+                btnGroup.appendChild(depositBtn);
+
+                card.appendChild(btnGroup);
+
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'btn-modal-cancel';
+                closeBtn.textContent = 'Закрыть';
+                closeBtn.id = 'closeWalletBtn';
+                card.appendChild(closeBtn);
+
+                document.body.appendChild(wrap);
+
+                closeBtn.addEventListener('click', () => wrap.remove());
+
+                depositBtn.addEventListener('click', function() {
+                    const currentWrap = wrap;
+                    currentWrap.innerHTML = '';
+
+                    const newCard = document.createElement('div');
+                    newCard.className = 'modal-card';
+                    currentWrap.appendChild(newCard);
+
+                    const depTitle = document.createElement('h2');
+                    depTitle.textContent = 'Пополнение';
+                    newCard.appendChild(depTitle);
+
+                    const depSub = document.createElement('div');
+                    depSub.className = 'sub';
+                    depSub.textContent = 'Средства зачисляются через DonationAlerts';
+                    newCard.appendChild(depSub);
+
+                    const fieldGroup = document.createElement('div');
+                    fieldGroup.className = 'field-group';
+                    const label = document.createElement('label');
+                    label.textContent = 'Сумма в рублях';
+                    fieldGroup.appendChild(label);
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.id = 'depAmountInp';
+                    input.min = '50';
+                    input.placeholder = 'От 50 ₽';
+                    fieldGroup.appendChild(input);
+                    newCard.appendChild(fieldGroup);
+
+                    const submitBtn = document.createElement('button');
+                    submitBtn.className = 'btn-modal-action';
+                    submitBtn.id = 'submitDepositBtn';
+                    submitBtn.textContent = 'Перейти к оплате';
+                    newCard.appendChild(submitBtn);
+
+                    const backBtn = document.createElement('button');
+                    backBtn.className = 'btn-modal-cancel';
+                    backBtn.id = 'cancelDepBtn';
+                    backBtn.textContent = 'Назад';
+                    newCard.appendChild(backBtn);
+
+                    backBtn.addEventListener('click', () => currentWrap.remove());
+
+                    submitBtn.addEventListener('click', () => {
+                        const amt = parseFloat(document.getElementById('depAmountInp').value);
+                        if (!amt || amt < 50) {
+                            addNotification('Ошибка', 'Минимальная сумма пополнения — 50 ₽');
+                            return;
+                        }
+                        const url = new URL('https://www.donationalerts.com/r/lethaldlc');
+                        url.searchParams.set('amount', String(amt));
+                        url.searchParams.set('currency', 'RUB');
+                        url.searchParams.set('message', `USER_${currentUser.id} TOPUP`);
+                        window.open(url.toString(), '_blank', 'noopener,noreferrer');
+                        currentWrap.remove();
+                    });
+                });
+            }
+
+            // ============================================================
+            // МОДАЛКА: АВТОРИЗАЦИЯ
+            // ============================================================
+            function showAuthModal(mode = 'login') {
+                const wrap = document.createElement('div');
+                wrap.className = 'modal-wrap';
+                let isLogin = mode === 'login';
+
+                function renderAuthContent() {
+                    wrap.innerHTML = '';
+
+                    const card = document.createElement('div');
+                    card.className = 'modal-card';
+                    wrap.appendChild(card);
+
+                    const tabsContainer = document.createElement('div');
+                    tabsContainer.style.cssText = 'display:flex;gap:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0.8rem;margin-bottom:1.5rem;justify-content:center;';
+
+                    const loginTab = document.createElement('button');
+                    loginTab.className = `tab-trigger ${isLogin ? 'active' : ''}`;
+                    loginTab.id = 'tabAuthLoginBtn';
+                    loginTab.style.fontSize = '0.85rem';
+                    loginTab.textContent = 'Вход';
+                    loginTab.addEventListener('click', () => {
+                        if (!isLogin) { isLogin = true; renderAuthContent(); }
+                    });
+                    tabsContainer.appendChild(loginTab);
+
+                    const registerTab = document.createElement('button');
+                    registerTab.className = `tab-trigger ${!isLogin ? 'active' : ''}`;
+                    registerTab.id = 'tabAuthRegisterBtn';
+                    registerTab.style.fontSize = '0.85rem';
+                    registerTab.textContent = 'Регистрация';
+                    registerTab.addEventListener('click', () => {
+                        if (isLogin) { isLogin = false; renderAuthContent(); }
+                    });
+                    tabsContainer.appendChild(registerTab);
+
+                    card.appendChild(tabsContainer);
+
+                    const title = document.createElement('h2');
+                    title.textContent = isLogin ? 'Авторизация' : 'Регистрация';
+                    card.appendChild(title);
+
+                    const sub = document.createElement('div');
+                    sub.className = 'sub';
+                    sub.textContent = isLogin ? 'Войдите в личный кабинет' : 'Создайте новый аккаунт';
+                    card.appendChild(sub);
+
+                    const errorEl = document.createElement('div');
+                    errorEl.className = 'auth-error';
+                    errorEl.id = 'authError';
+                    card.appendChild(errorEl);
+
+                    if (!isLogin) {
+                        const fg = document.createElement('div');
+                        fg.className = 'field-group';
+                        const label = document.createElement('label');
+                        label.textContent = 'Имя пользователя';
+                        fg.appendChild(label);
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.id = 'authNameInp';
+                        input.placeholder = 'Ваше имя';
+                        fg.appendChild(input);
+                        card.appendChild(fg);
+                    }
+
+                    const fg1 = document.createElement('div');
+                    fg1.className = 'field-group';
+                    const l1 = document.createElement('label');
+                    l1.textContent = 'Email адрес';
+                    fg1.appendChild(l1);
+                    const inp1 = document.createElement('input');
+                    inp1.type = 'email';
+                    inp1.id = 'authEmailInp';
+                    inp1.placeholder = 'your@email.com';
+                    fg1.appendChild(inp1);
+                    card.appendChild(fg1);
+
+                    const fg2 = document.createElement('div');
+                    fg2.className = 'field-group';
+                    const l2 = document.createElement('label');
+                    l2.textContent = 'Пароль';
+                    fg2.appendChild(l2);
+                    const inp2 = document.createElement('input');
+                    inp2.type = 'password';
+                    inp2.id = 'authPassInp';
+                    inp2.placeholder = '••••••••';
+                    fg2.appendChild(inp2);
+                    card.appendChild(fg2);
+
+                    const submitBtn = document.createElement('button');
+                    submitBtn.className = 'btn-modal-action';
+                    submitBtn.id = 'submitAuthBtn';
+                    submitBtn.textContent = isLogin ? 'Войти' : 'Зарегистрироваться';
+                    card.appendChild(submitBtn);
+
+                    const toggle = document.createElement('div');
+                    toggle.className = 'toggle-auth';
+                    if (isLogin) {
+                        toggle.innerHTML = 'Нет аккаунта? <span id="toggleToRegBtn">Создать аккаунт</span>';
+                    } else {
+                        toggle.innerHTML = 'Уже зарегистрированы? <span id="toggleToLogBtn">Войти</span>';
+                    }
+                    card.appendChild(toggle);
+
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.className = 'btn-modal-cancel';
+                    cancelBtn.id = 'cancelAuthBtn';
+                    cancelBtn.textContent = 'Отмена';
+                    card.appendChild(cancelBtn);
+
+                    cancelBtn.addEventListener('click', () => wrap.remove());
+
+                    document.getElementById('toggleToRegBtn')?.addEventListener('click', () => {
+                        isLogin = false;
+                        renderAuthContent();
+                    });
+                    document.getElementById('toggleToLogBtn')?.addEventListener('click', () => {
+                        isLogin = true;
+                        renderAuthContent();
+                    });
+
+                    card.querySelectorAll('input').forEach(inp => {
+                        inp.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter') document.getElementById('submitAuthBtn').click();
+                        });
+                    });
+
+                    document.getElementById('submitAuthBtn').addEventListener('click', async () => {
+                        const errEl = document.getElementById('authError');
+                        errEl.classList.remove('show');
+
+                        const email = document.getElementById('authEmailInp').value.trim().toLowerCase();
+                        const pass = document.getElementById('authPassInp').value;
+                        const name = !isLogin ? document.getElementById('authNameInp').value.trim() : '';
+
+                        if (!email.includes('@') || email.length < 5) {
+                            errEl.textContent = 'Введите корректный адрес email';
+                            errEl.classList.add('show');
+                            return;
+                        }
+                        if (pass.length < 6) {
+                            errEl.textContent = 'Пароль должен содержать от 6 символов';
+                            errEl.classList.add('show');
+                            return;
+                        }
+                        if (!isLogin && !name) {
+                            errEl.textContent = 'Укажите ваше имя';
+                            errEl.classList.add('show');
+                            return;
+                        }
+
+                        let success;
+                        if (isLogin) {
+                            success = await login(email, pass);
+                        } else {
+                            success = await register(email, pass, name);
+                        }
+
+                        if (success) {
+                            wrap.remove();
+                        }
+                    });
+                }
+
+                document.body.appendChild(wrap);
+                renderAuthContent();
+            }
+
+            // ============================================================
+            // РЕНДЕР КАБИНЕТА (УПРОЩЕННЫЙ)
+            // ============================================================
+            function renderCabinet() {
+                const container = document.getElementById('cabinetWrapper');
+                if (!currentUser) {
+                    container.innerHTML = '';
+                    const placeholder = document.createElement('div');
+                    placeholder.style.cssText = 'text-align:center;padding:4rem 0;';
+                    const msg = document.createElement('h3');
+                    msg.style.cssText = 'margin-bottom:1rem;color:#888;';
+                    msg.textContent = 'Требуется авторизация';
+                    placeholder.appendChild(msg);
+                    const btn = document.createElement('button');
+                    btn.className = 'btn';
+                    btn.id = 'cabLoginTrigger';
+                    btn.textContent = 'Войти в аккаунт';
+                    btn.addEventListener('click', () => showAuthModal('login'));
+                    placeholder.appendChild(btn);
+                    container.appendChild(placeholder);
+                    return;
+                }
+
+                const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
+                const isSubActive = currentUser.subscription?.active;
+
+                container.innerHTML = '';
+
+                const grid = document.createElement('div');
+                grid.className = 'cabinet-grid';
+
+                // Левая панель
+                const sidebar = document.createElement('div');
+                sidebar.className = 'cabinet-sidebar';
+
+                const avatar = document.createElement('div');
+                avatar.className = 'avatar-box';
+                avatar.textContent = (currentUser.name ? currentUser.name[0].toUpperCase() : 'U');
+                sidebar.appendChild(avatar);
+
+                const nameEl = document.createElement('div');
+                nameEl.className = 'user-name-title';
+                nameEl.textContent = currentUser.name;
+                sidebar.appendChild(nameEl);
+
+                const emailEl = document.createElement('div');
+                emailEl.className = 'user-email-sub';
+                emailEl.textContent = currentUser.email;
+                sidebar.appendChild(emailEl);
+
+                const idBadge = document.createElement('div');
+                idBadge.className = 'id-badge';
+                idBadge.textContent = `USER_${currentUser.id}`;
+                sidebar.appendChild(idBadge);
+
+                const statusPill = document.createElement('div');
+                statusPill.className = `status-pill ${isSubActive ? 'active' : ''}`;
+                statusPill.textContent = isSubActive ? '● Подписка активна' : '○ Нет подписки';
+                sidebar.appendChild(statusPill);
+
+                const divider1 = document.createElement('div');
+                divider1.className = 'sidebar-divider';
+                sidebar.appendChild(divider1);
+
+                const infoRows = [
+                    { label: 'Ключей', value: currentUser.keys?.length || 0 },
+                    { label: 'Тариф', value: currentUser.subscription?.plan || 'Отсутствует' },
+                    { label: 'Баланс', value: `${currentUser.balance || 0} ₽` }
+                ];
+                infoRows.forEach(row => {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = 'info-row';
+                    const labelSpan = document.createElement('span');
+                    labelSpan.className = 'label';
+                    labelSpan.textContent = row.label;
+                    const valSpan = document.createElement('span');
+                    valSpan.className = 'val';
+                    valSpan.textContent = row.value;
+                    rowDiv.appendChild(labelSpan);
+                    rowDiv.appendChild(valSpan);
+                    sidebar.appendChild(rowDiv);
+                });
+
+                const divider2 = document.createElement('div');
+                divider2.className = 'sidebar-divider';
+                sidebar.appendChild(divider2);
+
+                const btnContainer = document.createElement('div');
+                btnContainer.className = 'sidebar-buttons-container';
+
+                const walletBtn = document.createElement('button');
+                walletBtn.className = 'btn-side-tile';
+                walletBtn.id = 'openWalletBtn';
+                const icon1 = document.createElement('div');
+                icon1.className = 'icon-tag';
+                icon1.textContent = '₽';
+                walletBtn.appendChild(icon1);
+                const tg1 = document.createElement('div');
+                tg1.className = 'text-group';
+                const t1 = document.createElement('span');
+                t1.className = 'title';
+                t1.textContent = 'Кошелёк';
+                tg1.appendChild(t1);
+                const st1 = document.createElement('span');
+                st1.className = 'subtitle';
+                st1.textContent = `${currentUser.balance || 0} ₽ (Баланс)`;
+                tg1.appendChild(st1);
+                walletBtn.appendChild(tg1);
+                walletBtn.addEventListener('click', openWalletModal);
+                btnContainer.appendChild(walletBtn);
+
+                sidebar.appendChild(btnContainer);
+
+                const divider3 = document.createElement('div');
+                divider3.className = 'sidebar-divider';
+                sidebar.appendChild(divider3);
+
+                const buyBtn = document.createElement('button');
+                buyBtn.className = 'btn-sm';
+                buyBtn.style.width = '100%';
+                buyBtn.dataset.page = 'pricing';
+                buyBtn.textContent = 'Купить ключ';
+                buyBtn.addEventListener('click', () => navigateTo('pricing'));
+                sidebar.appendChild(buyBtn);
+
+                grid.appendChild(sidebar);
+
+                // Правая область
+                const main = document.createElement('div');
+                main.className = 'cabinet-main';
+
+                // Ключ
+                const keyHub = document.createElement('div');
+                keyHub.className = 'key-hub';
+
+                const khTitle = document.createElement('h3');
+                khTitle.textContent = 'Лицензионный терминал';
+                keyHub.appendChild(khTitle);
+
+                const khDesc = document.createElement('p');
+                khDesc.textContent = 'Скопируйте ваш ключ и введите его в инжекторе';
+                keyHub.appendChild(khDesc);
+
+                const keyDisplay = document.createElement('div');
+                keyDisplay.className = 'key-display';
+                const keySpan = document.createElement('span');
+                keySpan.id = 'keyValueBox';
+                keySpan.textContent = lastKey ? lastKey.key : 'КЛЮЧ_НЕ_НАЙДЕН';
+                keyDisplay.appendChild(keySpan);
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'btn-sm primary';
+                copyBtn.id = 'copyKeyTrigger';
+                copyBtn.textContent = 'Копировать';
+                copyBtn.addEventListener('click', function() {
+                    const text = document.getElementById('keyValueBox')?.textContent;
+                    if (text && text !== 'КЛЮЧ_НЕ_НАЙДЕН') {
+                        navigator.clipboard.writeText(text);
+                        this.textContent = 'Скопировано';
+                        setTimeout(() => this.textContent = 'Копировать', 2000);
+                    }
+                });
+                keyDisplay.appendChild(copyBtn);
+                keyHub.appendChild(keyDisplay);
+
+                const instGrid = document.createElement('div');
+                instGrid.className = 'instructions-grid';
+                const insts = [
+                    'Скачайте лоадер: lethaldlc.com/loader',
+                    'Запустите от имени администратора',
+                    'Вставьте ваш лицензионный ключ',
+                    'Нажмите "Inject" и войдите в игру'
+                ];
+                insts.forEach((text, index) => {
+                    const box = document.createElement('div');
+                    box.className = 'inst-box';
+                    const b = document.createElement('b');
+                    b.textContent = `${index + 1}.`;
+                    box.appendChild(b);
+                    box.appendChild(createSafeText(text));
+                    instGrid.appendChild(box);
+                });
+                keyHub.appendChild(instGrid);
+
+                main.appendChild(keyHub);
+                grid.appendChild(main);
+                container.appendChild(grid);
+
+                document.querySelectorAll('[data-page]').forEach(el => {
+                    el.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        navigateTo(this.dataset.page);
+                    });
+                });
+            }
+
+            // ============================================================
+            // ЧАСТИЦЫ (КРАСИВЫЙ ФОН)
+            // ============================================================
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+
+            function resizeCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            for (let i = 0; i < 90; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.25,
+                    vy: (Math.random() - 0.5) * 0.25,
+                    r: Math.random() * 1.5 + 0.5
+                });
+            }
+
+            function loopParticles() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = '#ffffff';
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(loopParticles);
+            }
+            loopParticles();
+
+            // ============================================================
+            // ОБРАБОТЧИКИ КНОПОК
+            // ============================================================
+            document.getElementById('loginBtn')?.addEventListener('click', () => showAuthModal('login'));
+            document.getElementById('registerBtn')?.addEventListener('click', () => showAuthModal('register'));
+            document.getElementById('logoutBtn')?.addEventListener('click', () => {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('lethal_session');
+                authToken = null;
+                currentUser = null;
+                updateUI();
+                navigateTo('main');
+            });
+
+            document.getElementById('hwidResetBtn')?.addEventListener('click', () => {
+                if (!currentUser) {
+                    showAuthModal('login');
+                    return;
+                }
+                openSmartPurchaseModal(400, 'hwid', true);
+            });
+
+            document.querySelectorAll('[data-page]').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navigateTo(this.dataset.page);
+                });
+            });
+
+            // ============================================================
+            // СТАРТ
+            // ============================================================
+            (async function init() {
+                // Восстановление сессии
+                if (authToken) {
+                    const result = await getBalance();
+                    if (result.balance !== undefined) {
+                        // Пользователь авторизован
+                    } else {
+                        authToken = null;
+                        localStorage.removeItem('auth_token');
+                    }
+                }
+                updateUI();
+                renderPricing();
+                navigateTo('main');
+            })();
 
         })();
     </script>
