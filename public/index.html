@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lethal DLC — Premium Cheat</title>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -40,13 +40,14 @@
             scroll-behavior: smooth;
         }
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Rajdhani', 'Inter', -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            letter-spacing: 0.3px;
         }
 
         .bg-container {
@@ -215,10 +216,11 @@
         .nav {
             display: flex;
             gap: 2.5rem;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 2.5px;
             font-weight: 700;
+            font-family: 'Rajdhani', sans-serif;
         }
         .nav a {
             color: #666677;
@@ -234,7 +236,7 @@
             bottom: -2px;
             left: 0;
             width: 0;
-            height: 1px;
+            height: 1.5px;
             background: #ffffff;
             transition: var(--transition);
         }
@@ -268,9 +270,9 @@
 
         .btn-sm {
             padding: 0.45rem 1.4rem;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             font-weight: 800;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             border-radius: 10px;
             border: 1px solid #333344;
@@ -280,6 +282,7 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            font-family: 'Rajdhani', sans-serif;
         }
         .btn-sm::before {
             content: '';
@@ -335,8 +338,8 @@
         }
         .hero-tag {
             display: inline-block;
-            font-size: 0.55rem;
-            font-weight: 800;
+            font-size: 0.6rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 4px;
             color: #666677;
@@ -347,6 +350,7 @@
             width: fit-content;
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(10px);
+            font-family: 'Rajdhani', sans-serif;
         }
         .hero h1 {
             font-family: 'Orbitron', monospace;
@@ -360,7 +364,7 @@
         }
         .hero h1 small {
             display: block;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Rajdhani', sans-serif;
             font-size: 1.1rem;
             font-weight: 300;
             color: #666677;
@@ -368,11 +372,14 @@
             margin-top: 0.5rem;
         }
         .hero p {
+            font-family: 'Rajdhani', sans-serif;
             font-size: 1.1rem;
+            font-weight: 400;
             color: #888899;
             max-width: 540px;
             margin-bottom: 2.5rem;
             line-height: 1.9;
+            letter-spacing: 0.5px;
         }
         .btn-group {
             display: flex;
@@ -381,9 +388,9 @@
         }
         .btn {
             padding: 0.9rem 3rem;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 800;
-            letter-spacing: 2.5px;
+            letter-spacing: 3px;
             text-transform: uppercase;
             border-radius: 12px;
             border: 1px solid #ffffff;
@@ -393,6 +400,7 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            font-family: 'Rajdhani', sans-serif;
         }
         .btn::before {
             content: '';
@@ -476,12 +484,13 @@
             box-shadow: var(--shadow);
         }
         .feature-item .index {
-            font-size: 0.55rem;
-            font-weight: 800;
+            font-size: 0.6rem;
+            font-weight: 700;
             color: #444455;
             margin-bottom: 0.8rem;
             display: block;
             letter-spacing: 2px;
+            font-family: 'Rajdhani', sans-serif;
         }
         .feature-item h3 {
             font-family: 'Orbitron', monospace;
@@ -492,9 +501,12 @@
             letter-spacing: 1px;
         }
         .feature-item p {
+            font-family: 'Rajdhani', sans-serif;
             color: #888899;
             font-size: 0.85rem;
             line-height: 1.8;
+            font-weight: 400;
+            letter-spacing: 0.3px;
         }
 
         .pricing-grid {
@@ -537,12 +549,13 @@
             right: 1.2rem;
             background: #ffffff;
             color: #000000;
-            font-size: 0.5rem;
+            font-size: 0.55rem;
             font-weight: 800;
             text-transform: uppercase;
             padding: 0.2rem 0.8rem;
             border-radius: 20px;
             letter-spacing: 1px;
+            font-family: 'Rajdhani', sans-serif;
         }
         .price-card .amount {
             font-family: 'Orbitron', monospace;
@@ -553,17 +566,21 @@
             letter-spacing: 2px;
         }
         .price-card .period {
+            font-family: 'Rajdhani', sans-serif;
             color: #666677;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-top: 0.2rem;
+            font-weight: 600;
         }
         .price-card .desc {
+            font-family: 'Rajdhani', sans-serif;
             color: #888899;
             font-size: 0.85rem;
             margin: 1.8rem 0 2.2rem;
             line-height: 1.8;
+            font-weight: 400;
         }
         .btn-buy {
             width: 100%;
@@ -578,6 +595,7 @@
             color: #ffffff;
             cursor: pointer;
             transition: var(--transition);
+            font-family: 'Rajdhani', sans-serif;
         }
         .btn-buy:hover {
             background: #ffffff;
@@ -609,8 +627,10 @@
             margin-bottom: 4px;
         }
         .hwid-box p {
+            font-family: 'Rajdhani', sans-serif;
             color: #888899;
             font-size: 0.85rem;
+            font-weight: 400;
         }
 
         .cabinet-grid {
@@ -662,10 +682,12 @@
             letter-spacing: 1px;
         }
         .user-email-sub {
+            font-family: 'Rajdhani', sans-serif;
             color: #666677;
             font-size: 0.8rem;
             margin-bottom: 1.2rem;
             word-break: break-all;
+            font-weight: 400;
         }
 
         .id-badge {
@@ -695,6 +717,7 @@
             width: fit-content;
             color: #666677;
             margin-bottom: 1.5rem;
+            font-family: 'Rajdhani', sans-serif;
         }
         .status-pill.active {
             border-color: #ffffff;
@@ -724,9 +747,11 @@
             justify-content: space-between;
             font-size: 0.8rem;
             padding: 0.5rem 0;
+            font-family: 'Rajdhani', sans-serif;
         }
         .info-row .label {
             color: #666677;
+            font-weight: 500;
         }
         .info-row .val {
             color: #ffffff;
@@ -751,6 +776,7 @@
             transition: var(--transition);
             text-align: left;
             width: 100%;
+            font-family: 'Rajdhani', sans-serif;
         }
         .btn-side-tile:hover {
             border-color: #ffffff;
@@ -789,6 +815,7 @@
             font-size: 0.65rem;
             color: #888899;
             margin-top: 2px;
+            font-weight: 400;
         }
 
         .cabinet-main {
@@ -820,6 +847,7 @@
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 0.5rem;
+            font-family: 'Rajdhani', sans-serif;
         }
         .dash-card .card-val {
             font-family: 'Orbitron', monospace;
@@ -832,6 +860,8 @@
             font-size: 0.65rem;
             color: #888899;
             margin-top: 0.3rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 400;
         }
 
         .key-hub {
@@ -853,9 +883,11 @@
             letter-spacing: 1px;
         }
         .key-hub p {
+            font-family: 'Rajdhani', sans-serif;
             font-size: 0.8rem;
             color: #888899;
             margin-bottom: 1.5rem;
+            font-weight: 400;
         }
 
         .key-display {
@@ -873,7 +905,7 @@
             border-color: var(--border-hover);
         }
         .key-display span {
-            font-family: monospace;
+            font-family: 'Rajdhani', monospace;
             font-size: 1.1rem;
             font-weight: 700;
             letter-spacing: 2px;
@@ -897,6 +929,7 @@
             color: #888899;
             align-items: center;
             transition: var(--transition);
+            font-family: 'Rajdhani', sans-serif;
         }
         .inst-box:hover {
             border-color: var(--border-hover);
@@ -931,6 +964,7 @@
             cursor: pointer;
             transition: var(--transition);
             padding-bottom: 4px;
+            font-family: 'Rajdhani', sans-serif;
         }
         .tab-trigger.active {
             color: #ffffff;
@@ -951,6 +985,7 @@
             margin-bottom: 0.6rem;
             font-size: 0.8rem;
             transition: var(--transition);
+            font-family: 'Rajdhani', sans-serif;
         }
         .history-row:hover {
             border-color: var(--border-hover);
@@ -1031,10 +1066,12 @@
             text-align: center;
         }
         .modal-card .sub {
+            font-family: 'Rajdhani', sans-serif;
             font-size: 0.8rem;
             color: #888899;
             text-align: center;
             margin-bottom: 1.8rem;
+            font-weight: 400;
         }
 
         .auth-error {
@@ -1048,6 +1085,7 @@
             display: none;
             text-align: center;
             font-weight: 600;
+            font-family: 'Rajdhani', sans-serif;
         }
         .auth-error.show {
             display: block;
@@ -1058,6 +1096,7 @@
             margin-top: 1.2rem;
             font-size: 0.75rem;
             color: #666677;
+            font-family: 'Rajdhani', sans-serif;
         }
         .toggle-auth span {
             color: #ffffff;
@@ -1083,6 +1122,7 @@
             font-size: 0.82rem;
             padding: 0.4rem 0;
             color: #888899;
+            font-family: 'Rajdhani', sans-serif;
         }
         .split-row.total {
             border-top: 1px solid var(--border);
@@ -1105,11 +1145,12 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             color: #ffffff;
-            font-family: inherit;
+            font-family: 'Rajdhani', sans-serif;
             font-size: 0.85rem;
             outline: none;
             text-transform: uppercase;
             transition: var(--transition);
+            font-weight: 500;
         }
         .promo-input-row input:focus {
             border-color: #ffffff;
@@ -1126,6 +1167,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: var(--transition);
+            font-family: 'Rajdhani', sans-serif;
         }
         .promo-input-row button:hover {
             background: #000000;
@@ -1143,6 +1185,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 0.4rem;
+            font-family: 'Rajdhani', sans-serif;
         }
         .field-group input {
             width: 100%;
@@ -1151,10 +1194,11 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             color: #ffffff;
-            font-family: inherit;
+            font-family: 'Rajdhani', sans-serif;
             font-size: 0.85rem;
             outline: none;
             transition: var(--transition);
+            font-weight: 500;
         }
         .field-group input:focus {
             border-color: #ffffff;
@@ -1173,6 +1217,7 @@
             color: #000000;
             cursor: pointer;
             transition: var(--transition);
+            font-family: 'Rajdhani', sans-serif;
         }
         .btn-modal-action:hover {
             background: #000000;
@@ -1190,6 +1235,7 @@
             margin-top: 0.8rem;
             cursor: pointer;
             transition: var(--transition);
+            font-family: 'Rajdhani', sans-serif;
         }
         .btn-modal-cancel:hover {
             color: #ffffff;
@@ -1215,6 +1261,7 @@
             color: #ffffff;
             animation: notifSlide 0.4s ease-out;
             backdrop-filter: blur(10px);
+            font-family: 'Rajdhani', sans-serif;
         }
         @keyframes notifSlide {
             from {
@@ -1236,6 +1283,7 @@
             font-size: 0.72rem;
             color: #888899;
             margin-top: 4px;
+            font-weight: 400;
         }
         .notification.error {
             border-color: rgba(255, 68, 68, 0.3);
@@ -1449,7 +1497,7 @@
 
     <script>
         // ============================================================
-        // КЛИЕНТСКАЯ ЧАСТЬ - ВСЯ ЛОГИКА НА СЕРВЕРЕ
+        // ПОЛНЫЙ КЛИЕНТСКИЙ КОД
         // ============================================================
         (function() {
             'use strict';
@@ -1518,8 +1566,6 @@
                     authToken = result.token;
                     localStorage.setItem('auth_token', authToken);
                     currentUser = result.user;
-                    // Сохраняем ID в куки
-                    document.cookie = `userId=${currentUser.id || 'U' + Math.random().toString(36).substring(2, 8).toUpperCase()}; path=/; max-age=86400`;
                     updateUI();
                     renderCabinet();
                     addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
@@ -1535,7 +1581,6 @@
                     authToken = result.token;
                     localStorage.setItem('auth_token', authToken);
                     currentUser = result.user;
-                    document.cookie = `userId=${currentUser.id}; path=/; max-age=86400`;
                     updateUI();
                     renderCabinet();
                     addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
@@ -1795,7 +1840,7 @@
 
                 const sub = document.createElement('div');
                 sub.className = 'sub';
-                sub.textContent = 'Партнёрская программа и промокоды';
+                sub.textContent = 'Партнёрская программа и промокоды — подписка не обязательна!';
                 card.appendChild(sub);
 
                 const fg1 = document.createElement('div');
@@ -2136,13 +2181,11 @@
                     return;
                 }
 
-                // Получаем актуальный баланс
                 await getBalance();
 
                 const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
                 const isSubActive = currentUser.subscription?.active;
 
-                // Получаем медиа заявки
                 let applications = [];
                 try {
                     const result = await apiRequest('/api/media', {}, 'GET');
@@ -2179,7 +2222,7 @@
 
                 const idBadge = document.createElement('div');
                 idBadge.className = 'id-badge';
-                idBadge.textContent = `ID: ${currentUser.id || 'Не установлен'}`;
+                idBadge.textContent = `Email: ${currentUser.email}`;
                 sidebar.appendChild(idBadge);
 
                 const statusPill = document.createElement('div');
@@ -2305,7 +2348,6 @@
                 const main = document.createElement('div');
                 main.className = 'cabinet-main';
 
-                // Метрики
                 const metricsRow = document.createElement('div');
                 metricsRow.className = 'metric-cards-row';
 
@@ -2339,7 +2381,6 @@
 
                 main.appendChild(metricsRow);
 
-                // Ключ
                 const keyHub = document.createElement('div');
                 keyHub.className = 'key-hub';
 
@@ -2394,7 +2435,6 @@
 
                 main.appendChild(keyHub);
 
-                // Вкладки
                 const tabsHub = document.createElement('div');
                 tabsHub.className = 'tabs-hub';
 
@@ -2565,7 +2605,6 @@
             document.getElementById('registerBtn')?.addEventListener('click', () => showAuthModal('register'));
             document.getElementById('logoutBtn')?.addEventListener('click', () => {
                 localStorage.removeItem('auth_token');
-                document.cookie = 'userId=; path=/; max-age=0';
                 authToken = null;
                 currentUser = null;
                 updateUI();
@@ -2588,8 +2627,8 @@
                 });
             });
 
-            // === ФИКС: ПРОВЕРКА СЕССИИ ===
-            async function checkSession() {
+            // === ФИКС СЕССИИ ===
+            async function fixSession() {
                 const token = localStorage.getItem('auth_token');
                 if (!token) return false;
 
@@ -2600,12 +2639,12 @@
                     const data = await response.json();
                     if (data.success) {
                         currentUser = data.user;
-                        document.cookie =
-                            `userId=${data.user.id || 'U' + Math.random().toString(36).substring(2, 8).toUpperCase()}; path=/; max-age=86400`;
                         return true;
                     } else {
                         localStorage.removeItem('auth_token');
-                        document.cookie = 'userId=; path=/; max-age=0';
+                        currentUser = null;
+                        updateUI();
+                        renderCabinet();
                         return false;
                     }
                 } catch (e) {
@@ -2613,9 +2652,30 @@
                 }
             }
 
+            const originalFetch = window.fetch;
+            window.fetch = function(...args) {
+                return originalFetch.apply(this, args).then(async response => {
+                    const clonedResponse = response.clone();
+                    try {
+                        const data = await clonedResponse.json();
+                        if (data.error && (
+                                data.error.includes('пользователь не найден') ||
+                                data.error.includes('Пользователь не найден') ||
+                                data.error.includes('Недействительный токен')
+                            )) {
+                            setTimeout(() => fixSession(), 500);
+                        }
+                    } catch (e) {}
+                    return response;
+                });
+            };
+
+            setTimeout(async function() {
+                await fixSession();
+            }, 1000);
+
             // === СТАРТ ===
             (async function init() {
-                await checkSession();
                 if (authToken) {
                     const result = await getBalance();
                     if (result && result.success) {

@@ -22,11 +22,11 @@ function saveUsers(users) {
   } catch (e) {}
 }
 
-function getUserIdFromToken(token) {
+function verifyToken(token) {
   try {
     if (!token) return null;
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    return decoded.payload?.userId || decoded.payload?.email || null;
+    return decoded.payload?.email || null;
   } catch {
     return null;
   }
@@ -89,40 +89,29 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const userId = getUserIdFromToken(token);
-    if (!userId) {
+    const email = verifyToken(token);
+    if (!email) {
       return res.status(401).json({ error: 'Неверный токен' });
     }
 
     const users = loadUsers();
+    const user = users[email];
     
-    let foundUser = null;
-    let foundEmail = null;
-    
-    for (const [email, user] of Object.entries(users)) {
-      if (user.id === userId || email === userId) {
-        foundUser = user;
-        foundEmail = email;
-        break;
-      }
-    }
-
-    if (!foundUser) {
+    if (!user) {
       return res.status(401).json({ 
-        error: 'Пользователь не найден. Пожалуйста, перезайдите в аккаунт.'
+        error: 'Пользователь не найден. Перезайдите в аккаунт.'
       });
     }
 
-    // GET - получение заявок (ДОСТУПНО ВСЕМ)
+    // GET - получение заявок
     if (req.method === 'GET') {
-      const applications = foundUser.mediaApplications || [];
       return res.status(200).json({
         success: true,
-        applications: applications
+        applications: user.mediaApplications || []
       });
     }
 
-    // POST - подача заявки (ДОСТУПНО ВСЕМ, ПОДПИСКА НЕ НУЖНА!)
+    // POST - подача заявки
     if (req.method === 'POST') {
       const { tiktokUrl, promoCode, telegramContact } = req.body;
 
@@ -130,28 +119,26 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Заполните все поля' });
       }
 
-      // Валидация TikTok
+      // Валидация
       const tiktokRegex = /^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/@[a-zA-Z0-9._]+(\/)?$/i;
       if (!tiktokRegex.test(tiktokUrl)) {
         return res.status(400).json({ error: 'Некорректная ссылка TikTok' });
       }
 
-      // Валидация промокода
       const promoRegex = /^[A-Z0-9_]{3,12}$/;
       if (!promoRegex.test(promoCode.toUpperCase())) {
         return res.status(400).json({ error: 'Промокод: 3-12 латинских букв, цифр или _' });
       }
 
-      // Валидация Telegram
       const tgRegex = /^@[a-zA-Z0-9_]{3,32}$/;
       if (!tgRegex.test(telegramContact)) {
         return res.status(400).json({ error: 'Некорректный Telegram (@username)' });
       }
 
-      // Проверка на дубликат промокода
-      for (const [email, user] of Object.entries(users)) {
-        if (user.mediaApplications) {
-          for (const app of user.mediaApplications) {
+      // Проверка на дубликат
+      for (const [emailKey, userData] of Object.entries(users)) {
+        if (userData.mediaApplications) {
+          for (const app of userData.mediaApplications) {
             if (app.status === 'approved' && app.promoCode === promoCode.toUpperCase()) {
               return res.status(400).json({ error: 'Этот промокод уже используется' });
             }
@@ -168,26 +155,24 @@ export default async function handler(req, res) {
         telegramContact: telegramContact,
         status: 'pending',
         createdAt: new Date().toISOString(),
-        userName: foundUser.name || foundEmail.split('@')[0],
-        userEmail: foundEmail,
-        userId: foundUser.id
+        userName: user.name || email.split('@')[0],
+        userEmail: email
       };
 
-      if (!foundUser.mediaApplications) {
-        foundUser.mediaApplications = [];
+      if (!user.mediaApplications) {
+        user.mediaApplications = [];
       }
-      foundUser.mediaApplications.push(application);
+      user.mediaApplications.push(application);
       
-      users[foundEmail] = foundUser;
+      users[email] = user;
       saveUsers(users);
 
-      // Отправка в Telegram
-      await sendTelegramNotification(application, foundEmail);
+      await sendTelegramNotification(application, email);
 
       return res.status(200).json({
         success: true,
         application: application,
-        message: '✅ Заявка подана! Администратор рассмотрит её в ближайшее время.'
+        message: '✅ Заявка подана!'
       });
     }
 

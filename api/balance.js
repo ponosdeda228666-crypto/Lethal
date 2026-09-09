@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { verifyToken } from './auth.js';
 
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 
@@ -14,6 +13,16 @@ function loadUsers() {
     return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
   } catch (e) {
     return {};
+  }
+}
+
+function verifyToken(token) {
+  try {
+    if (!token) return null;
+    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    return decoded.payload?.email || null;
+  } catch {
+    return null;
   }
 }
 

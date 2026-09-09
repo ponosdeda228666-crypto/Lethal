@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { verifyToken } from './auth.js';
 
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 
@@ -21,6 +20,16 @@ function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
   } catch (e) {}
+}
+
+function verifyToken(token) {
+  try {
+    if (!token) return null;
+    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    return decoded.payload?.email || null;
+  } catch {
+    return null;
+  }
 }
 
 const PRICES = { 
@@ -118,9 +127,7 @@ export default async function handler(req, res) {
             parse_mode: 'HTML'
           })
         });
-      } catch (e) {
-        console.error('Ошибка отправки в Telegram:', e);
-      }
+      } catch (e) {}
     }
 
     return res.status(200).json({
