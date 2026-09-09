@@ -1,39 +1,5 @@
 import crypto from 'crypto';
-import fs from 'fs';
-import path from 'path';
-
-const USERS_FILE = path.join(process.cwd(), 'users.json');
-const SECRET = 'lethal-super-secret-2026';
-
-function loadUsers() {
-  try {
-    if (!fs.existsSync(USERS_FILE)) {
-      fs.writeFileSync(USERS_FILE, JSON.stringify({}, null, 2));
-      return {};
-    }
-    return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
-  } catch {
-    return {};
-  }
-}
-
-function saveUsers(users) {
-  try {
-    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-  } catch {}
-}
-
-function verifyToken(token) {
-  try {
-    if (!token) return null;
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    const checkHash = crypto.createHash('sha256').update(`${decoded.email}|${decoded.time}` + SECRET).digest('hex');
-    if (decoded.hash !== checkHash) return null;
-    return decoded.email;
-  } catch {
-    return null;
-  }
-}
+import { loadUsers, saveUsers, verifyToken, setCors } from './_utils.js';
 
 const PRICES = { 
   'month': 250, 
@@ -43,9 +9,7 @@ const PRICES = {
 };
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token');
+  setCors(res);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();

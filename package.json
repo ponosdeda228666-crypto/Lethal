@@ -4,8 +4,5 @@
   "type": "module",
   "scripts": {
     "vercel-build": "echo 'Building...'"
-  },
-  "dependencies": {
-    "node-fetch": "^2.7.0"
   }
 }
