@@ -96,7 +96,6 @@ export default async function handler(req, res) {
 
     const users = loadUsers();
     
-    // Ищем пользователя по ID или email
     let foundUser = null;
     let foundEmail = null;
     
@@ -114,7 +113,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // GET - получение заявок
+    // GET - получение заявок (ДОСТУПНО ВСЕМ)
     if (req.method === 'GET') {
       const applications = foundUser.mediaApplications || [];
       return res.status(200).json({
@@ -123,7 +122,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // POST - подача заявки
+    // POST - подача заявки (ДОСТУПНО ВСЕМ, ПОДПИСКА НЕ НУЖНА!)
     if (req.method === 'POST') {
       const { tiktokUrl, promoCode, telegramContact } = req.body;
 
@@ -131,17 +130,19 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Заполните все поля' });
       }
 
-      // Валидация
+      // Валидация TikTok
       const tiktokRegex = /^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/@[a-zA-Z0-9._]+(\/)?$/i;
       if (!tiktokRegex.test(tiktokUrl)) {
         return res.status(400).json({ error: 'Некорректная ссылка TikTok' });
       }
 
+      // Валидация промокода
       const promoRegex = /^[A-Z0-9_]{3,12}$/;
       if (!promoRegex.test(promoCode.toUpperCase())) {
         return res.status(400).json({ error: 'Промокод: 3-12 латинских букв, цифр или _' });
       }
 
+      // Валидация Telegram
       const tgRegex = /^@[a-zA-Z0-9_]{3,32}$/;
       if (!tgRegex.test(telegramContact)) {
         return res.status(400).json({ error: 'Некорректный Telegram (@username)' });
@@ -169,7 +170,7 @@ export default async function handler(req, res) {
         createdAt: new Date().toISOString(),
         userName: foundUser.name || foundEmail.split('@')[0],
         userEmail: foundEmail,
-        userId: foundUser.id || 'U' + crypto.randomBytes(4).toString('hex').toUpperCase()
+        userId: foundUser.id
       };
 
       if (!foundUser.mediaApplications) {
@@ -186,7 +187,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         success: true,
         application: application,
-        message: 'Заявка подана! Ожидайте подтверждения.'
+        message: '✅ Заявка подана! Администратор рассмотрит её в ближайшее время.'
       });
     }
 
