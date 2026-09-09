@@ -3,29 +3,37 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lethal DLC — Premium</title>
+    <title>Lethal DLC — Premium Cheat</title>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
-           ПОЛНЫЙ СТИЛЬ С АНИМАЦИЯМИ
+           СУПЕР СТИЛЬНЫЙ МОНОХРОМНЫЙ ДИЗАЙН
            ============================================================ */
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
         input, textarea { user-select: text; }
 
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap');
-
         :root {
-            --bg: #000000;
-            --surface: #09090b;
-            --surface-card: #0f0f11;
-            --border: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(255, 255, 255, 0.25);
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --surface-card: #161618;
+            --surface-hover: #1e1e22;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.15);
             --text-primary: #ffffff;
-            --text-secondary: #888888;
-            --shadow: 0 10px 40px rgba(0, 0, 0, 0.95);
-            --radius: 12px;
-            --radius-lg: 18px;
-            --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --text-secondary: #888899;
+            --text-muted: #444455;
+            --accent: #ffffff;
+            --glow: 0 0 40px rgba(255,255,255,0.03);
+            --shadow: 0 20px 60px rgba(0,0,0,0.8);
+            --radius: 14px;
+            --radius-lg: 20px;
+            --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         html { scroll-behavior: smooth; }
@@ -39,7 +47,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ФОН С АНИМАЦИЕЙ */
+        /* ===== ЭПИЧНЫЙ ФОН ===== */
         .bg-container {
             position: fixed;
             top: 0;
@@ -49,53 +57,81 @@
             z-index: 0;
             pointer-events: none;
             overflow: hidden;
-            background: #000000;
+            background: var(--bg);
         }
         .bg-gradient {
             position: absolute;
             inset: -50%;
-            background: radial-gradient(ellipse at 20% 30%, rgba(255,255,255,0.03) 0%, transparent 50%),
-                        radial-gradient(ellipse at 80% 70%, rgba(255,255,255,0.02) 0%, transparent 45%),
-                        radial-gradient(ellipse at 40% 80%, rgba(255,255,255,0.02) 0%, transparent 40%);
-            animation: gradientShift 30s ease-in-out infinite alternate;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(255,255,255,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(255,255,255,0.025) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 80%, rgba(255,255,255,0.015) 0%, transparent 40%);
+            animation: gradientShift 40s ease-in-out infinite alternate;
         }
         .bg-gradient2 {
             position: absolute;
             inset: -50%;
-            background: radial-gradient(ellipse at 60% 40%, rgba(255,255,255,0.02) 0%, transparent 50%),
-                        radial-gradient(ellipse at 30% 70%, rgba(255,255,255,0.015) 0%, transparent 45%);
-            animation: gradientShift2 35s ease-in-out infinite alternate;
+            background:
+                radial-gradient(ellipse at 60% 40%, rgba(255,255,255,0.025) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 70%, rgba(255,255,255,0.015) 0%, transparent 45%);
+            animation: gradientShift2 45s ease-in-out infinite alternate;
         }
         @keyframes gradientShift {
             0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(1.15); }
             100% { transform: rotate(360deg) scale(1); }
         }
         @keyframes gradientShift2 {
             0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(-180deg) scale(1.15); }
+            50% { transform: rotate(-180deg) scale(1.2); }
             100% { transform: rotate(-360deg) scale(1); }
         }
         .bg-grid {
             position: absolute;
             inset: 0;
-            background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-            background-size: 55px 55px;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.5;
         }
         .bg-orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(90px);
-            animation: orbFloat 25s ease-in-out infinite alternate;
+            filter: blur(120px);
+            animation: orbFloat 30s ease-in-out infinite alternate;
         }
-        .bg-orb.orb1 { width: 450px; height: 450px; background: rgba(255,255,255,0.02); top: -10%; left: -5%; animation-duration: 28s; }
-        .bg-orb.orb2 { width: 550px; height: 550px; background: rgba(255,255,255,0.015); bottom: -15%; right: -10%; animation-duration: 32s; animation-delay: -6s; }
-        .bg-orb.orb3 { width: 380px; height: 380px; background: rgba(255,255,255,0.02); top: 40%; left: 50%; transform: translateX(-50%); animation-duration: 24s; animation-delay: -12s; }
+        .bg-orb.orb1 {
+            width: 600px;
+            height: 600px;
+            background: rgba(255,255,255,0.015);
+            top: -15%;
+            left: -10%;
+            animation-duration: 35s;
+        }
+        .bg-orb.orb2 {
+            width: 700px;
+            height: 700px;
+            background: rgba(255,255,255,0.01);
+            bottom: -20%;
+            right: -15%;
+            animation-duration: 40s;
+            animation-delay: -8s;
+        }
+        .bg-orb.orb3 {
+            width: 500px;
+            height: 500px;
+            background: rgba(255,255,255,0.012);
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-duration: 28s;
+            animation-delay: -15s;
+        }
         @keyframes orbFloat {
             0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(60px, -40px) scale(1.08); }
-            100% { transform: translate(-30px, 50px) scale(0.95); }
+            50% { transform: translate(80px, -60px) scale(1.1); }
+            100% { transform: translate(-50px, 70px) scale(0.9); }
         }
 
         #particles-canvas {
@@ -107,9 +143,10 @@
             z-index: 0;
             pointer-events: none;
             display: block;
-            opacity: 0.5;
+            opacity: 0.4;
         }
 
+        /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
         .container {
             position: relative;
             z-index: 1;
@@ -121,385 +158,681 @@
             flex-direction: column;
         }
 
-        /* ШАПКА */
+        /* ===== ШАПКА С ГЛАМУРОМ ===== */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 0 2rem;
+            padding: 1.2rem 0 2rem;
             border-bottom: 1px solid var(--border);
             flex-wrap: wrap;
             gap: 1rem;
+            backdrop-filter: blur(10px);
+            background: rgba(10,10,10,0.5);
+            margin: 0 -2rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
         }
         .logo {
-            font-size: 1.8rem;
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
             font-weight: 900;
-            letter-spacing: 4px;
+            letter-spacing: 6px;
             text-transform: uppercase;
             color: #ffffff;
             cursor: pointer;
+            text-shadow: 0 0 30px rgba(255,255,255,0.05);
+            transition: var(--transition);
         }
-        .logo span { color: #555555; font-weight: 300; }
+        .logo:hover { text-shadow: 0 0 50px rgba(255,255,255,0.15); }
+        .logo span {
+            color: #444455;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 2rem;
             flex-wrap: wrap;
         }
+
         .nav {
             display: flex;
-            gap: 2rem;
-            font-size: 0.8rem;
+            gap: 2.5rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 600;
+            letter-spacing: 2px;
+            font-weight: 700;
         }
         .nav a {
-            color: #777777;
+            color: #666677;
             text-decoration: none;
             transition: var(--transition);
             cursor: pointer;
             padding-bottom: 4px;
+            position: relative;
         }
-        .nav a:hover, .nav a.active-link { color: #ffffff; }
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #ffffff;
+            transition: var(--transition);
+        }
+        .nav a:hover::after,
+        .nav a.active-link::after {
+            width: 100%;
+        }
+        .nav a:hover, .nav a.active-link {
+            color: #ffffff;
+        }
 
         .auth-buttons {
             display: flex;
-            gap: 0.6rem;
+            gap: 0.8rem;
             align-items: center;
         }
         .user-email-tag {
             color: #ffffff;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            background: #111111;
-            padding: 0.35rem 0.8rem;
+            background: var(--surface-card);
+            padding: 0.4rem 1rem;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             display: none;
+            font-family: monospace;
+            letter-spacing: 0.5px;
         }
+
         .btn-sm {
-            padding: 0.4rem 1.2rem;
-            font-size: 0.65rem;
-            font-weight: 700;
+            padding: 0.45rem 1.4rem;
+            font-size: 0.6rem;
+            font-weight: 800;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            border-radius: 8px;
-            border: 1px solid #333333;
+            border-radius: 10px;
+            border: 1px solid #333344;
             background: transparent;
             color: #ffffff;
             cursor: pointer;
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
-        .btn-sm:hover { border-color: #ffffff; background: #ffffff; color: #000000; }
-        .btn-sm.primary { background: #ffffff; color: #000000; border-color: #ffffff; }
-        .btn-sm.primary:hover { background: #cccccc; border-color: #cccccc; }
+        .btn-sm::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: var(--transition);
+        }
+        .btn-sm:hover::before {
+            left: 100%;
+        }
+        .btn-sm:hover {
+            border-color: #ffffff;
+            background: rgba(255,255,255,0.05);
+        }
+        .btn-sm.primary {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+        }
+        .btn-sm.primary:hover {
+            background: #cccccc;
+            border-color: #cccccc;
+        }
 
         .page { display: none; }
-        .page.active { display: block; animation: pageFade 0.4s ease-out; }
+        .page.active {
+            display: block;
+            animation: pageFade 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
         @keyframes pageFade {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* ГЕРОЙ */
+        /* ===== ГЕРОЙ ===== */
         .hero {
-            padding: 4.5rem 0 2.5rem;
-            min-height: 40vh;
+            padding: 5rem 0 3rem;
+            min-height: 50vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
         .hero-tag {
             display: inline-block;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #888888;
+            letter-spacing: 4px;
+            color: #666677;
             border: 1px solid var(--border);
-            padding: 0.3rem 1.2rem;
+            padding: 0.3rem 1.5rem;
             border-radius: 30px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             width: fit-content;
-            background: #080808;
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(10px);
         }
         .hero h1 {
-            font-size: 4.2rem;
+            font-family: 'Orbitron', monospace;
+            font-size: 5rem;
             font-weight: 900;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             line-height: 1.05;
             color: #ffffff;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 60px rgba(255,255,255,0.03);
         }
         .hero h1 small {
             display: block;
+            font-family: 'Inter', sans-serif;
             font-size: 1.1rem;
             font-weight: 300;
-            color: #666666;
-            letter-spacing: 6px;
-            margin-top: 0.3rem;
+            color: #666677;
+            letter-spacing: 8px;
+            margin-top: 0.5rem;
         }
         .hero p {
-            font-size: 1.05rem;
-            color: #888888;
+            font-size: 1.1rem;
+            color: #888899;
             max-width: 540px;
-            margin-bottom: 2.2rem;
-            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            line-height: 1.9;
         }
-        .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn-group { display: flex; gap: 1.2rem; flex-wrap: wrap; }
         .btn {
-            padding: 0.85rem 2.6rem;
-            font-size: 0.75rem;
+            padding: 0.9rem 3rem;
+            font-size: 0.7rem;
             font-weight: 800;
-            letter-spacing: 2px;
+            letter-spacing: 2.5px;
             text-transform: uppercase;
-            border-radius: 10px;
+            border-radius: 12px;
             border: 1px solid #ffffff;
             background: #ffffff;
             color: #000000;
             cursor: pointer;
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
-        .btn:hover { background: #000000; color: #ffffff; }
-        .btn-outline { background: transparent; color: #ffffff; border-color: #333333; }
-        .btn-outline:hover { border-color: #ffffff; background: transparent; }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+            transition: var(--transition);
+        }
+        .btn:hover::before { left: 100%; }
+        .btn:hover { background: #000000; color: #ffffff; transform: translateY(-2px); box-shadow: 0 10px 40px rgba(255,255,255,0.05); }
+        .btn-outline {
+            background: transparent;
+            color: #ffffff;
+            border-color: #333344;
+        }
+        .btn-outline:hover {
+            border-color: #ffffff;
+            background: rgba(255,255,255,0.05);
+            color: #ffffff;
+        }
 
-        /* СЕКЦИИ */
-        .section { padding: 3rem 0 2rem; border-top: 1px solid var(--border); }
-        .section-header { margin-bottom: 2rem; }
+        /* ===== СЕКЦИИ ===== */
+        .section {
+            padding: 4rem 0 2.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .section-header { margin-bottom: 2.5rem; }
         .section-title {
-            font-size: 1.6rem;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
             font-weight: 700;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             color: #ffffff;
             border-left: 3px solid #ffffff;
-            padding-left: 1rem;
+            padding-left: 1.2rem;
+            text-shadow: 0 0 30px rgba(255,255,255,0.02);
         }
 
+        /* ===== ВОЗМОЖНОСТИ ===== */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.8rem;
+            gap: 2rem;
         }
         .feature-item {
-            padding: 2.2rem 1.8rem;
+            padding: 2.5rem 2rem;
             background: var(--surface-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
-        .feature-item:hover { border-color: var(--border-hover); transform: translateY(-3px); }
-        .feature-item .index { font-size: 0.6rem; font-weight: 800; color: #444444; margin-bottom: 0.5rem; display: block; }
-        .feature-item h3 { font-size: 1.25rem; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem; }
-        .feature-item p { color: #888888; font-size: 0.85rem; line-height: 1.7; }
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .feature-item:hover::before { opacity: 1; }
+        .feature-item:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        .feature-item .index {
+            font-size: 0.55rem;
+            font-weight: 800;
+            color: #444455;
+            margin-bottom: 0.8rem;
+            display: block;
+            letter-spacing: 2px;
+        }
+        .feature-item h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.6rem;
+            letter-spacing: 1px;
+        }
+        .feature-item p {
+            color: #888899;
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
 
-        /* ТАРИФЫ */
+        /* ===== ТАРИФЫ ===== */
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
         }
         .price-card {
             background: var(--surface-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 2.5rem 1.8rem;
+            padding: 3rem 2rem 2.5rem;
             text-align: center;
             transition: var(--transition);
             position: relative;
+            overflow: hidden;
         }
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .price-card:hover::before { opacity: 1; }
         .price-card:hover {
             border-color: var(--border-hover);
-            transform: translateY(-5px);
+            transform: translateY(-8px);
             box-shadow: var(--shadow);
         }
         .price-card .badge {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 1.2rem;
+            right: 1.2rem;
             background: #ffffff;
             color: #000000;
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 800;
+            text-transform: uppercase;
             padding: 0.2rem 0.8rem;
             border-radius: 20px;
+            letter-spacing: 1px;
         }
-        .price-card .amount { font-size: 3rem; font-weight: 900; color: #ffffff; margin-top: 0.5rem; }
-        .price-card .period { color: #666666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; }
-        .price-card .desc { color: #888888; font-size: 0.85rem; margin: 1.5rem 0 2rem; line-height: 1.7; }
+        .price-card .amount {
+            font-family: 'Orbitron', monospace;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-top: 0.5rem;
+            letter-spacing: 2px;
+        }
+        .price-card .period {
+            color: #666677;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 0.2rem;
+        }
+        .price-card .desc {
+            color: #888899;
+            font-size: 0.85rem;
+            margin: 1.8rem 0 2.2rem;
+            line-height: 1.8;
+        }
         .btn-buy {
             width: 100%;
-            padding: 0.75rem;
-            font-size: 0.75rem;
+            padding: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 800;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            border-radius: 8px;
-            border: 1px solid #333333;
+            border-radius: 10px;
+            border: 1px solid #333344;
             background: transparent;
             color: #ffffff;
             cursor: pointer;
             transition: var(--transition);
         }
-        .btn-buy:hover { background: #ffffff; color: #000000; border-color: #ffffff; }
+        .btn-buy:hover {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            transform: scale(1.02);
+        }
 
         .hwid-box {
             background: var(--surface-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 2rem;
-            margin-top: 2rem;
+            padding: 2.5rem;
+            margin-top: 2.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.5rem;
+            transition: var(--transition);
+        }
+        .hwid-box:hover {
+            border-color: var(--border-hover);
+        }
+        .hwid-box h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .hwid-box p {
+            color: #888899;
+            font-size: 0.85rem;
         }
 
-        /* КАБИНЕТ */
+        /* ===== КАБИНЕТ ===== */
         .cabinet-grid {
             display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 2rem;
+            grid-template-columns: 340px 1fr;
+            gap: 2.5rem;
         }
         .cabinet-sidebar {
             background: var(--surface-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 2rem;
+            padding: 2.5rem;
             display: flex;
             flex-direction: column;
+            transition: var(--transition);
+        }
+        .cabinet-sidebar:hover {
+            border-color: var(--border-hover);
         }
         .avatar-box {
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            background: #111111;
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a1a1e, #0a0a0a);
             border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            font-weight: 800;
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 700;
             color: #ffffff;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
+            position: relative;
         }
-        .user-name-title { font-size: 1.15rem; font-weight: 700; color: #ffffff; }
-        .user-email-sub { color: #666666; font-size: 0.8rem; margin-bottom: 1rem; word-break: break-all; }
+        .avatar-box::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.05), transparent);
+            z-index: -1;
+        }
+        .user-name-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+        .user-email-sub {
+            color: #666677;
+            font-size: 0.8rem;
+            margin-bottom: 1.2rem;
+            word-break: break-all;
+        }
+
         .id-badge {
             background: #000000;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 0.6rem;
             text-align: center;
             font-family: monospace;
-            font-size: 0.85rem;
-            color: #ffffff;
-            margin-bottom: 1rem;
+            font-size: 0.75rem;
+            color: #888899;
+            margin-bottom: 1.2rem;
+            letter-spacing: 1px;
         }
+
         .status-pill {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 0.3rem 0.8rem;
+            letter-spacing: 1.5px;
+            padding: 0.3rem 1rem;
             border-radius: 20px;
-            border: 1px solid #333333;
+            border: 1px solid #333344;
             width: fit-content;
-            color: #ffffff;
-            margin-bottom: 1.2rem;
+            color: #666677;
+            margin-bottom: 1.5rem;
         }
-        .status-pill.active { border-color: #ffffff; background: #ffffff; color: #000000; }
-        .sidebar-divider { height: 1px; background: var(--border); margin: 1rem 0; }
+        .status-pill.active {
+            border-color: #ffffff;
+            background: rgba(255,255,255,0.05);
+            color: #ffffff;
+        }
+        .status-pill .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #444455;
+            display: inline-block;
+        }
+        .status-pill.active .dot {
+            background: #00ff44;
+            box-shadow: 0 0 10px rgba(0,255,68,0.3);
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 1.2rem 0;
+        }
+
         .info-row {
             display: flex;
             justify-content: space-between;
             font-size: 0.8rem;
-            padding: 0.4rem 0;
+            padding: 0.5rem 0;
         }
-        .info-row .label { color: #666666; }
+        .info-row .label { color: #666677; }
         .info-row .val { color: #ffffff; font-weight: 600; }
 
         .sidebar-buttons-container {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
-            margin: 1.4rem 0;
+            margin: 1.5rem 0;
         }
         .btn-side-tile {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1rem;
+            padding: 1rem 1.2rem;
             border-radius: 12px;
-            background: #0a0a0a;
+            background: var(--surface);
             border: 1px solid var(--border);
             cursor: pointer;
             transition: var(--transition);
             text-align: left;
             width: 100%;
         }
-        .btn-side-tile:hover { border-color: #ffffff; background: #141414; transform: translateX(4px); }
+        .btn-side-tile:hover {
+            border-color: #ffffff;
+            background: var(--surface-hover);
+            transform: translateX(5px);
+        }
         .btn-side-tile .icon-tag {
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            background: #181818;
-            border: 1px solid #333333;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
-            color: #ffffff;
-            font-weight: 800;
+            font-size: 1.1rem;
             flex-shrink: 0;
+            transition: var(--transition);
+        }
+        .btn-side-tile:hover .icon-tag {
+            border-color: #ffffff;
+            background: rgba(255,255,255,0.05);
         }
         .btn-side-tile .text-group { display: flex; flex-direction: column; }
-        .btn-side-tile .title { font-size: 0.78rem; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
-        .btn-side-tile .subtitle { font-size: 0.68rem; color: #888888; margin-top: 2px; }
+        .btn-side-tile .title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-side-tile .subtitle {
+            font-size: 0.65rem;
+            color: #888899;
+            margin-top: 2px;
+        }
 
-        .cabinet-main { display: flex; flex-direction: column; gap: 1.5rem; }
+        .cabinet-main { display: flex; flex-direction: column; gap: 2rem; }
+
         .metric-cards-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.2rem;
+            gap: 1.5rem;
         }
         .dash-card {
             background: var(--surface-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 1.3rem;
+            padding: 1.5rem;
             transition: var(--transition);
         }
-        .dash-card:hover { border-color: var(--border-hover); }
-        .dash-card .card-head { font-size: 0.65rem; font-weight: 800; color: #666666; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.4rem; }
-        .dash-card .card-val { font-size: 1.8rem; font-weight: 900; color: #ffffff; }
-        .dash-card .card-sub { font-size: 0.68rem; color: #888888; margin-top: 0.3rem; }
+        .dash-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+        }
+        .dash-card .card-head {
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: #666677;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5rem;
+        }
+        .dash-card .card-val {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+        .dash-card .card-sub {
+            font-size: 0.65rem;
+            color: #888899;
+            margin-top: 0.3rem;
+        }
 
         .key-hub {
             background: var(--surface-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 2rem;
+            padding: 2.5rem;
+            transition: var(--transition);
         }
-        .key-hub h3 { font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-bottom: 0.4rem; }
-        .key-hub p { font-size: 0.8rem; color: #888888; margin-bottom: 1.5rem; }
+        .key-hub:hover {
+            border-color: var(--border-hover);
+        }
+        .key-hub h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+            letter-spacing: 1px;
+        }
+        .key-hub p {
+            font-size: 0.8rem;
+            color: #888899;
+            margin-bottom: 1.5rem;
+        }
+
         .key-display {
             background: #000000;
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            transition: var(--transition);
         }
-        .key-display span { font-family: monospace; font-size: 1.1rem; font-weight: 700; letter-spacing: 2px; }
+        .key-display:hover {
+            border-color: var(--border-hover);
+        }
+        .key-display span {
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
         .instructions-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -507,86 +840,136 @@
             margin-bottom: 1.5rem;
         }
         .inst-box {
-            background: #050505;
+            background: #000000;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            padding: 0.8rem 1.2rem;
             display: flex;
-            gap: 10px;
+            gap: 12px;
             font-size: 0.8rem;
-            color: #888888;
+            color: #888899;
+            align-items: center;
+            transition: var(--transition);
         }
-        .inst-box b { color: #ffffff; }
+        .inst-box:hover {
+            border-color: var(--border-hover);
+        }
+        .inst-box b {
+            color: #ffffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+        }
 
         .tabs-hub {
             background: var(--surface-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 1.8rem;
+            padding: 2rem;
         }
         .tabs-nav {
             display: flex;
-            gap: 1.5rem;
+            gap: 2rem;
             border-bottom: 1px solid var(--border);
-            padding-bottom: 0.8rem;
-            margin-bottom: 1.2rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         .tab-trigger {
             background: none;
             border: none;
-            color: #666666;
-            font-size: 0.75rem;
+            color: #666677;
+            font-size: 0.7rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             cursor: pointer;
             transition: var(--transition);
+            padding-bottom: 4px;
         }
-        .tab-trigger.active { color: #ffffff; border-bottom: 2px solid #ffffff; padding-bottom: 4px; }
+        .tab-trigger.active {
+            color: #ffffff;
+            border-bottom: 2px solid #ffffff;
+        }
+        .tab-trigger:hover {
+            color: #ffffff;
+        }
 
         .history-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.85rem 1rem;
-            background: #050505;
+            padding: 0.8rem 1.2rem;
+            background: #000000;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 0.6rem;
             font-size: 0.8rem;
+            transition: var(--transition);
+        }
+        .history-row:hover {
+            border-color: var(--border-hover);
         }
         .history-tag {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 800;
             text-transform: uppercase;
-            padding: 0.2rem 0.7rem;
+            padding: 0.2rem 0.8rem;
             border-radius: 20px;
-            border: 1px solid #444444;
+            border: 1px solid #444455;
             color: #ffffff;
         }
+        .history-tag.approved {
+            border-color: #00ff44;
+            color: #00ff44;
+        }
+        .history-tag.rejected {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+        .history-tag.pending {
+            border-color: #ffaa00;
+            color: #ffaa00;
+        }
 
-        /* МОДАЛКИ */
+        /* ===== МОДАЛКИ ===== */
         .modal-wrap {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(20px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 9999;
             padding: 1.5rem;
+            animation: modalFade 0.3s ease-out;
+        }
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
         .modal-card {
-            background: #0a0a0a;
-            border: 1px solid #333333;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 2.4rem;
+            padding: 2.8rem;
             max-width: 480px;
             width: 100%;
             box-shadow: var(--shadow);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-card::-webkit-scrollbar {
+            width: 3px;
+        }
+        .modal-card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .modal-card::-webkit-scrollbar-thumb {
+            background: #333344;
+            border-radius: 10px;
         }
         .modal-card h2 {
+            font-family: 'Orbitron', monospace;
             font-size: 1.4rem;
             font-weight: 700;
             letter-spacing: 2px;
@@ -597,16 +980,17 @@
         }
         .modal-card .sub {
             font-size: 0.8rem;
-            color: #777777;
+            color: #888899;
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
         }
+
         .auth-error {
-            color: #ffffff;
-            background: #141414;
-            border: 1px solid #ffffff;
+            color: #ff4444;
+            background: rgba(255,68,68,0.05);
+            border: 1px solid rgba(255,68,68,0.2);
             padding: 0.6rem 0.8rem;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.75rem;
             margin-bottom: 1rem;
             display: none;
@@ -614,11 +998,12 @@
             font-weight: 600;
         }
         .auth-error.show { display: block; }
+
         .toggle-auth {
             text-align: center;
             margin-top: 1.2rem;
             font-size: 0.75rem;
-            color: #777777;
+            color: #666677;
         }
         .toggle-auth span {
             color: #ffffff;
@@ -627,12 +1012,12 @@
             text-decoration: underline;
             transition: var(--transition);
         }
-        .toggle-auth span:hover { color: #aaaaaa; }
+        .toggle-auth span:hover { color: #888899; }
 
         .split-calculation-box {
             background: #000000;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 1.2rem;
             margin-bottom: 1.4rem;
         }
@@ -640,8 +1025,8 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.82rem;
-            padding: 0.35rem 0;
-            color: #888888;
+            padding: 0.4rem 0;
+            color: #888899;
         }
         .split-row.total {
             border-top: 1px solid var(--border);
@@ -659,10 +1044,10 @@
         }
         .promo-input-row input {
             flex: 1;
-            padding: 0.75rem 0.9rem;
+            padding: 0.7rem 1rem;
             background: #000000;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             color: #ffffff;
             font-family: inherit;
             font-size: 0.85rem;
@@ -672,12 +1057,12 @@
         }
         .promo-input-row input:focus { border-color: #ffffff; }
         .promo-input-row button {
-            padding: 0 1.2rem;
+            padding: 0 1.5rem;
             background: #ffffff;
             color: #000000;
             border: 1px solid #ffffff;
-            border-radius: 8px;
-            font-size: 0.75rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
             font-weight: 800;
             cursor: pointer;
             text-transform: uppercase;
@@ -689,19 +1074,19 @@
         .field-group { margin-bottom: 1.2rem; }
         .field-group label {
             display: block;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 700;
-            color: #777777;
+            color: #666677;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.4rem;
         }
         .field-group input {
             width: 100%;
-            padding: 0.75rem 0.9rem;
+            padding: 0.7rem 1rem;
             background: #000000;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             color: #ffffff;
             font-family: inherit;
             font-size: 0.85rem;
@@ -713,32 +1098,37 @@
         .btn-modal-action {
             width: 100%;
             padding: 0.85rem;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid #ffffff;
             background: #ffffff;
             color: #000000;
             cursor: pointer;
             transition: var(--transition);
         }
-        .btn-modal-action:hover { background: #000000; color: #ffffff; }
+        .btn-modal-action:hover {
+            background: #000000;
+            color: #ffffff;
+        }
         .btn-modal-cancel {
             width: 100%;
             background: none;
             border: none;
-            color: #555555;
-            font-size: 0.68rem;
+            color: #555566;
+            font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-top: 0.8rem;
             cursor: pointer;
+            transition: var(--transition);
         }
         .btn-modal-cancel:hover { color: #ffffff; }
 
+        /* ===== УВЕДОМЛЕНИЯ ===== */
         .notification-container {
             position: fixed;
             top: 20px;
@@ -747,25 +1137,69 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            max-width: 360px;
+            max-width: 380px;
             width: 100%;
         }
         .notification {
-            background: #0a0a0a;
-            border: 1px solid #ffffff;
-            border-radius: 10px;
-            padding: 1rem 1.2rem;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
             box-shadow: var(--shadow);
             color: #ffffff;
+            animation: notifSlide 0.4s ease-out;
+            backdrop-filter: blur(10px);
         }
-        .notification .notif-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
-        .notification .notif-body { font-size: 0.72rem; color: #888888; margin-top: 4px; }
+        @keyframes notifSlide {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .notification .notif-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .notification .notif-body {
+            font-size: 0.72rem;
+            color: #888899;
+            margin-top: 4px;
+        }
+        .notification.error {
+            border-color: rgba(255,68,68,0.3);
+        }
+        .notification.success {
+            border-color: rgba(0,255,68,0.3);
+        }
 
-        @media (max-width: 900px) {
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 1024px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
             .cabinet-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .container { padding: 1rem 1.2rem 2rem; }
+            .hero h1 { font-size: 2.8rem; }
+            .header { flex-direction: column; align-items: stretch; padding: 1rem; margin: 0; border-radius: 0; }
+            .header-right { flex-direction: column; align-items: stretch; gap: 1rem; }
+            .nav { justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+            .auth-buttons { justify-content: center; flex-wrap: wrap; }
+            .features-grid { grid-template-columns: 1fr; }
             .metric-cards-row { grid-template-columns: 1fr; }
             .instructions-grid { grid-template-columns: 1fr; }
-            .features-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .modal-card { padding: 2rem; margin: 0.5rem; }
+            .hero { padding: 2rem 0; min-height: auto; }
+            .btn-group { flex-direction: column; }
+            .btn { text-align: center; }
+        }
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 2rem; }
+            .logo { font-size: 1.4rem; letter-spacing: 3px; }
+            .section-title { font-size: 1.2rem; }
+            .price-card .amount { font-size: 2.5rem; }
+            .key-display { flex-direction: column; gap: 0.8rem; }
+            .key-display span { font-size: 0.8rem; word-break: break-all; text-align: center; }
         }
     </style>
 </head>
@@ -785,6 +1219,7 @@
 
     <div class="container">
 
+        <!-- ===== ШАПКА ===== -->
         <header class="header">
             <div class="logo" data-page="main">Lethal <span>DLC</span></div>
             <div class="header-right">
@@ -802,16 +1237,17 @@
             </div>
         </header>
 
-        <!-- ГЛАВНАЯ -->
+        <!-- ===== СТРАНИЦА: ГЛАВНАЯ ===== -->
         <div class="page active" id="page-main">
             <section class="hero">
-                <div class="hero-tag">Strict Monochrome Edition</div>
+                <div class="hero-tag">✦ Premium Edition 2026</div>
                 <h1>
                     Lethal DLC
-                    <small>абсолютный контроль</small>
+                    <small>абсолютный контроль над игровой механикой</small>
                 </h1>
                 <p>
-                    Бескомпромиссная система скрытности, мгновенный расчёт баланса и аппаратная привязка нового поколения.
+                    Бескомпромиссная система скрытности, мгновенный расчёт баланса<br />
+                    и аппаратная привязка нового поколения.
                 </p>
                 <div class="btn-group">
                     <button class="btn" data-page="pricing">Приобрести подписку</button>
@@ -827,38 +1263,38 @@
                     <div class="feature-item">
                         <span class="index">01 / COMBAT</span>
                         <h3>Боевой модуль</h3>
-                        <p>Адаптивный аимбот с контролем отдачи и приоритетом уязвимых зон.</p>
+                        <p>Адаптивный аимбот с контролем отдачи, сглаживанием траектории и приоритетом уязвимых зон.</p>
                     </div>
                     <div class="feature-item">
                         <span class="index">02 / SECURITY</span>
                         <h3>Анти-детект</h3>
-                        <p>Изоляция в Ring-0, очистка системных логов и защита от античитов.</p>
+                        <p>Изоляция в Ring-0, очистка системных логов и защита от сигнатурного анализа античитов.</p>
                     </div>
                     <div class="feature-item">
                         <span class="index">03 / VISUALS</span>
                         <h3>ESP терминал</h3>
-                        <p>Контуры скелетов, дистанция, линии прицела и радар 144+ FPS.</p>
+                        <p>Контуры скелетов, дистанция, линии прицела и радар с частотой синхронизации 144+ FPS.</p>
                     </div>
                     <div class="feature-item">
                         <span class="index">04 / MISC</span>
                         <h3>Дополнительно</h3>
-                        <p>Бесконечная выносливость и мгновенное взаимодействие с игровым миром.</p>
+                        <p>Бесконечная выносливость, отсутствие разброса и мгновенное взаимодействие с игровым миром.</p>
                     </div>
                     <div class="feature-item">
                         <span class="index">05 / ANALYTICS</span>
                         <h3>Статистика</h3>
-                        <p>Логирование сессий и детальный трекинг эффективности в реальном времени.</p>
+                        <p>Логирование сессий, фиксация попаданий и детальный трекинг эффективности в реальном времени.</p>
                     </div>
                     <div class="feature-item">
                         <span class="index">06 / UPDATES</span>
                         <h3>Облачные патчи</h3>
-                        <p>Автоматическая доставка обновлений без повторного скачивания.</p>
+                        <p>Автоматическая доставка обновлений без необходимости повторного скачивания загрузчика.</p>
                     </div>
                 </div>
             </section>
         </div>
 
-        <!-- ТАРИФЫ -->
+        <!-- ===== СТРАНИЦА: ТАРИФЫ ===== -->
         <div class="page" id="page-pricing">
             <section class="section">
                 <div class="section-header">
@@ -868,15 +1304,15 @@
 
                 <div class="hwid-box">
                     <div>
-                        <h3 style="font-size:1.1rem; margin-bottom:4px;">Сброс HWID</h3>
-                        <p style="color:#888; font-size:0.85rem;">Перепривязка ключа к новому железу.</p>
+                        <h3>Сброс HWID</h3>
+                        <p>Перепривязка ключа к новому железу. Оплата с баланса или доплата.</p>
                     </div>
                     <button class="btn" id="hwidResetBtn">Сбросить за 400 ₽</button>
                 </div>
             </section>
         </div>
 
-        <!-- КАБИНЕТ -->
+        <!-- ===== СТРАНИЦА: КАБИНЕТ ===== -->
         <div class="page" id="page-cabinet">
             <section class="section">
                 <div class="section-header">
@@ -936,8 +1372,7 @@
             function addNotification(title, body, type = 'info') {
                 const container = document.getElementById('notifications');
                 const notif = document.createElement('div');
-                notif.className = 'notification';
-                notif.style.borderColor = type === 'error' ? '#ff4444' : '#ffffff';
+                notif.className = 'notification ' + type;
                 const t = document.createElement('div');
                 t.className = 'notif-title';
                 t.textContent = title;
@@ -947,7 +1382,7 @@
                 notif.appendChild(t);
                 notif.appendChild(b);
                 container.prepend(notif);
-                setTimeout(() => notif.remove(), 4000);
+                setTimeout(() => notif.remove(), 5000);
             }
 
             // === АВТОРИЗАЦИЯ ===
@@ -959,7 +1394,7 @@
                     currentUser = result.user;
                     updateUI();
                     renderCabinet();
-                    addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`);
+                    addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
                     return true;
                 }
                 addNotification('❌ Ошибка', result.error || 'Ошибка входа', 'error');
@@ -974,7 +1409,7 @@
                     currentUser = result.user;
                     updateUI();
                     renderCabinet();
-                    addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`);
+                    addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
                     return true;
                 }
                 addNotification('❌ Ошибка', result.error || 'Ошибка регистрации', 'error');
@@ -985,7 +1420,7 @@
                 const result = await apiRequest('/api/purchase', { planId });
                 if (result.success) {
                     currentUser.balance = result.balance;
-                    addNotification('✅ Успешно', `Тариф активирован! Ключ: ${result.key}`);
+                    addNotification('✅ Успешно', `Тариф активирован! Ключ: ${result.key}`, 'success');
                     renderCabinet();
                     return result;
                 }
@@ -1105,7 +1540,7 @@
                 card.appendChild(sub);
 
                 const info = document.createElement('div');
-                info.style.cssText = 'color:#888;font-size:0.85rem;text-align:center;margin-bottom:1.5rem;';
+                info.style.cssText = 'color:#888899;font-size:0.85rem;text-align:center;margin-bottom:1.5rem;';
                 info.textContent = `Баланс: ${currentUser.balance || 0} ₽`;
                 card.appendChild(info);
 
@@ -1158,7 +1593,7 @@
 
                 const btn = document.createElement('button');
                 btn.className = 'btn-modal-action';
-                btn.textContent = 'Пополнить через DonationAlerts';
+                btn.textContent = '💳 Пополнить через DonationAlerts';
                 btn.addEventListener('click', () => {
                     const url = new URL('https://www.donationalerts.com/r/lethaldlc');
                     url.searchParams.set('message', `USER_${currentUser.id} TOPUP`);
@@ -1177,6 +1612,248 @@
                 document.body.appendChild(wrap);
             }
 
+            // === МОДАЛКА МЕДИА ЗАЯВКА ===
+            function openMediaApplyModal() {
+                const wrap = document.createElement('div');
+                wrap.className = 'modal-wrap';
+
+                const card = document.createElement('div');
+                card.className = 'modal-card';
+                wrap.appendChild(card);
+
+                const title = document.createElement('h2');
+                title.textContent = '🎬 TikTok Медиа';
+                card.appendChild(title);
+
+                const sub = document.createElement('div');
+                sub.className = 'sub';
+                sub.textContent = 'Партнёрская программа и промокоды';
+                card.appendChild(sub);
+
+                const fg1 = document.createElement('div');
+                fg1.className = 'field-group';
+                const l1 = document.createElement('label');
+                l1.textContent = 'Ссылка на TikTok';
+                fg1.appendChild(l1);
+                const inp1 = document.createElement('input');
+                inp1.type = 'url';
+                inp1.id = 'mediaTiktok';
+                inp1.placeholder = 'https://www.tiktok.com/@username';
+                fg1.appendChild(inp1);
+                card.appendChild(fg1);
+
+                const fg2 = document.createElement('div');
+                fg2.className = 'field-group';
+                const l2 = document.createElement('label');
+                l2.textContent = 'Желаемый промокод (3-12 символов)';
+                fg2.appendChild(l2);
+                const inp2 = document.createElement('input');
+                inp2.type = 'text';
+                inp2.id = 'mediaPromo';
+                inp2.maxLength = '12';
+                inp2.placeholder = 'Например: STREAM2027';
+                fg2.appendChild(inp2);
+                card.appendChild(fg2);
+
+                const fg3 = document.createElement('div');
+                fg3.className = 'field-group';
+                const l3 = document.createElement('label');
+                l3.textContent = 'Ваш Telegram для связи';
+                fg3.appendChild(l3);
+                const inp3 = document.createElement('input');
+                inp3.type = 'text';
+                inp3.id = 'mediaTelegram';
+                inp3.placeholder = '@username';
+                fg3.appendChild(inp3);
+                card.appendChild(fg3);
+
+                const submitBtn = document.createElement('button');
+                submitBtn.className = 'btn-modal-action';
+                submitBtn.id = 'submitMediaBtn';
+                submitBtn.textContent = '📤 Подать заявку';
+                card.appendChild(submitBtn);
+
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'btn-modal-cancel';
+                cancelBtn.id = 'cancelMediaBtn';
+                cancelBtn.textContent = 'Отмена';
+                card.appendChild(cancelBtn);
+
+                document.body.appendChild(wrap);
+
+                cancelBtn.addEventListener('click', () => wrap.remove());
+
+                submitBtn.addEventListener('click', async function() {
+                    const tiktok = document.getElementById('mediaTiktok').value.trim();
+                    const promo = document.getElementById('mediaPromo').value.trim().toUpperCase();
+                    const tg = document.getElementById('mediaTelegram').value.trim();
+
+                    if (!tiktok || !promo || !tg) {
+                        addNotification('❌ Ошибка', 'Заполните все поля', 'error');
+                        return;
+                    }
+
+                    const tiktokRegex = /^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/@[a-zA-Z0-9._]+(\/)?$/i;
+                    if (!tiktokRegex.test(tiktok)) {
+                        addNotification('❌ Ошибка', 'Некорректная ссылка TikTok', 'error');
+                        return;
+                    }
+
+                    const promoRegex = /^[A-Z0-9_]{3,12}$/;
+                    if (!promoRegex.test(promo)) {
+                        addNotification('❌ Ошибка', 'Промокод: 3-12 латинских букв или цифр', 'error');
+                        return;
+                    }
+
+                    const tgRegex = /^@[a-zA-Z0-9_]{3,32}$/;
+                    if (!tgRegex.test(tg)) {
+                        addNotification('❌ Ошибка', 'Укажите корректный Telegram (@username)', 'error');
+                        return;
+                    }
+
+                    this.textContent = '⏳ Отправка...';
+                    this.disabled = true;
+
+                    try {
+                        const response = await fetch('/api/media', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Auth-Token': authToken
+                            },
+                            body: JSON.stringify({
+                                tiktokUrl: tiktok,
+                                promoCode: promo,
+                                telegramContact: tg
+                            })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            addNotification('✅ Успешно', 'Заявка подана! Ожидайте подтверждения.', 'success');
+                            wrap.remove();
+                            renderCabinet();
+                        } else {
+                            addNotification('❌ Ошибка', result.error || 'Ошибка подачи заявки', 'error');
+                            this.textContent = '📤 Подать заявку';
+                            this.disabled = false;
+                        }
+                    } catch (e) {
+                        addNotification('❌ Ошибка', 'Ошибка сети. Попробуйте позже.', 'error');
+                        this.textContent = '📤 Подать заявку';
+                        this.disabled = false;
+                    }
+                });
+            }
+
+            // === МОДАЛКА СТАТИСТИКА МЕДИА ===
+            function openMediaStatsModal(promoCode) {
+                fetch('/api/media/stats?promo=' + encodeURIComponent(promoCode), {
+                    headers: { 'X-Auth-Token': authToken }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) {
+                        addNotification('❌ Ошибка', data.error || 'Ошибка загрузки статистики', 'error');
+                        return;
+                    }
+
+                    const stat = data.stats || { uses: 0, volume: 0, reward: 0 };
+                    const wrap = document.createElement('div');
+                    wrap.className = 'modal-wrap';
+
+                    const card = document.createElement('div');
+                    card.className = 'modal-card';
+                    wrap.appendChild(card);
+
+                    const title = document.createElement('h2');
+                    title.textContent = '📊 Медиа Аналитика';
+                    card.appendChild(title);
+
+                    const sub = document.createElement('div');
+                    sub.className = 'sub';
+                    sub.textContent = `Промокод: ${promoCode}`;
+                    card.appendChild(sub);
+
+                    const box = document.createElement('div');
+                    box.className = 'split-calculation-box';
+
+                    const rows = [
+                        { label: 'Покупок по коду', value: stat.uses || 0 },
+                        { label: 'Сгенерированный оборот', value: `${stat.volume || 0} ₽` },
+                        { label: 'Доход партнёра (15%)', value: `${stat.reward || 0} ₽` }
+                    ];
+
+                    rows.forEach((row, index) => {
+                        const r = document.createElement('div');
+                        r.className = `split-row ${index === rows.length - 1 ? 'total' : ''}`;
+                        r.appendChild(document.createTextNode(row.label));
+                        const span = document.createElement('span');
+                        span.textContent = row.value;
+                        if (index === rows.length - 1) {
+                            span.style.color = '#ffffff';
+                        }
+                        r.appendChild(span);
+                        box.appendChild(r);
+                    });
+
+                    card.appendChild(box);
+
+                    if (stat.reward && stat.reward > 0) {
+                        const claimBtn = document.createElement('button');
+                        claimBtn.className = 'btn-modal-action';
+                        claimBtn.textContent = `💰 Забрать ${stat.reward} ₽`;
+                        claimBtn.addEventListener('click', async function() {
+                            this.textContent = '⏳ Обработка...';
+                            this.disabled = true;
+                            
+                            try {
+                                const response = await fetch('/api/media/claim', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-Auth-Token': authToken
+                                    },
+                                    body: JSON.stringify({ promoCode: promoCode })
+                                });
+                                const result = await response.json();
+                                if (result.success) {
+                                    addNotification('✅ Успешно', `Зачислено ${result.amount} ₽ на баланс!`, 'success');
+                                    wrap.remove();
+                                    renderCabinet();
+                                } else {
+                                    addNotification('❌ Ошибка', result.error || 'Ошибка', 'error');
+                                    this.textContent = `💰 Забрать ${stat.reward} ₽`;
+                                    this.disabled = false;
+                                }
+                            } catch (e) {
+                                addNotification('❌ Ошибка', 'Ошибка сети', 'error');
+                                this.textContent = `💰 Забрать ${stat.reward} ₽`;
+                                this.disabled = false;
+                            }
+                        });
+                        card.appendChild(claimBtn);
+                    } else {
+                        const msg = document.createElement('p');
+                        msg.style.cssText = 'text-align:center;font-size:0.75rem;color:#666;margin-bottom:1rem;';
+                        msg.textContent = 'Пока нет накопленных реферальных средств';
+                        card.appendChild(msg);
+                    }
+
+                    const closeBtn = document.createElement('button');
+                    closeBtn.className = 'btn-modal-cancel';
+                    closeBtn.textContent = 'Закрыть';
+                    closeBtn.addEventListener('click', () => wrap.remove());
+                    card.appendChild(closeBtn);
+
+                    document.body.appendChild(wrap);
+                })
+                .catch(() => {
+                    addNotification('❌ Ошибка', 'Ошибка загрузки статистики', 'error');
+                });
+            }
+
             // === МОДАЛКА АВТОРИЗАЦИИ ===
             function showAuthModal(mode = 'login') {
                 const wrap = document.createElement('div');
@@ -1189,7 +1866,6 @@
                     card.className = 'modal-card';
                     wrap.appendChild(card);
 
-                    // Вкладки
                     const tabs = document.createElement('div');
                     tabs.style.cssText = 'display:flex;gap:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0.8rem;margin-bottom:1.5rem;justify-content:center;';
                     
@@ -1282,7 +1958,6 @@
                     cancelBtn.addEventListener('click', () => wrap.remove());
                     card.appendChild(cancelBtn);
 
-                    // Обработчики
                     document.getElementById('toggleToRegBtn')?.addEventListener('click', () => {
                         isLogin = false;
                         render();
@@ -1349,7 +2024,7 @@
                     const placeholder = document.createElement('div');
                     placeholder.style.cssText = 'text-align:center;padding:4rem 0;';
                     const msg = document.createElement('h3');
-                    msg.style.cssText = 'margin-bottom:1rem;color:#888;';
+                    msg.style.cssText = 'margin-bottom:1rem;color:#888899;font-family:Orbitron,monospace;letter-spacing:2px;';
                     msg.textContent = '🔒 Требуется авторизация';
                     placeholder.appendChild(msg);
                     const btn = document.createElement('button');
@@ -1363,13 +2038,14 @@
 
                 const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
                 const isSubActive = currentUser.subscription?.active;
+                const approvedMedia = currentUser.mediaApplications?.find(a => a.status === 'approved');
 
                 container.innerHTML = '';
 
                 const grid = document.createElement('div');
                 grid.className = 'cabinet-grid';
 
-                // Sidebar
+                // === SIDEBAR ===
                 const sidebar = document.createElement('div');
                 sidebar.className = 'cabinet-sidebar';
 
@@ -1395,7 +2071,10 @@
 
                 const statusPill = document.createElement('div');
                 statusPill.className = `status-pill ${isSubActive ? 'active' : ''}`;
-                statusPill.textContent = isSubActive ? '✅ Подписка активна' : '⭕ Нет подписки';
+                const dot = document.createElement('span');
+                dot.className = 'dot';
+                statusPill.appendChild(dot);
+                statusPill.appendChild(document.createTextNode(isSubActive ? 'Подписка активна' : 'Нет подписки'));
                 sidebar.appendChild(statusPill);
 
                 const divider1 = document.createElement('div');
@@ -1428,6 +2107,7 @@
                 const btnContainer = document.createElement('div');
                 btnContainer.className = 'sidebar-buttons-container';
 
+                // Кошелёк
                 const walletBtn = document.createElement('button');
                 walletBtn.className = 'btn-side-tile';
                 const icon1 = document.createElement('div');
@@ -1448,12 +2128,101 @@
                 walletBtn.addEventListener('click', openWalletModal);
                 btnContainer.appendChild(walletBtn);
 
+                // Медиа
+                if (approvedMedia) {
+                    const mediaBtn = document.createElement('button');
+                    mediaBtn.className = 'btn-side-tile';
+                    mediaBtn.style.borderColor = 'rgba(255,255,255,0.15)';
+                    const icon2 = document.createElement('div');
+                    icon2.className = 'icon-tag';
+                    icon2.textContent = '📊';
+                    mediaBtn.appendChild(icon2);
+                    const tg2 = document.createElement('div');
+                    tg2.className = 'text-group';
+                    const t2 = document.createElement('span');
+                    t2.className = 'title';
+                    t2.textContent = 'Медиа статистика';
+                    tg2.appendChild(t2);
+                    const st2 = document.createElement('span');
+                    st2.className = 'subtitle';
+                    st2.textContent = `Код: ${approvedMedia.promoCode}`;
+                    tg2.appendChild(st2);
+                    mediaBtn.appendChild(tg2);
+                    mediaBtn.addEventListener('click', () => openMediaStatsModal(approvedMedia.promoCode));
+                    btnContainer.appendChild(mediaBtn);
+                } else {
+                    const mediaBtn = document.createElement('button');
+                    mediaBtn.className = 'btn-side-tile';
+                    const icon2 = document.createElement('div');
+                    icon2.className = 'icon-tag';
+                    icon2.textContent = '🎬';
+                    mediaBtn.appendChild(icon2);
+                    const tg2 = document.createElement('div');
+                    tg2.className = 'text-group';
+                    const t2 = document.createElement('span');
+                    t2.className = 'title';
+                    t2.textContent = 'Медиа проект';
+                    tg2.appendChild(t2);
+                    const st2 = document.createElement('span');
+                    st2.className = 'subtitle';
+                    st2.textContent = 'TikTok & Промокоды';
+                    tg2.appendChild(st2);
+                    mediaBtn.appendChild(tg2);
+                    mediaBtn.addEventListener('click', openMediaApplyModal);
+                    btnContainer.appendChild(mediaBtn);
+                }
+
                 sidebar.appendChild(btnContainer);
+
+                const divider3 = document.createElement('div');
+                divider3.className = 'sidebar-divider';
+                sidebar.appendChild(divider3);
+
+                const buyBtn = document.createElement('button');
+                buyBtn.className = 'btn-sm';
+                buyBtn.style.width = '100%';
+                buyBtn.dataset.page = 'pricing';
+                buyBtn.textContent = 'Купить ключ';
+                buyBtn.addEventListener('click', () => navigateTo('pricing'));
+                sidebar.appendChild(buyBtn);
+
                 grid.appendChild(sidebar);
 
-                // Main
+                // === MAIN ===
                 const main = document.createElement('div');
                 main.className = 'cabinet-main';
+
+                // Метрики
+                const metricsRow = document.createElement('div');
+                metricsRow.className = 'metric-cards-row';
+
+                const metrics = [
+                    { head: 'Баланс кошелька', val: `${currentUser.balance || 0} ₽`, sub: 'Автоматическая скидка при покупке' },
+                    { head: 'Статус лицензии', val: isSubActive ? 'Активна' : 'Неактивна', sub: isSubActive ? 'Доступ открыт' : 'Оформите подписку' },
+                    { head: 'Всего ключей', val: currentUser.keys?.length || 0, sub: 'В вашем инвентаре' }
+                ];
+                metrics.forEach(m => {
+                    const card = document.createElement('div');
+                    card.className = 'dash-card';
+                    const head = document.createElement('div');
+                    head.className = 'card-head';
+                    head.textContent = m.head;
+                    card.appendChild(head);
+                    const val = document.createElement('div');
+                    val.className = 'card-val';
+                    if (m.head === 'Статус лицензии') {
+                        val.style.fontSize = '1.4rem';
+                    }
+                    val.textContent = m.val;
+                    card.appendChild(val);
+                    const sub = document.createElement('div');
+                    sub.className = 'card-sub';
+                    sub.textContent = m.sub;
+                    card.appendChild(sub);
+                    metricsRow.appendChild(card);
+                });
+
+                main.appendChild(metricsRow);
 
                 // Ключ
                 const keyHub = document.createElement('div');
@@ -1509,6 +2278,102 @@
                 keyHub.appendChild(instGrid);
 
                 main.appendChild(keyHub);
+
+                // Вкладки
+                const tabsHub = document.createElement('div');
+                tabsHub.className = 'tabs-hub';
+
+                const tabsNav = document.createElement('div');
+                tabsNav.className = 'tabs-nav';
+                
+                const tab1 = document.createElement('button');
+                tab1.className = `tab-trigger ${currentTab === 'withdrawals' ? 'active' : ''}`;
+                tab1.id = 'tabWithTrigger';
+                tab1.textContent = 'Выводы средств';
+                tab1.addEventListener('click', () => {
+                    currentTab = 'withdrawals';
+                    renderCabinet();
+                });
+                tabsNav.appendChild(tab1);
+
+                const tab2 = document.createElement('button');
+                tab2.className = `tab-trigger ${currentTab === 'media' ? 'active' : ''}`;
+                tab2.id = 'tabMediaTrigger';
+                tab2.textContent = 'Медиа заявки';
+                tab2.addEventListener('click', () => {
+                    currentTab = 'media';
+                    renderCabinet();
+                });
+                tabsNav.appendChild(tab2);
+
+                tabsHub.appendChild(tabsNav);
+
+                const tabContent = document.createElement('div');
+
+                if (currentTab === 'withdrawals') {
+                    if (currentUser.withdrawals?.length > 0) {
+                        currentUser.withdrawals.forEach(w => {
+                            const row = document.createElement('div');
+                            row.className = 'history-row';
+                            const left = document.createElement('div');
+                            const b = document.createElement('b');
+                            b.style.color = '#fff';
+                            b.textContent = `${w.amount} ₽`;
+                            left.appendChild(b);
+                            const details = document.createElement('div');
+                            details.style.cssText = 'font-size:0.65rem;color:#666;';
+                            details.textContent = `${w.requisites} • TG: ${w.telegram || '—'} • ${w.date}`;
+                            left.appendChild(details);
+                            row.appendChild(left);
+                            const tag = document.createElement('span');
+                            tag.className = 'history-tag';
+                            tag.textContent = 'В обработке';
+                            row.appendChild(tag);
+                            tabContent.appendChild(row);
+                        });
+                    } else {
+                        const empty = document.createElement('div');
+                        empty.style.cssText = 'color:#555;font-size:0.8rem;padding:1rem 0;';
+                        empty.textContent = 'Заявок на вывод пока нет.';
+                        tabContent.appendChild(empty);
+                    }
+                } else {
+                    if (currentUser.mediaApplications && currentUser.mediaApplications.length > 0) {
+                        currentUser.mediaApplications.forEach(m => {
+                            const row = document.createElement('div');
+                            row.className = 'history-row';
+                            const left = document.createElement('div');
+                            const b = document.createElement('b');
+                            b.style.color = '#fff';
+                            b.textContent = `Промокод: ${m.promoCode}`;
+                            left.appendChild(b);
+                            const details = document.createElement('div');
+                            details.style.cssText = 'font-size:0.65rem;color:#666;';
+                            details.textContent = `${m.tiktokUrl} • TG: ${m.telegramContact || '—'} • ${new Date(m.createdAt).toLocaleDateString()}`;
+                            left.appendChild(details);
+                            row.appendChild(left);
+                            const tag = document.createElement('span');
+                            tag.className = `history-tag ${m.status}`;
+                            const statusMap = {
+                                'pending': '⏳ НА ПРОВЕРКЕ',
+                                'approved': '✅ ОДОБРЕНО',
+                                'rejected': '❌ ОТКЛОНЕНО'
+                            };
+                            tag.textContent = statusMap[m.status] || m.status;
+                            row.appendChild(tag);
+                            tabContent.appendChild(row);
+                        });
+                    } else {
+                        const empty = document.createElement('div');
+                        empty.style.cssText = 'color:#555;font-size:0.8rem;padding:1rem 0;';
+                        empty.textContent = 'Медиа заявок пока нет. Подайте заявку через кнопку "Медиа проект"';
+                        tabContent.appendChild(empty);
+                    }
+                }
+
+                tabsHub.appendChild(tabContent);
+                main.appendChild(tabsHub);
+
                 grid.appendChild(main);
                 container.appendChild(grid);
 
@@ -1535,36 +2400,40 @@
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
 
-            for (let i = 0; i < 90; i++) {
+            for (let i = 0; i < 120; i++) {
                 particles.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 0.25,
-                    vy: (Math.random() - 0.5) * 0.25,
-                    r: Math.random() * 1.5 + 0.5
+                    vx: (Math.random() - 0.5) * 0.2,
+                    vy: (Math.random() - 0.5) * 0.2,
+                    r: Math.random() * 1.8 + 0.3,
+                    opacity: Math.random() * 0.5 + 0.2
                 });
             }
 
             function loopParticles() {
                 ctx.clearRect(0, 0, width, height);
-                ctx.fillStyle = '#ffffff';
-                ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+                
                 for (let i = 0; i < particles.length; i++) {
                     const p = particles[i];
                     p.x += p.vx;
                     p.y += p.vy;
                     if (p.x < 0 || p.x > width) p.vx *= -1;
                     if (p.y < 0 || p.y > height) p.vy *= -1;
+
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
                     ctx.fill();
+
                     for (let j = i + 1; j < particles.length; j++) {
                         const p2 = particles[j];
                         const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                        if (dist < 120) {
+                        if (dist < 150) {
                             ctx.beginPath();
                             ctx.moveTo(p.x, p.y);
                             ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${0.02 * (1 - dist / 150)})`;
                             ctx.stroke();
                         }
                     }
