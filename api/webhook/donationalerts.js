@@ -60,7 +60,6 @@ export default async function handler(req, res) {
   try {
     const signature = req.headers['x-da-signature'];
     
-    // Проверяем подпись только если секрет задан
     if (DA_SECRET && DA_SECRET !== 'fallback-da-secret-2026') {
       if (!verifyDASignature(req.body, signature)) {
         console.log('❌ Неверная подпись DonationAlerts');
@@ -70,10 +69,8 @@ export default async function handler(req, res) {
 
     const data = req.body.data || req.body;
     
-    // Парсим email из разных форматов DonationAlerts
     let email = data.email || data.receiver || data.user_email || data.username;
     
-    // Если email не найден, пробуем достать из message
     if (!email && data.message) {
       const match = data.message.match(/USER_([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i);
       if (match) email = match[1];
@@ -101,7 +98,6 @@ export default async function handler(req, res) {
     let foundUser = null;
     let foundEmail = null;
 
-    // Ищем пользователя по email
     for (const [key, user] of Object.entries(users)) {
       if (key.toLowerCase() === normalizedEmail) {
         foundUser = user;
@@ -115,10 +111,8 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Начисляем баланс
     foundUser.balance = (foundUser.balance || 0) + amount;
     
-    // Добавляем в историю пополнений
     if (!foundUser.deposits) foundUser.deposits = [];
     foundUser.deposits.push({
       id: 'DA-' + transactionId,
@@ -128,7 +122,6 @@ export default async function handler(req, res) {
       confirmed: true
     });
 
-    // Генерируем ключ если сумма >= 250 (минимальная цена тарифа)
     if (amount >= 250) {
       const key = 'DA-' + Date.now().toString(36).toUpperCase() + '-' + crypto.randomBytes(4).toString('hex').toUpperCase();
       if (!foundUser.keys) foundUser.keys = [];
@@ -139,7 +132,6 @@ export default async function handler(req, res) {
         date: new Date().toISOString()
       });
       
-      // Активируем подписку на 30 дней
       foundUser.subscription = {
         active: true,
         plan: 'DonationAlerts',
@@ -150,7 +142,6 @@ export default async function handler(req, res) {
     users[foundEmail] = foundUser;
     saveUsers(users);
 
-    // Уведомление в Telegram
     if (process.env.BOT_TOKEN && process.env.CHAT_ID) {
       try {
         const tgText = `💰 <b>ПОПОЛНЕНИЕ БАЛАНСА!</b>\n\n` +
