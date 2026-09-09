@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
+const JWT_SECRET = 'lethal-dlc-super-secret-key-2026';
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 
 function loadUsers() {
@@ -11,14 +11,13 @@ function loadUsers() {
       fs.writeFileSync(USERS_FILE, JSON.stringify({}, null, 2));
       return {};
     }
-    const data = fs.readFileSync(USERS_FILE, 'utf8');
-    return JSON.parse(data);
+    return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
   } catch (e) {
     return {};
   }
 }
 
-function verifyTokenAndGetUserDirect(token, users) {
+function verifyToken(token) {
   try {
     if (!token) return null;
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
@@ -27,12 +26,10 @@ function verifyTokenAndGetUserDirect(token, users) {
       .update(JSON.stringify(decoded.payload))
       .digest('hex');
     if (decoded.signature !== expectedSignature) return null;
-    const userId = decoded.payload.userId;
-    for (const [userEmail, user] of Object.entries(users)) {
-      if (user.id === userId) return { email: userEmail, user };
-    }
+    return decoded.payload.email;
+  } catch {
     return null;
-  } catch { return null; }
+  }
 }
 
 export default async function handler(req, res) {
@@ -50,21 +47,25 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
+    const email = verifyToken(token);
+    if (!email) {
+      return res.status(401).json({ error: 'Неверный токен' });
+    }
+
     const users = loadUsers();
-    const result = verifyTokenAndGetUserDirect(token, users);
-    
-    if (!result) {
-      return res.status(401).json({ error: 'Недействительный токен' });
+    const user = users[email];
+    if (!user) {
+      return res.status(401).json({ error: 'Пользователь не найден' });
     }
 
     return res.status(200).json({
       success: true,
-      balance: result.user.balance || 0,
+      balance: user.balance || 0,
       currency: 'RUB'
     });
 
   } catch (error) {
     console.error('❌ Ошибка balance:', error);
-    return res.status(500).json({ error: 'Внутренняя ошибка сервера: ' + error.message });
+    return res.status(500).json({ error: 'Внутренняя ошибка' });
   }
 }

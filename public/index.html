@@ -158,7 +158,7 @@
             flex-direction: column;
         }
 
-        /* ===== ШАПКА С ГЛАМУРОМ ===== */
+        /* ===== ШАПКА ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -167,12 +167,6 @@
             border-bottom: 1px solid var(--border);
             flex-wrap: wrap;
             gap: 1rem;
-            backdrop-filter: blur(10px);
-            background: rgba(10,10,10,0.5);
-            margin: 0 -2rem;
-            padding-left: 2rem;
-            padding-right: 2rem;
-            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
         }
         .logo {
             font-family: 'Orbitron', monospace;
@@ -237,6 +231,7 @@
             display: flex;
             gap: 0.8rem;
             align-items: center;
+            flex-wrap: wrap;
         }
         .user-email-tag {
             color: #ffffff;
@@ -1180,7 +1175,7 @@
         @media (max-width: 768px) {
             .container { padding: 1rem 1.2rem 2rem; }
             .hero h1 { font-size: 2.8rem; }
-            .header { flex-direction: column; align-items: stretch; padding: 1rem; margin: 0; border-radius: 0; }
+            .header { flex-direction: column; align-items: stretch; }
             .header-right { flex-direction: column; align-items: stretch; gap: 1rem; }
             .nav { justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
             .auth-buttons { justify-content: center; flex-wrap: wrap; }
@@ -2469,6 +2464,63 @@
                 });
             });
 
+            // === ФИКС - ПРИНУДИТЕЛЬНОЕ ВОССТАНОВЛЕНИЕ СЕССИИ ===
+            window.fixSession = async function() {
+                const token = localStorage.getItem('auth_token');
+                if (!token) {
+                    showAuthModal('login');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/auth', {
+                        headers: { 'X-Auth-Token': token }
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        currentUser = data.user;
+                        authToken = token;
+                        updateUI();
+                        renderCabinet();
+                        addNotification('✅ Сессия восстановлена', 'Добро пожаловать!', 'success');
+                    } else {
+                        localStorage.removeItem('auth_token');
+                        showAuthModal('login');
+                    }
+                } catch (e) {
+                    localStorage.removeItem('auth_token');
+                    showAuthModal('login');
+                }
+            };
+
+            // Перехватываем все ошибки API
+            const originalFetch = window.fetch;
+            window.fetch = function(...args) {
+                return originalFetch.apply(this, args).then(async response => {
+                    const clonedResponse = response.clone();
+                    try {
+                        const data = await clonedResponse.json();
+                        if (data.error && (
+                            data.error.includes('пользователь не найден') ||
+                            data.error.includes('Недействительный токен') ||
+                            data.error.includes('User not found')
+                        )) {
+                            console.log('🔴 Ошибка авторизации, восстанавливаем сессию...');
+                            setTimeout(() => window.fixSession(), 500);
+                        }
+                    } catch (e) {}
+                    return response;
+                });
+            };
+
+            // Запускаем восстановление при загрузке
+            setTimeout(() => {
+                if (localStorage.getItem('auth_token')) {
+                    window.fixSession();
+                }
+            }, 1000);
+
             // === СТАРТ ===
             (async function init() {
                 if (authToken) {
@@ -2486,150 +2538,6 @@
             })();
 
         })();
-        // ============================================================
-// ФИКС: ПЕРЕЗАЙТИ В АККАУНТ
-// ============================================================
-
-// Функция проверки и восстановления сессии
-async function checkAndFixSession() {
-    const token = localStorage.getItem('auth_token');
-    if (!token) return false;
-    
-    try {
-        const response = await fetch('/api/balance', {
-            headers: { 'X-Auth-Token': token }
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-            // Сессия валидна
-            return true;
-        } else {
-            // Токен умер - удаляем и просим перезайти
-            localStorage.removeItem('auth_token');
-            authToken = null;
-            currentUser = null;
-            updateUI();
-            renderCabinet();
-            addNotification('⏰ Сессия истекла', 'Пожалуйста, войдите заново', 'error');
-            
-            // Автоматически открываем окно входа
-            setTimeout(() => showAuthModal('login'), 1000);
-            return false;
-        }
-    } catch (e) {
-        console.error('Ошибка проверки сессии:', e);
-        return false;
-    }
-}
-
-// Перезайти в аккаунт (принудительно)
-function forceReLogin() {
-    localStorage.removeItem('auth_token');
-    authToken = null;
-    currentUser = null;
-    updateUI();
-    renderCabinet();
-    addNotification('🔄 Перезаход', 'Войдите заново в аккаунт', 'info');
-    setTimeout(() => showAuthModal('login'), 500);
-}
-
-// Добавляем кнопку "Перезайти" в шапку
-function addReLoginButton() {
-    const authButtons = document.querySelector('.auth-buttons');
-    if (!authButtons) return;
-    
-    // Проверяем, есть ли уже такая кнопка
-    if (document.getElementById('reloginBtn')) return;
-    
-    const reloginBtn = document.createElement('button');
-    reloginBtn.id = 'reloginBtn';
-    reloginBtn.className = 'btn-sm';
-    reloginBtn.textContent = '🔄 Перезайти';
-    reloginBtn.style.display = 'none';
-    reloginBtn.style.borderColor = '#ff4444';
-    reloginBtn.style.color = '#ff4444';
-    reloginBtn.addEventListener('click', forceReLogin);
-    authButtons.appendChild(reloginBtn);
-}
-
-// Модифицируем updateUI для показа кнопки Перезайти
-const originalUpdateUI = updateUI;
-updateUI = function() {
-    originalUpdateUI();
-    
-    const reloginBtn = document.getElementById('reloginBtn');
-    if (!reloginBtn) return;
-    
-    if (currentUser) {
-        reloginBtn.style.display = 'inline-block';
-    } else {
-        reloginBtn.style.display = 'none';
-    }
-};
-
-// ============================================================
-// ПЕРЕХВАТ ОШИБОК API
-// ============================================================
-
-// Сохраняем оригинальный apiRequest
-const originalApiRequest = apiRequest;
-
-// Переопределяем apiRequest с обработкой ошибок
-apiRequest = async function(endpoint, data, method = 'POST') {
-    try {
-        const headers = { 'Content-Type': 'application/json' };
-        if (authToken) headers['X-Auth-Token'] = authToken;
-        
-        const response = await fetch(endpoint, {
-            method: method,
-            headers: headers,
-            body: JSON.stringify(data)
-        });
-        
-        const result = await response.json();
-        
-        // Если пришла ошибка "пользователь не найден" - предлагаем перезайти
-        if (result.error && (
-            result.error.includes('пользователь не найден') ||
-            result.error.includes('Недействительный токен') ||
-            result.error.includes('User not found')
-        )) {
-            console.log('🔴 Ошибка авторизации, предлагаем перезайти');
-            addNotification('⚠️ Требуется перезаход', 'Ваша сессия устарела, войдите заново', 'error');
-            setTimeout(() => showAuthModal('login'), 1500);
-            return { error: 'session_expired', needRelogin: true };
-        }
-        
-        return result;
-    } catch (e) {
-        console.error('❌ Ошибка запроса:', e);
-        return { error: 'Ошибка сети' };
-    }
-};
-
-// ============================================================
-// ИНИЦИАЛИЗАЦИЯ С ПРОВЕРКОЙ
-// ============================================================
-
-// Запускаем проверку сессии при загрузке
-document.addEventListener('DOMContentLoaded', function() {
-    // Добавляем кнопку перезайти
-    addReLoginButton();
-    
-    // Проверяем сессию
-    setTimeout(async () => {
-        if (authToken) {
-            const isValid = await checkAndFixSession();
-            if (!isValid) {
-                // Если сессия невалидна - показываем окно входа
-                setTimeout(() => showAuthModal('login'), 1000);
-            }
-        }
-    }, 2000);
-});
-
-console.log('✅ Фикс "перезайти в акк" установлен!');
     </script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { verifyTokenAndGetUser } from './auth.js';
 
+const JWT_SECRET = 'lethal-dlc-super-secret-key-2026';
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 
 function loadUsers() {
@@ -11,10 +11,8 @@ function loadUsers() {
       fs.writeFileSync(USERS_FILE, JSON.stringify({}, null, 2));
       return {};
     }
-    const data = fs.readFileSync(USERS_FILE, 'utf8');
-    return JSON.parse(data);
+    return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
   } catch (e) {
-    console.error('Ошибка загрузки пользователей:', e);
     return {};
   }
 }
@@ -22,8 +20,21 @@ function loadUsers() {
 function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-  } catch (e) {
-    console.error('Ошибка сохранения пользователей:', e);
+  } catch (e) {}
+}
+
+function verifyToken(token) {
+  try {
+    if (!token) return null;
+    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    const expectedSignature = crypto
+      .createHmac('sha256', JWT_SECRET)
+      .update(JSON.stringify(decoded.payload))
+      .digest('hex');
+    if (decoded.signature !== expectedSignature) return null;
+    return decoded.payload.email;
+  } catch {
+    return null;
   }
 }
 
@@ -35,7 +46,6 @@ const PRICES = {
 };
 
 export default async function handler(req, res) {
-  // Настройка CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token');
@@ -50,16 +60,18 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const users = loadUsers();
-    const result = verifyTokenAndGetUser(token, users);
-    
-    if (!result) {
-      return res.status(401).json({ error: 'Недействительный токен' });
+    const email = verifyToken(token);
+    if (!email) {
+      return res.status(401).json({ error: 'Неверный токен' });
     }
 
-    const { email: foundEmail, user: foundUser } = result;
-    const { planId } = req.body;
+    const users = loadUsers();
+    const user = users[email];
+    if (!user) {
+      return res.status(401).json({ error: 'Пользователь не найден' });
+    }
 
+    const { planId } = req.body;
     if (!planId) {
       return res.status(400).json({ error: 'Укажите тариф' });
     }
@@ -69,20 +81,20 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Неверный тариф' });
     }
 
-    if (foundUser.balance < price) {
+    if (user.balance < price) {
       return res.status(400).json({ 
         error: 'Недостаточно средств',
-        balance: foundUser.balance,
+        balance: user.balance,
         required: price
       });
     }
 
-    foundUser.balance -= price;
+    user.balance -= price;
     
     const key = 'L101N-' + crypto.randomBytes(6).toString('hex').toUpperCase();
 
-    if (!foundUser.keys) foundUser.keys = [];
-    foundUser.keys.push({
+    if (!user.keys) user.keys = [];
+    user.keys.push({
       key: key,
       plan: planId,
       price: price,
@@ -90,51 +102,27 @@ export default async function handler(req, res) {
     });
 
     if (planId === 'hwid') {
-      foundUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
+      user.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
     } else {
-      foundUser.subscription = {
+      user.subscription = {
         active: true,
         plan: planId,
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
       };
     }
 
-    users[foundEmail] = foundUser;
+    users[email] = user;
     saveUsers(users);
-
-    // Уведомление в Telegram
-    if (process.env.BOT_TOKEN && process.env.CHAT_ID) {
-      try {
-        const tgText = `🛒 <b>НОВАЯ ПОКУПКА!</b>\n\n` +
-                       `👤 <b>Пользователь:</b> ${foundEmail}\n` +
-                       `📦 <b>Тариф:</b> ${planId}\n` +
-                       `💰 <b>Сумма:</b> ${price} ₽\n` +
-                       `🔑 <b>Ключ:</b> ${key}\n` +
-                       `💳 <b>Остаток:</b> ${foundUser.balance} ₽`;
-        
-        await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: process.env.CHAT_ID,
-            text: tgText,
-            parse_mode: 'HTML'
-          })
-        });
-      } catch (e) {
-        console.error('Ошибка отправки в Telegram:', e);
-      }
-    }
 
     return res.status(200).json({
       success: true,
       key: key,
-      balance: foundUser.balance,
+      balance: user.balance,
       plan: planId
     });
 
   } catch (error) {
     console.error('❌ Ошибка purchase:', error);
-    return res.status(500).json({ error: 'Внутренняя ошибка сервера: ' + error.message });
+    return res.status(500).json({ error: 'Внутренняя ошибка' });
   }
 }
