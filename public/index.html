@@ -7,9 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ============================================================
-           СУПЕР СТИЛЬНЫЙ МОНОХРОМНЫЙ ДИЗАЙН
-           ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -47,7 +44,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ===== ЭПИЧНЫЙ ФОН ===== */
         .bg-container {
             position: fixed;
             top: 0;
@@ -146,7 +142,6 @@
             opacity: 0.4;
         }
 
-        /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
         .container {
             position: relative;
             z-index: 1;
@@ -158,7 +153,6 @@
             flex-direction: column;
         }
 
-        /* ===== ШАПКА ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -298,7 +292,6 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* ===== ГЕРОЙ ===== */
         .hero {
             padding: 5rem 0 3rem;
             min-height: 50vh;
@@ -386,7 +379,6 @@
             color: #ffffff;
         }
 
-        /* ===== СЕКЦИИ ===== */
         .section {
             padding: 4rem 0 2.5rem;
             border-top: 1px solid var(--border);
@@ -403,7 +395,6 @@
             text-shadow: 0 0 30px rgba(255,255,255,0.02);
         }
 
-        /* ===== ВОЗМОЖНОСТИ ===== */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -457,7 +448,6 @@
             line-height: 1.8;
         }
 
-        /* ===== ТАРИФЫ ===== */
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -572,7 +562,6 @@
             font-size: 0.85rem;
         }
 
-        /* ===== КАБИНЕТ ===== */
         .cabinet-grid {
             display: grid;
             grid-template-columns: 340px 1fr;
@@ -925,7 +914,6 @@
             color: #ffaa00;
         }
 
-        /* ===== МОДАЛКИ ===== */
         .modal-wrap {
             position: fixed;
             inset: 0;
@@ -1123,7 +1111,6 @@
         }
         .btn-modal-cancel:hover { color: #ffffff; }
 
-        /* ===== УВЕДОМЛЕНИЯ ===== */
         .notification-container {
             position: fixed;
             top: 20px;
@@ -1167,7 +1154,6 @@
             border-color: rgba(0,255,68,0.3);
         }
 
-        /* ===== АДАПТИВ ===== */
         @media (max-width: 1024px) {
             .features-grid { grid-template-columns: repeat(2, 1fr); }
             .cabinet-grid { grid-template-columns: 1fr; }
@@ -1214,7 +1200,6 @@
 
     <div class="container">
 
-        <!-- ===== ШАПКА ===== -->
         <header class="header">
             <div class="logo" data-page="main">Lethal <span>DLC</span></div>
             <div class="header-right">
@@ -1232,7 +1217,6 @@
             </div>
         </header>
 
-        <!-- ===== СТРАНИЦА: ГЛАВНАЯ ===== -->
         <div class="page active" id="page-main">
             <section class="hero">
                 <div class="hero-tag">✦ Premium Edition 2026</div>
@@ -1289,7 +1273,6 @@
             </section>
         </div>
 
-        <!-- ===== СТРАНИЦА: ТАРИФЫ ===== -->
         <div class="page" id="page-pricing">
             <section class="section">
                 <div class="section-header">
@@ -1307,7 +1290,6 @@
             </section>
         </div>
 
-        <!-- ===== СТРАНИЦА: КАБИНЕТ ===== -->
         <div class="page" id="page-cabinet">
             <section class="section">
                 <div class="section-header">
@@ -1320,9 +1302,6 @@
     </div>
 
     <script>
-        // ============================================================
-        // ПОЛНЫЙ КЛИЕНТСКИЙ КОД
-        // ============================================================
         (function() {
             'use strict';
 
@@ -1591,7 +1570,7 @@
                 btn.textContent = '💳 Пополнить через DonationAlerts';
                 btn.addEventListener('click', () => {
                     const url = new URL('https://www.donationalerts.com/r/lethaldlc');
-                    url.searchParams.set('message', `USER_${currentUser.id} TOPUP`);
+                    url.searchParams.set('message', `USER_${currentUser.email} TOPUP`);
                     window.open(url.toString(), '_blank', 'noopener,noreferrer');
                     wrap.remove();
                     addNotification('🔄 Перенаправление', 'Оплата через DonationAlerts');
@@ -2061,7 +2040,7 @@
 
                 const idBadge = document.createElement('div');
                 idBadge.className = 'id-badge';
-                idBadge.textContent = `ID: ${currentUser.id}`;
+                idBadge.textContent = `Email: ${currentUser.email}`;
                 sidebar.appendChild(idBadge);
 
                 const statusPill = document.createElement('div');
@@ -2464,37 +2443,18 @@
                 });
             });
 
-            // === ФИКС - ПРИНУДИТЕЛЬНОЕ ВОССТАНОВЛЕНИЕ СЕССИИ ===
-            window.fixSession = async function() {
-                const token = localStorage.getItem('auth_token');
-                if (!token) {
-                    showAuthModal('login');
-                    return;
-                }
-                
-                try {
-                    const response = await fetch('/api/auth', {
-                        headers: { 'X-Auth-Token': token }
-                    });
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        currentUser = data.user;
-                        authToken = token;
-                        updateUI();
-                        renderCabinet();
-                        addNotification('✅ Сессия восстановлена', 'Добро пожаловать!', 'success');
-                    } else {
-                        localStorage.removeItem('auth_token');
-                        showAuthModal('login');
-                    }
-                } catch (e) {
-                    localStorage.removeItem('auth_token');
-                    showAuthModal('login');
-                }
+            // === СУПЕР ФИКС - ПРИНУДИТЕЛЬНОЕ ВОССТАНОВЛЕНИЕ ===
+            window.forceRelogin = function() {
+                localStorage.removeItem('auth_token');
+                authToken = null;
+                currentUser = null;
+                updateUI();
+                renderCabinet();
+                addNotification('🔄 Требуется перезаход', 'Пожалуйста, войдите заново', 'error');
+                setTimeout(() => showAuthModal('login'), 1000);
             };
 
-            // Перехватываем все ошибки API
+            // Перехват ошибок API
             const originalFetch = window.fetch;
             window.fetch = function(...args) {
                 return originalFetch.apply(this, args).then(async response => {
@@ -2504,22 +2464,34 @@
                         if (data.error && (
                             data.error.includes('пользователь не найден') ||
                             data.error.includes('Недействительный токен') ||
-                            data.error.includes('User not found')
+                            data.error.includes('User not found') ||
+                            data.error.includes('Пользователь не найден. Пожалуйста, перезайдите') ||
+                            data.needRelogin === true
                         )) {
-                            console.log('🔴 Ошибка авторизации, восстанавливаем сессию...');
-                            setTimeout(() => window.fixSession(), 500);
+                            setTimeout(() => window.forceRelogin(), 500);
                         }
                     } catch (e) {}
                     return response;
                 });
             };
 
-            // Запускаем восстановление при загрузке
-            setTimeout(() => {
-                if (localStorage.getItem('auth_token')) {
-                    window.fixSession();
+            // Проверка сессии при загрузке
+            setTimeout(async function() {
+                const token = localStorage.getItem('auth_token');
+                if (token) {
+                    try {
+                        const response = await fetch('/api/auth', {
+                            headers: { 'X-Auth-Token': token }
+                        });
+                        const data = await response.json();
+                        if (!data.success) {
+                            window.forceRelogin();
+                        }
+                    } catch (e) {
+                        window.forceRelogin();
+                    }
                 }
-            }, 1000);
+            }, 2000);
 
             // === СТАРТ ===
             (async function init() {

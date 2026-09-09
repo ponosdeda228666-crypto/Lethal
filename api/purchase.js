@@ -33,7 +33,7 @@ function verifyToken(token) {
       .digest('hex');
     if (decoded.signature !== expectedSignature) return null;
     return decoded.payload.email;
-  } catch {
+  } catch (e) {
     return null;
   }
 }

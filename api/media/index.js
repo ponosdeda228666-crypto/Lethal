@@ -33,7 +33,7 @@ function verifyToken(token) {
       .digest('hex');
     if (decoded.signature !== expectedSignature) return null;
     return decoded.payload.email;
-  } catch {
+  } catch (e) {
     return null;
   }
 }
@@ -101,7 +101,10 @@ export default async function handler(req, res) {
     const users = loadUsers();
     const user = users[email];
     if (!user) {
-      return res.status(401).json({ error: 'Пользователь не найден' });
+      return res.status(401).json({ 
+        error: 'Пользователь не найден. Пожалуйста, перезайдите в аккаунт.',
+        needRelogin: true
+      });
     }
 
     // GET - получение заявок
