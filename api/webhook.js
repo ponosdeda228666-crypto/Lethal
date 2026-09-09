@@ -1,66 +1,111 @@
-// Хранилище обработанных транзакций в оперативной памяти инстанса
-// !!! ВНИМАНИЕ: Для production на Vercel используйте внешнее хранилище (Upstash Redis, Vercel KV, Supabase) !!!
-const processedAlertIds = new Map();
+import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
+
+const DA_SECRET = process.env.DA_SECRET || 'your-donationalerts-secret';
+const USERS_FILE = path.join(process.cwd(), 'users.json');
+const verifiedTransactions = new Map();
+
+function loadUsers() {
+  try {
+    const data = fs.readFileSync(USERS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch {
+    return {};
+  }
+}
+
+function saveUsers(users) {
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+}
+
+function verifyDASignature(body, signature) {
+  if (!signature) return false;
+  const expected = crypto
+    .createHmac('sha256', DA_SECRET)
+    .update(JSON.stringify(body))
+    .digest('hex');
+  return signature === expected;
+}
 
 export default async function handler(req, res) {
-  // Разрешаем только POST-запросы
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    return res.status(405).json({ error: 'Method Not Allowed' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  try {
-    const { id, amount, currency, message, billing_system } = req.body;
-
-    // 1. Проверка обязательных полей от DonationAlerts
-    if (!id || !amount || !message) {
-      return res.status(400).json({ error: 'Invalid payload structure' });
-    }
-
-    // 2. Защита от Double-Spending / Replay атаки
-    const alertId = String(id);
-    if (processedAlertIds.has(alertId)) {
-      return res.status(200).json({ status: 'already_processed' });
-    }
-
-    // 3. Валидация сообщения: извлекаем email и тип операции
-    const parsedData = message.trim().match(/^USER_([^\s]+)\s+(.+)$/);
-    if (!parsedData) {
-      return res.status(200).json({ status: 'ignored_unrecognized_message' });
-    }
-
-    const userEmail = parsedData[1].toLowerCase();
-    const actionType = parsedData[2];
-    const creditedAmount = parseFloat(amount);
-
-    if (isNaN(creditedAmount) || creditedAmount <= 0) {
-      return res.status(400).json({ error: 'Invalid amount' });
-    }
-
-    // 4. Фиксация транзакции
-    // Сохраняем ID и время, через 10 минут запись будет удалена
-    processedAlertIds.set(alertId, Date.now());
-    
-    // Очищаем старые записи (чтобы избежать утечки памяти)
-    const now = Date.now();
-    for (const [key, time] of processedAlertIds.entries()) {
-      if (now - time > 600000) { // 10 минут в миллисекундах
-        processedAlertIds.delete(key);
-      }
-    }
-
-    // Логирование успешного зачисления
-    console.log(`[PAYMENT CONFIRMED] User: ${userEmail}, Amount: ${creditedAmount} ${currency}, Action: ${actionType}`);
-
-    return res.status(200).json({
-      success: true,
-      user: userEmail,
-      credited: creditedAmount,
-      action: actionType
-    });
-
-  } catch (err) {
-    console.error('Webhook error:', err);
-    return res.status(500).json({ error: 'Internal server error' });
+  // Проверка подписи
+  const signature = req.headers['x-da-signature'];
+  if (!verifyDASignature(req.body, signature)) {
+    console.log('❌ Invalid DA signature');
+    return res.status(403).json({ error: 'Invalid signature' });
   }
+
+  const data = req.body.data || req.body;
+  const email = data.email || data.receiver || data.user_email;
+  const amount = parseFloat(data.amount || data.amount_total || 0);
+  const currency = data.currency || 'RUB';
+  const username = data.username || data.name || 'User';
+  const transactionId = data.id || data.transaction_id || Date.now().toString();
+
+  // Защита от повторной отправки
+  if (verifiedTransactions.has(transactionId)) {
+    return res.status(200).json({ status: 'already_processed' });
+  }
+
+  if (amount < 1) {
+    return res.status(400).json({ error: 'Invalid amount' });
+  }
+
+  const users = loadUsers();
+  let foundUser = null;
+  let foundEmail = null;
+
+  for (const [key, user] of Object.entries(users)) {
+    if (key.toLowerCase() === email.toLowerCase()) {
+      foundUser = user;
+      foundEmail = key;
+      break;
+    }
+  }
+
+  if (!foundUser) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  // Фиксируем транзакцию
+  verifiedTransactions.set(transactionId, {
+    timestamp: Date.now(),
+    email: foundEmail,
+    amount: amount
+  });
+
+  // Начисляем баланс
+  foundUser.balance = (foundUser.balance || 0) + amount;
+  
+  if (!foundUser.deposits) foundUser.deposits = [];
+  foundUser.deposits.push({
+    id: 'DA-' + transactionId,
+    amount: amount,
+    currency: currency,
+    date: new Date().toISOString(),
+    confirmed: true
+  });
+
+  saveUsers(users);
+
+  console.log(`✅ Balance updated: ${foundEmail} +${amount} ${currency}`);
+
+  return res.status(200).json({
+    success: true,
+    user: foundEmail,
+    balance: foundUser.balance,
+    credited: amount
+  });
 }

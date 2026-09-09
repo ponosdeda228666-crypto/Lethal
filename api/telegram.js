@@ -1,9 +1,13 @@
-// api/telegram.js
 import fs from 'fs';
+import crypto from 'crypto';
+import path from 'path';
 
-const BOT_TOKEN = "8861768227:AAFbmUHocOR0zatOere_DcXopW-7JYyZbc4";
-const CHAT_ID = "8488940016";
-const TMP_FILE = "/tmp/tg_decisions.json";
+const BOT_TOKEN = process.env.BOT_TOKEN || "8861768227:AAFbmUHocOR0zatOere_DcXopW-7JYyZbc4";
+const CHAT_ID = process.env.CHAT_ID || "8488940016";
+const TMP_FILE = path.join('/tmp', 'tg_decisions.json');
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-it';
+
+const processedRequests = new Map();
 
 function getLocalDecisions() {
   try {
@@ -19,6 +23,15 @@ function saveLocalDecision(id, status) {
     data[id] = status;
     fs.writeFileSync(TMP_FILE, JSON.stringify(data));
   } catch (e) {}
+}
+
+function verifyServerRequest(body, signature) {
+  if (!signature) return false;
+  const expected = crypto
+    .createHmac('sha256', JWT_SECRET)
+    .update(JSON.stringify(body))
+    .digest('hex');
+  return signature === expected;
 }
 
 async function syncDecisionCloud(id, status) {
@@ -50,13 +63,12 @@ async function getDecisionCloud(id) {
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Request-Signature');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // 1. Автоматическая привязка вебхука Telegram
   if (req.method === 'GET' && req.query.setup === 'webhook') {
     const host = req.headers.host;
     const proto = req.headers['x-forwarded-proto'] || 'https';
@@ -66,7 +78,6 @@ export default async function handler(req, res) {
     return res.status(200).json({ webhookUrl, tgResponse: tgData });
   }
 
-  // 2. Проверка статуса заявки клиентом
   if (req.method === 'GET') {
     const { check } = req.query;
     if (check) {
@@ -76,7 +87,6 @@ export default async function handler(req, res) {
     return res.status(200).json({ status: 'active' });
   }
 
-  // 3. Обработка нажатий на инлайн-кнопки в Telegram (Webhook)
   if (req.method === 'POST' && req.body && req.body.callback_query) {
     const cb = req.body.callback_query;
     const data = cb.data || "";
@@ -125,11 +135,29 @@ export default async function handler(req, res) {
     return res.status(200).json({ status: "ok" });
   }
 
-  // 4. Отправка новой заявки с сайта в Telegram
   if (req.method === 'POST') {
+    // Только сервер может отправлять!
+    const signature = req.headers['x-request-signature'];
+    if (!verifyServerRequest(req.body, signature)) {
+      return res.status(403).json({ error: 'Invalid signature' });
+    }
+
     const { text, actionId, type } = req.body;
     if (!text || !actionId) {
-      return res.status(400).json({ error: "Некорректные параметры заявки" });
+      return res.status(400).json({ error: "Invalid parameters" });
+    }
+
+    const key = `${actionId}_${type}`;
+    if (processedRequests.has(key)) {
+      return res.status(200).json({ status: 'already_processed' });
+    }
+    processedRequests.set(key, Date.now());
+    
+    const now = Date.now();
+    for (const [k, time] of processedRequests.entries()) {
+      if (now - time > 600000) {
+        processedRequests.delete(k);
+      }
     }
 
     const replyMarkup = {
@@ -154,11 +182,11 @@ export default async function handler(req, res) {
 
     const result = await response.json();
     if (!response.ok) {
-      return res.status(500).json({ error: result.description || "Ошибка Telegram API" });
+      return res.status(500).json({ error: result.description || "Telegram API error" });
     }
 
     return res.status(200).json({ success: true, message_id: result.result.message_id });
   }
 
-  return res.status(405).json({ error: "Метод не поддерживается" });
+  return res.status(405).json({ error: "Method not allowed" });
 }

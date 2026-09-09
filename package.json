@@ -1,13 +1,12 @@
 {
-  "name": "lethaldlc",
+  "name": "lethal-dlc",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "vercel-build": "echo 'Building...'"
   },
   "dependencies": {
-    "node-fetch": "^2.7.0"
-  },
-  "author": "",
-  "license": "ISC"
+    "node-fetch": "^2.7.0",
+    "crypto": "^1.0.1"
+  }
 }

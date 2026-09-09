@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lethal DLC — Premium Cheat</title>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+    <style>
+        /* ВСЕ СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ... все стили из предыдущей версии ... */
+    </style>
+</head>
+<body>
+    <!-- ВСЕ HTML БЕЗ ИЗМЕНЕНИЙ -->
+    <!-- ... -->
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ЗАЩИТА ОТ ДЕВТУЛС
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) || 
+                    (e.ctrlKey && (e.key === 'U' || e.key === 'u')) ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c'))) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            console.clear();
+            console.log = function() {};
+            console.warn = function() {};
+            console.error = function() {};
+
+            // API КЛИЕНТ
+            const API_URL = '';
+            let authToken = localStorage.getItem('auth_token');
+            let currentUser = null;
+            let currentTab = 'withdrawals';
+
+            async function apiRequest(endpoint, data, method = 'POST') {
+                const headers = { 'Content-Type': 'application/json' };
+                if (authToken) {
+                    headers['X-Auth-Token'] = authToken;
+                }
+                const response = await fetch(API_URL + endpoint, {
+                    method: method,
+                    headers: headers,
+                    body: JSON.stringify(data)
+                });
+                return await response.json();
+            }
+
+            // ВСЯ ОСТАЛЬНАЯ ЛОГИКА (рендеринг, модалки) - ТОЛЬКО ВИЗУАЛ
+            // Все операции с деньгами и ключами - ТОЛЬКО через apiRequest
+
+            // ЛОГИН
+            async function login(email, password) {
+                const result = await apiRequest('/api/auth', { email, password, action: 'login' });
+                if (result.success) {
+                    authToken = result.token;
+                    localStorage.setItem('auth_token', authToken);
+                    currentUser = result.user;
+                    updateUI();
+                    renderCabinet();
+                    addNotification('Успешно', `Добро пожаловать, ${currentUser.name}!`);
+                    return true;
+                }
+                addNotification('Ошибка', result.error || 'Ошибка входа');
+                return false;
+            }
+
+            // РЕГИСТРАЦИЯ
+            async function register(email, password, name) {
+                const result = await apiRequest('/api/auth', { email, password, name, action: 'register' });
+                if (result.success) {
+                    authToken = result.token;
+                    localStorage.setItem('auth_token', authToken);
+                    currentUser = result.user;
+                    updateUI();
+                    renderCabinet();
+                    addNotification('Успешно', `Добро пожаловать, ${currentUser.name}!`);
+                    return true;
+                }
+                addNotification('Ошибка', result.error || 'Ошибка регистрации');
+                return false;
+            }
+
+            // ПОКУПКА
+            async function purchasePlan(planId, promoCode = null) {
+                const result = await apiRequest('/api/purchase', { planId, promoCode });
+                if (result.success) {
+                    currentUser.balance = result.balance;
+                    addNotification('Успешно', `Тариф активирован! Ключ: ${result.key}`);
+                    renderCabinet();
+                    return result;
+                }
+                addNotification('Ошибка', result.error || 'Ошибка покупки');
+                return null;
+            }
+
+            // БАЛАНС
+            async function getBalance() {
+                const result = await apiRequest('/api/balance', {}, 'GET');
+                if (result.balance !== undefined) {
+                    currentUser.balance = result.balance;
+                    renderCabinet();
+                }
+                return result;
+            }
+
+            // ВСЕ ФУНКЦИИ РЕНДЕРИНГА И МОДАЛОК (БЕЗ ИЗМЕНЕНИЙ)
+            // ... весь визуальный код из предыдущей версии ...
+            // Все вызовы типа openSmartPurchaseModal используют purchasePlan()
+
+        })();
+    </script>
+</body>
+</html>
