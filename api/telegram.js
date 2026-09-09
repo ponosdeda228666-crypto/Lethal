@@ -5,7 +5,7 @@ import path from 'path';
 const BOT_TOKEN = process.env.BOT_TOKEN || "8861768227:AAFbmUHocOR0zatOere_DcXopW-7JYyZbc4";
 const CHAT_ID = process.env.CHAT_ID || "8488940016";
 const USERS_FILE = path.join(process.cwd(), 'users.json');
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
+const JWT_SECRET = 'lethal-dlc-super-secret-key-2026';
 
 const processedRequests = new Map();
 
@@ -66,7 +66,7 @@ async function getDecisionCloud(id) {
   return null;
 }
 
-function verifyTokenAndGetUser(token, users) {
+function verifyToken(token) {
   try {
     if (!token) return null;
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
@@ -75,13 +75,7 @@ function verifyTokenAndGetUser(token, users) {
       .update(JSON.stringify(decoded.payload))
       .digest('hex');
     if (decoded.signature !== expectedSignature) return null;
-    const userId = decoded.payload.userId;
-    const email = decoded.payload.email;
-    for (const [userEmail, user] of Object.entries(users)) {
-      if (user.id === userId) return { email: userEmail, user };
-    }
-    if (email && users[email]) return { email, user: users[email] };
-    return null;
+    return decoded.payload.email;
   } catch { return null; }
 }
 
@@ -121,7 +115,6 @@ async function processMediaApplication(applicationId, approve) {
       }
       promocodes[foundApp.promoCode] = {
         owner: foundEmail,
-        ownerId: foundUser.id,
         uses: 0,
         volume: 0,
         reward: 0,

@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { verifyTokenAndGetUser } from '../auth.js';
 
+const JWT_SECRET = 'lethal-dlc-super-secret-key-2026';
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 const PROMO_FILE = path.join(process.cwd(), 'promocodes.json');
 
@@ -31,6 +31,19 @@ function savePromocodes(promocodes) {
   try { fs.writeFileSync(PROMO_FILE, JSON.stringify(promocodes, null, 2)); } catch {}
 }
 
+function verifyToken(token) {
+  try {
+    if (!token) return null;
+    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    const expectedSignature = crypto
+      .createHmac('sha256', JWT_SECRET)
+      .update(JSON.stringify(decoded.payload))
+      .digest('hex');
+    if (decoded.signature !== expectedSignature) return null;
+    return decoded.payload.email;
+  } catch { return null; }
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -50,21 +63,23 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const users = loadUsers();
-    const result = verifyTokenAndGetUser(token, users);
-    
-    if (!result) {
-      return res.status(401).json({ error: 'Недействительный токен' });
+    const email = verifyToken(token);
+    if (!email) {
+      return res.status(401).json({ error: 'Неверный токен' });
     }
 
-    const { email: foundEmail, user: foundUser } = result;
-    const { promoCode } = req.body;
+    const users = loadUsers();
+    const user = users[email];
+    if (!user) {
+      return res.status(401).json({ error: 'Пользователь не найден' });
+    }
 
+    const { promoCode } = req.body;
     if (!promoCode) {
       return res.status(400).json({ error: 'Укажите промокод' });
     }
 
-    const hasAccess = foundUser.mediaApplications?.some(app => 
+    const hasAccess = user.mediaApplications?.some(app => 
       app.status === 'approved' && app.promoCode === promoCode
     );
 
@@ -79,21 +94,21 @@ export default async function handler(req, res) {
     }
 
     const amount = stats.reward;
-    foundUser.balance = (foundUser.balance || 0) + amount;
+    user.balance = (user.balance || 0) + amount;
     stats.reward = 0;
 
-    users[foundEmail] = foundUser;
+    users[email] = user;
     saveUsers(users);
     savePromocodes(promocodes);
 
     return res.status(200).json({
       success: true,
       amount: amount,
-      balance: foundUser.balance
+      balance: user.balance
     });
 
   } catch (error) {
     console.error('❌ Ошибка claim:', error);
-    return res.status(500).json({ error: 'Внутренняя ошибка: ' + error.message });
+    return res.status(500).json({ error: 'Внутренняя ошибка' });
   }
 }

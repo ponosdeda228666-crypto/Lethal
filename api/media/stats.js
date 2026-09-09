@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { verifyTokenAndGetUser } from '../auth.js';
 
+const JWT_SECRET = 'lethal-dlc-super-secret-key-2026';
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 const PROMO_FILE = path.join(process.cwd(), 'promocodes.json');
 
@@ -23,6 +23,19 @@ function loadPromocodes() {
   } catch { return {}; }
 }
 
+function verifyToken(token) {
+  try {
+    if (!token) return null;
+    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    const expectedSignature = crypto
+      .createHmac('sha256', JWT_SECRET)
+      .update(JSON.stringify(decoded.payload))
+      .digest('hex');
+    if (decoded.signature !== expectedSignature) return null;
+    return decoded.payload.email;
+  } catch { return null; }
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -38,21 +51,23 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const users = loadUsers();
-    const result = verifyTokenAndGetUser(token, users);
-    
-    if (!result) {
-      return res.status(401).json({ error: 'Недействительный токен' });
+    const email = verifyToken(token);
+    if (!email) {
+      return res.status(401).json({ error: 'Неверный токен' });
     }
 
-    const { user: foundUser } = result;
-    const { promo } = req.query;
+    const users = loadUsers();
+    const user = users[email];
+    if (!user) {
+      return res.status(401).json({ error: 'Пользователь не найден' });
+    }
 
+    const { promo } = req.query;
     if (!promo) {
       return res.status(400).json({ error: 'Укажите промокод' });
     }
 
-    const hasAccess = foundUser.mediaApplications?.some(app => 
+    const hasAccess = user.mediaApplications?.some(app => 
       app.status === 'approved' && app.promoCode === promo
     );
 
@@ -70,6 +85,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('❌ Ошибка stats:', error);
-    return res.status(500).json({ error: 'Внутренняя ошибка: ' + error.message });
+    return res.status(500).json({ error: 'Внутренняя ошибка' });
   }
 }
