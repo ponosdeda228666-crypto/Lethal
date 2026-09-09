@@ -1,5 +1,40 @@
 import crypto from 'crypto';
-import { loadUsers, saveUsers, verifyToken, setCors } from './_utils.js';
+import fs from 'fs';
+
+const USERS_FILE = '/tmp/users.json';
+
+function loadUsers() {
+  try {
+    if (!fs.existsSync(USERS_FILE)) {
+      fs.writeFileSync(USERS_FILE, JSON.stringify({}, null, 2));
+      return {};
+    }
+    return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+  } catch { return {}; }
+}
+
+function saveUsers(users) {
+  try { fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2)); } catch {}
+}
+
+function verifyToken(token) {
+  try {
+    if (!token) return null;
+    const users = loadUsers();
+    for (const [email, user] of Object.entries(users)) {
+      if (user.token === token) {
+        return email;
+      }
+    }
+    return null;
+  } catch { return null; }
+}
+
+function setCors(res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, X-Requested-With');
+}
 
 async function sendTelegramNotification(application, userEmail) {
   const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -49,13 +84,25 @@ export default async function handler(req, res) {
 
   try {
     const token = req.headers['x-auth-token'];
-    if (!token) return res.status(401).json({ error: 'Требуется авторизация' });
+    console.log('📌 media.js - токен получен:', token ? 'ЕСТЬ' : 'НЕТ');
+    
+    if (!token) {
+      return res.status(401).json({ error: 'Требуется авторизация' });
+    }
+
     const email = verifyToken(token);
-    if (!email) return res.status(401).json({ error: 'Неверный токен' });
+    console.log('📌 media.js - email из verifyToken:', email);
+    
+    if (!email) {
+      return res.status(401).json({ error: 'Неверный токен' });
+    }
 
     const users = loadUsers();
     const user = users[email];
-    if (!user) return res.status(401).json({ error: 'Пользователь не найден' });
+    
+    if (!user) {
+      return res.status(401).json({ error: 'Пользователь не найден' });
+    }
 
     if (req.method === 'GET') {
       return res.status(200).json({
@@ -99,6 +146,7 @@ export default async function handler(req, res) {
       }
 
       const applicationId = 'M' + Date.now().toString(36).toUpperCase() + crypto.randomBytes(4).toString('hex').toUpperCase();
+      
       const application = {
         id: applicationId,
         tiktokUrl: tiktokUrl,
@@ -125,7 +173,9 @@ export default async function handler(req, res) {
     }
 
     return res.status(405).json({ error: 'Method not allowed' });
-  } catch (e) {
-    return res.status(500).json({ error: 'Ошибка: ' + e.message });
+
+  } catch (error) {
+    console.error('❌ Ошибка media:', error);
+    return res.status(500).json({ error: 'Внутренняя ошибка: ' + error.message });
   }
 }
