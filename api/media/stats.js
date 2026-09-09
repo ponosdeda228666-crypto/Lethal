@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { verifyToken } from '../auth.js';
 
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 const PROMO_FILE = path.join(process.cwd(), 'promocodes.json');
@@ -23,6 +22,16 @@ function loadPromocodes() {
   } catch { return {}; }
 }
 
+function getUserIdFromToken(token) {
+  try {
+    if (!token) return null;
+    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    return decoded.payload?.userId || decoded.payload?.email || null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -38,14 +47,21 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const email = verifyToken(token);
-    if (!email) {
+    const userId = getUserIdFromToken(token);
+    if (!userId) {
       return res.status(401).json({ error: 'Неверный токен' });
     }
 
     const users = loadUsers();
-    const user = users[email];
-    if (!user) {
+    let foundUser = null;
+    for (const [email, user] of Object.entries(users)) {
+      if (user.id === userId || email === userId) {
+        foundUser = user;
+        break;
+      }
+    }
+
+    if (!foundUser) {
       return res.status(401).json({ error: 'Пользователь не найден' });
     }
 
@@ -54,7 +70,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Укажите промокод' });
     }
 
-    const hasAccess = user.mediaApplications?.some(app => 
+    const hasAccess = foundUser.mediaApplications?.some(app => 
       app.status === 'approved' && app.promoCode === promo
     );
 

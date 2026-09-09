@@ -5,7 +5,6 @@ import path from 'path';
 const BOT_TOKEN = process.env.BOT_TOKEN || "8861768227:AAFbmUHocOR0zatOere_DcXopW-7JYyZbc4";
 const CHAT_ID = process.env.CHAT_ID || "8488940016";
 const USERS_FILE = path.join(process.cwd(), 'users.json');
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
 
 const processedRequests = new Map();
 
@@ -64,19 +63,6 @@ async function getDecisionCloud(id) {
     }
   } catch {}
   return null;
-}
-
-function verifyToken(token) {
-  try {
-    if (!token) return null;
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    const expectedSignature = crypto
-      .createHmac('sha256', JWT_SECRET)
-      .update(JSON.stringify(decoded.payload))
-      .digest('hex');
-    if (decoded.signature !== expectedSignature) return null;
-    return decoded.payload;
-  } catch { return null; }
 }
 
 async function processMediaApplication(applicationId, approve) {

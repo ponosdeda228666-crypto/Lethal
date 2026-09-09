@@ -41,7 +41,7 @@ function generateToken(email, userId) {
   return Buffer.from(JSON.stringify({ payload, signature })).toString('base64');
 }
 
-export function verifyToken(token) {
+function verifyToken(token) {
   try {
     if (!token) return null;
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
@@ -79,18 +79,29 @@ export default async function handler(req, res) {
     }
 
     const users = loadUsers();
-    const user = users[payload.email];
-    if (!user) {
+    let foundUser = null;
+    let foundEmail = null;
+    
+    // Ищем по ID или email
+    for (const [email, user] of Object.entries(users)) {
+      if (user.id === payload.userId || email === payload.email) {
+        foundUser = user;
+        foundEmail = email;
+        break;
+      }
+    }
+
+    if (!foundUser) {
       return res.status(401).json({ error: 'Пользователь не найден' });
     }
 
     return res.status(200).json({
       success: true,
       user: {
-        id: user.id || 'U' + crypto.randomBytes(4).toString('hex').toUpperCase(),
-        email: payload.email,
-        name: user.name || 'User',
-        balance: user.balance || 0
+        id: foundUser.id || 'U' + crypto.randomBytes(4).toString('hex').toUpperCase(),
+        email: foundEmail,
+        name: foundUser.name || 'User',
+        balance: foundUser.balance || 0
       }
     });
   }

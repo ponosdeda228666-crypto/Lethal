@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { verifyToken } from '../auth.js';
 
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 
@@ -21,6 +20,16 @@ function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
   } catch (e) {}
+}
+
+function getUserIdFromToken(token) {
+  try {
+    if (!token) return null;
+    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    return decoded.payload?.userId || decoded.payload?.email || null;
+  } catch {
+    return null;
+  }
 }
 
 async function sendTelegramNotification(application, userEmail) {
@@ -80,14 +89,26 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const payload = verifyToken(token);
-    if (!payload) {
+    const userId = getUserIdFromToken(token);
+    if (!userId) {
       return res.status(401).json({ error: 'Неверный токен' });
     }
 
     const users = loadUsers();
-    const user = users[payload.email];
-    if (!user) {
+    
+    // Ищем пользователя по ID или email
+    let foundUser = null;
+    let foundEmail = null;
+    
+    for (const [email, user] of Object.entries(users)) {
+      if (user.id === userId || email === userId) {
+        foundUser = user;
+        foundEmail = email;
+        break;
+      }
+    }
+
+    if (!foundUser) {
       return res.status(401).json({ 
         error: 'Пользователь не найден. Пожалуйста, перезайдите в аккаунт.'
       });
@@ -95,7 +116,7 @@ export default async function handler(req, res) {
 
     // GET - получение заявок
     if (req.method === 'GET') {
-      const applications = user.mediaApplications || [];
+      const applications = foundUser.mediaApplications || [];
       return res.status(200).json({
         success: true,
         applications: applications
@@ -127,9 +148,9 @@ export default async function handler(req, res) {
       }
 
       // Проверка на дубликат промокода
-      for (const [key, u] of Object.entries(users)) {
-        if (u.mediaApplications) {
-          for (const app of u.mediaApplications) {
+      for (const [email, user] of Object.entries(users)) {
+        if (user.mediaApplications) {
+          for (const app of user.mediaApplications) {
             if (app.status === 'approved' && app.promoCode === promoCode.toUpperCase()) {
               return res.status(400).json({ error: 'Этот промокод уже используется' });
             }
@@ -146,21 +167,21 @@ export default async function handler(req, res) {
         telegramContact: telegramContact,
         status: 'pending',
         createdAt: new Date().toISOString(),
-        userName: user.name || payload.email.split('@')[0],
-        userEmail: payload.email,
-        userId: user.id || 'U' + crypto.randomBytes(4).toString('hex').toUpperCase()
+        userName: foundUser.name || foundEmail.split('@')[0],
+        userEmail: foundEmail,
+        userId: foundUser.id || 'U' + crypto.randomBytes(4).toString('hex').toUpperCase()
       };
 
-      if (!user.mediaApplications) {
-        user.mediaApplications = [];
+      if (!foundUser.mediaApplications) {
+        foundUser.mediaApplications = [];
       }
-      user.mediaApplications.push(application);
+      foundUser.mediaApplications.push(application);
       
-      users[payload.email] = user;
+      users[foundEmail] = foundUser;
       saveUsers(users);
 
       // Отправка в Telegram
-      await sendTelegramNotification(application, payload.email);
+      await sendTelegramNotification(application, foundEmail);
 
       return res.status(200).json({
         success: true,
