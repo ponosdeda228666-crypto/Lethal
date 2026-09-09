@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lethal DLC — Premium Cheat</title>
-    <!-- Обновляем DOMPurify до безопасной версии -->
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
     <style>
         /* ============================================================
@@ -46,7 +45,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ===== ФОН ===== */
         .bg-container {
             position: fixed;
             top: 0;
@@ -157,7 +155,6 @@
             flex-direction: column;
         }
 
-        /* ===== ШАПКА ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -262,7 +259,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== HERO ===== */
         .hero {
             padding: 4.5rem 0 2.5rem;
             min-height: 40vh;
@@ -325,7 +321,6 @@
         .btn-outline { background: transparent; color: #ffffff; border-color: #333333; }
         .btn-outline:hover { border-color: #ffffff; background: transparent; }
 
-        /* ===== СЕКЦИИ И ТАРИФЫ ===== */
         .section { padding: 3rem 0 2rem; border-top: 1px solid var(--border); }
         .section-header { margin-bottom: 2rem; }
         .section-title {
@@ -433,7 +428,6 @@
             gap: 1rem;
         }
 
-        /* ===== ЛИЧНЫЙ КАБИНЕТ ===== */
         .cabinet-grid {
             display: grid;
             grid-template-columns: 320px 1fr;
@@ -651,7 +645,6 @@
             color: #ffffff;
         }
 
-        /* ===== МОДАЛКИ ===== */
         .modal-wrap {
             position: fixed;
             inset: 0;
@@ -827,7 +820,6 @@
         }
         .btn-modal-cancel:hover { color: #ffffff; }
 
-        /* УВЕДОМЛЕНИЯ */
         .notification-container {
             position: fixed;
             top: 20px;
@@ -895,7 +887,6 @@
             </div>
         </header>
 
-        <!-- СТРАНИЦА: ГЛАВНАЯ -->
         <div class="page active" id="page-main">
             <section class="hero">
                 <div class="hero-tag">Strict Monochrome Edition</div>
@@ -951,7 +942,6 @@
             </section>
         </div>
 
-        <!-- СТРАНИЦА: ТАРИФЫ -->
         <div class="page" id="page-pricing">
             <section class="section">
                 <div class="section-header">
@@ -969,7 +959,6 @@
             </section>
         </div>
 
-        <!-- СТРАНИЦА: КАБИНЕТ -->
         <div class="page" id="page-cabinet">
             <section class="section">
                 <div class="section-header">
@@ -986,7 +975,7 @@
             'use strict';
 
             // ============================================================
-            // 0. БЕЗОПАСНАЯ РАБОТА С HTML (ЗАЩИТА ОТ XSS)
+            // 0. БЕЗОПАСНАЯ РАБОТА С HTML
             // ============================================================
             function sanitizeHTML(dirtyHTML) {
                 if (!dirtyHTML) return '';
@@ -1010,28 +999,17 @@
                 return document.createTextNode(text !== undefined && text !== null ? String(text) : '');
             }
 
-            function createSafeElement(tag, className, text) {
-                const el = document.createElement(tag);
-                if (className) el.className = className;
-                if (text !== undefined && text !== null) {
-                    el.appendChild(createSafeText(text));
-                }
-                return el;
-            }
-
-            // Безопасное чтение из localStorage
             function safeJSONParse(jsonString, fallback) {
                 try {
                     const result = JSON.parse(jsonString);
                     return result !== null && result !== undefined ? result : fallback;
                 } catch (e) {
-                    console.warn("Ошибка парсинга JSON, возвращаем fallback:", e);
                     return fallback;
                 }
             }
 
             // ============================================================
-            // 1. КРИПТОГРАФИЧЕСКАЯ ЗАЩИТА (SHA-256 + HMAC ANTI-TAMPER)
+            // 1. КРИПТОГРАФИЧЕСКАЯ ЗАЩИТА
             // ============================================================
             const SECRET_SALT = "LETHAL_STRICT_SALT_2027";
 
@@ -1065,7 +1043,7 @@
             }
 
             // ============================================================
-            // 2. ОТПРАВКА И СИНХРОНИЗАЦИЯ С TELEGRAM
+            // 2. TELEGRAM API
             // ============================================================
             async function sendTelegramAlert(text, actionId, type) {
                 try {
@@ -1104,7 +1082,7 @@
             }
 
             // ============================================================
-            // 3. БАЗА ДАННЫХ, ПРОМОКОДЫ И СЕССИИ
+            // 3. БАЗА ДАННЫХ
             // ============================================================
             let users = safeJSONParse(localStorage.getItem('lethal_users'), {});
             let promocodes = safeJSONParse(localStorage.getItem('lethal_promocodes'), {});
@@ -1126,14 +1104,12 @@
                 const email = localStorage.getItem('lethal_session');
                 if (email && users[email]) {
                     const u = users[email];
-                    
                     const currentValidChecksum = await generateChecksum(u);
                     if (u.checksum && u.checksum !== currentValidChecksum) {
                         console.warn("Попытка накрутки баланса! Сброс.");
                         u.balance = 0;
                         await verifyAndSaveUser(u);
                     }
-
                     currentUser = u;
                     return true;
                 }
@@ -1147,7 +1123,7 @@
             }
 
             // ============================================================
-            // 4. ТАРИФНЫЕ ПЛАНЫ
+            // 4. ТАРИФЫ
             // ============================================================
             const PLANS = [
                 { id: 'month', label: '1 Месяц', price: 250, desc: 'Полный функционал, автоматические обновления и обход защиты.' },
@@ -1201,13 +1177,12 @@
                         openSmartPurchaseModal(price, planId);
                     });
                     card.appendChild(btn);
-
                     grid.appendChild(card);
                 });
             }
 
             // ============================================================
-            // 5. МОДАЛКА ОПЛАТЫ (БЕЗОПАСНАЯ)
+            // 5. МОДАЛКА ОПЛАТЫ
             // ============================================================
             function openSmartPurchaseModal(basePrice, planId, isHwid = false) {
                 const planObj = isHwid ? { label: 'Сброс HWID' } : (PLANS.find(p => p.id === planId) || { label: 'Подписка' });
@@ -1233,19 +1208,16 @@
 
                 const promoRow = document.createElement('div');
                 promoRow.className = 'promo-input-row';
-                
                 const promoInput = document.createElement('input');
                 promoInput.type = 'text';
                 promoInput.id = 'promoCodeInp';
                 promoInput.placeholder = 'Промокод (скидка 10%)';
                 promoInput.maxLength = 16;
                 promoRow.appendChild(promoInput);
-
                 const applyBtn = document.createElement('button');
                 applyBtn.id = 'applyPromoBtn';
                 applyBtn.textContent = 'Применить';
                 promoRow.appendChild(applyBtn);
-
                 card.appendChild(promoRow);
 
                 const calcBox = document.createElement('div');
@@ -1418,7 +1390,7 @@
             }
 
             // ============================================================
-            // 6. МОДАЛКА: КОШЕЛЁК (БЕЗОПАСНАЯ)
+            // 6. МОДАЛКА: КОШЕЛЁК (ПОЛНОСТЬЮ РАБОЧАЯ)
             // ============================================================
             function openWalletModal() {
                 const wrap = document.createElement('div');
@@ -1434,8 +1406,7 @@
 
                 const sub = document.createElement('div');
                 sub.className = 'sub';
-                // БЕЗОПАСНО: используем textContent для динамических данных
-                const balanceText = document.createTextNode(`Текущий баланс: `);
+                const balanceText = document.createTextNode('Текущий баланс: ');
                 sub.appendChild(balanceText);
                 const bold = document.createElement('b');
                 bold.style.color = '#fff';
@@ -1471,12 +1442,14 @@
 
                 closeBtn.addEventListener('click', () => wrap.remove());
 
-                depositBtn.addEventListener('click', () => {
-                    wrap.innerHTML = '';
+                depositBtn.addEventListener('click', function() {
+                    // Сохраняем ссылку на wrap для использования внутри
+                    const currentWrap = wrap;
+                    currentWrap.innerHTML = '';
                     
                     const newCard = document.createElement('div');
                     newCard.className = 'modal-card';
-                    wrap.appendChild(newCard);
+                    currentWrap.appendChild(newCard);
 
                     const depTitle = document.createElement('h2');
                     depTitle.textContent = 'Пополнение';
@@ -1512,7 +1485,7 @@
                     backBtn.textContent = 'Назад';
                     newCard.appendChild(backBtn);
 
-                    backBtn.addEventListener('click', () => wrap.remove());
+                    backBtn.addEventListener('click', () => currentWrap.remove());
 
                     submitBtn.addEventListener('click', () => {
                         const amt = parseFloat(document.getElementById('depAmountInp').value);
@@ -1528,16 +1501,17 @@
                         if (url.origin === 'https://www.donationalerts.com') {
                             window.open(url.toString(), '_blank', 'noopener,noreferrer');
                         }
-                        wrap.remove();
+                        currentWrap.remove();
                     });
                 });
 
-                withdrawBtn.addEventListener('click', () => {
-                    wrap.innerHTML = '';
+                withdrawBtn.addEventListener('click', function() {
+                    const currentWrap = wrap;
+                    currentWrap.innerHTML = '';
                     
                     const newCard = document.createElement('div');
                     newCard.className = 'modal-card';
-                    wrap.appendChild(newCard);
+                    currentWrap.appendChild(newCard);
 
                     const wdTitle = document.createElement('h2');
                     wdTitle.textContent = 'Заявка на вывод';
@@ -1597,7 +1571,7 @@
                     backBtn.textContent = 'Назад';
                     newCard.appendChild(backBtn);
 
-                    backBtn.addEventListener('click', () => wrap.remove());
+                    backBtn.addEventListener('click', () => currentWrap.remove());
 
                     submitBtn.addEventListener('click', async () => {
                         const amt = parseFloat(document.getElementById('withAmountInp').value);
@@ -1644,7 +1618,7 @@
 
                         await sendTelegramAlert(tgText, reqId, 'payout');
 
-                        wrap.remove();
+                        currentWrap.remove();
                         addNotification('Успешно', 'Заявка передана на выплату');
                         renderCabinet();
                     });
@@ -1652,7 +1626,7 @@
             }
 
             // ============================================================
-            // 7. МОДАЛКА: ПОДАЧА ЗАЯВКИ НА МЕДИА (TIKTOK)
+            // 7. МОДАЛКА: МЕДИА ЗАЯВКА
             // ============================================================
             function openMediaApplyModal() {
                 const wrap = document.createElement('div');
@@ -1774,7 +1748,7 @@
             }
 
             // ============================================================
-            // 8. МОДАЛКА: СТАТИСТИКА МЕДИА-ПАРТНЕРА
+            // 8. МОДАЛКА: СТАТИСТИКА МЕДИА
             // ============================================================
             function openMediaStatsModal(promoCode) {
                 const stat = promocodes[promoCode] || { uses: 0, volume: 0, reward: 0 };
@@ -1792,7 +1766,6 @@
 
                 const sub = document.createElement('div');
                 sub.className = 'sub';
-                // БЕЗОПАСНО: используем textContent для динамических данных
                 const subText = document.createTextNode('Партнёрский промокод: ');
                 sub.appendChild(subText);
                 const bold = document.createElement('b');
@@ -1868,7 +1841,7 @@
             }
 
             // ============================================================
-            // 9. РЕНДЕР ЛИЧНОГО КАБИНЕТА (БЕЗОПАСНЫЙ)
+            // 9. РЕНДЕР КАБИНЕТА
             // ============================================================
             async function renderCabinet() {
                 const container = document.getElementById('cabinetWrapper');
@@ -1893,6 +1866,7 @@
                     return;
                 }
 
+                // Проверка статуса медиа-заявок
                 if (currentUser.mediaApplications && currentUser.mediaApplications.length > 0) {
                     for (let app of currentUser.mediaApplications) {
                         if (app.status === 'pending') {
@@ -1984,6 +1958,7 @@
                 const btnContainer = document.createElement('div');
                 btnContainer.className = 'sidebar-buttons-container';
 
+                // Кошелек
                 const walletBtn = document.createElement('button');
                 walletBtn.className = 'btn-side-tile';
                 walletBtn.id = 'openWalletBtn';
@@ -2005,6 +1980,7 @@
                 walletBtn.addEventListener('click', openWalletModal);
                 btnContainer.appendChild(walletBtn);
 
+                // Медиа
                 if (approvedMedia) {
                     const mediaBtn = document.createElement('button');
                     mediaBtn.className = 'btn-side-tile';
@@ -2101,6 +2077,7 @@
 
                 main.appendChild(metricsRow);
 
+                // Ключ
                 const keyHub = document.createElement('div');
                 keyHub.className = 'key-hub';
 
@@ -2154,6 +2131,7 @@
 
                 main.appendChild(keyHub);
 
+                // Вкладки
                 const tabsHub = document.createElement('div');
                 tabsHub.className = 'tabs-hub';
 
@@ -2255,7 +2233,7 @@
             }
 
             // ============================================================
-            // 10. АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ
+            // 10. АВТОРИЗАЦИЯ
             // ============================================================
             function showAuthModal(mode = 'login') {
                 const wrap = document.createElement('div');
@@ -2522,6 +2500,7 @@
                 }
             }
 
+            // Обработчики кнопок
             document.getElementById('loginBtn')?.addEventListener('click', () => showAuthModal('login'));
             document.getElementById('registerBtn')?.addEventListener('click', () => showAuthModal('register'));
             document.getElementById('logoutBtn')?.addEventListener('click', () => {
@@ -2547,7 +2526,7 @@
             });
 
             // ============================================================
-            // 12. МОНОХРОМНЫЙ ХОЛСТ С ЧАСТИЦАМИ
+            // 12. ЧАСТИЦЫ
             // ============================================================
             const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
@@ -2605,7 +2584,7 @@
             loopParticles();
 
             // ============================================================
-            // СТАРТ ПРИЛОЖЕНИЯ
+            // СТАРТ
             // ============================================================
             (async function init() {
                 await getValidSession();
