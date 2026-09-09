@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import fs from 'fs';
 
-const SECRET = 'lethal-super-secret-2026';
 const USERS_FILE = '/tmp/users.json';
 const PROMO_FILE = '/tmp/promocodes.json';
 
@@ -34,27 +33,23 @@ function savePromocodes(data) {
   try { fs.writeFileSync(PROMO_FILE, JSON.stringify(data, null, 2)); } catch {}
 }
 
-// ПРОСТОЙ ТОКЕН - email + подпись
-function generateToken(email) {
-  const payload = { email };
-  const json = JSON.stringify(payload);
-  const signature = crypto.createHash('sha256').update(json + SECRET).digest('hex');
-  const token = Buffer.from(JSON.stringify({ payload, signature })).toString('base64');
-  return token;
+// ПРОСТЕЙШИЙ ТОКЕН - случайная строка
+function generateToken() {
+  return crypto.randomBytes(32).toString('hex');
 }
 
+// Проверка токена - ищем пользователя с таким токеном
 function verifyToken(token) {
   try {
     if (!token) return null;
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    const { payload, signature } = decoded;
-    const checkSignature = crypto.createHash('sha256').update(JSON.stringify(payload) + SECRET).digest('hex');
-    if (signature !== checkSignature) return null;
-    return payload.email;
-  } catch (e) {
-    console.error('verifyToken error:', e);
+    const users = loadUsers();
+    for (const [email, user] of Object.entries(users)) {
+      if (user.token === token) {
+        return email;
+      }
+    }
     return null;
-  }
+  } catch { return null; }
 }
 
 function setCors(res) {
@@ -114,25 +109,18 @@ export default async function handler(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const path = url.pathname;
 
-  console.log(`📌 ${req.method} ${path}`);
-  console.log(`📌 Headers:`, req.headers);
-
   // === GET /api/balance ===
   if (path === '/api/balance' && req.method === 'GET') {
     try {
       const token = req.headers['x-auth-token'];
-      console.log(`📌 Token: ${token}`);
       if (!token) return res.status(401).json({ error: 'Требуется авторизация' });
       const email = verifyToken(token);
-      console.log(`📌 Email from token: ${email}`);
       if (!email) return res.status(401).json({ error: 'Неверный токен' });
       const users = loadUsers();
       const user = users[email];
-      console.log(`📌 User found: ${!!user}`);
       if (!user) return res.status(401).json({ error: 'Пользователь не найден' });
       return res.status(200).json({ success: true, balance: user.balance || 0 });
     } catch (e) {
-      console.error('GET /api/balance error:', e);
       return res.status(500).json({ error: 'Внутренняя ошибка' });
     }
   }
@@ -144,16 +132,18 @@ export default async function handler(req, res) {
       const normalizedEmail = email.toLowerCase().trim();
       const users = loadUsers();
 
-      console.log(`📌 Auth action: ${action}, email: ${normalizedEmail}`);
-
       if (action === 'register') {
         if (users[normalizedEmail]) {
           return res.status(400).json({ error: 'Пользователь уже существует' });
         }
+        
+        const token = generateToken();
+        
         users[normalizedEmail] = {
           email: normalizedEmail,
           name: name || normalizedEmail.split('@')[0],
           password: password,
+          token: token,
           balance: 0,
           keys: [],
           withdrawals: [],
@@ -161,8 +151,7 @@ export default async function handler(req, res) {
           createdAt: new Date().toISOString()
         };
         saveUsers(users);
-        const token = generateToken(normalizedEmail);
-        console.log(`📌 Generated token: ${token}`);
+        
         return res.status(200).json({
           success: true,
           token: token,
@@ -174,8 +163,13 @@ export default async function handler(req, res) {
         const user = users[normalizedEmail];
         if (!user) return res.status(401).json({ error: 'Пользователь не найден' });
         if (user.password !== password) return res.status(401).json({ error: 'Неверный пароль' });
-        const token = generateToken(normalizedEmail);
-        console.log(`📌 Generated token: ${token}`);
+        
+        // Обновляем токен при входе
+        const token = generateToken();
+        user.token = token;
+        users[normalizedEmail] = user;
+        saveUsers(users);
+        
         return res.status(200).json({
           success: true,
           token: token,
@@ -185,7 +179,6 @@ export default async function handler(req, res) {
 
       return res.status(400).json({ error: 'Неизвестное действие' });
     } catch (e) {
-      console.error('POST /api/auth error:', e);
       return res.status(500).json({ error: 'Внутренняя ошибка' });
     }
   }
@@ -194,10 +187,8 @@ export default async function handler(req, res) {
   if (path === '/api/auth' && req.method === 'GET') {
     try {
       const token = req.headers['x-auth-token'];
-      console.log(`📌 Session check token: ${token}`);
       if (!token) return res.status(401).json({ error: 'Нет токена' });
       const email = verifyToken(token);
-      console.log(`📌 Session email: ${email}`);
       if (!email) return res.status(401).json({ error: 'Неверный токен' });
       const users = loadUsers();
       const user = users[email];
@@ -207,7 +198,6 @@ export default async function handler(req, res) {
         user: { email, name: user.name || 'User', balance: user.balance || 0 }
       });
     } catch (e) {
-      console.error('GET /api/auth error:', e);
       return res.status(500).json({ error: 'Внутренняя ошибка' });
     }
   }
@@ -232,10 +222,8 @@ export default async function handler(req, res) {
   if (path === '/api/media' && req.method === 'POST') {
     try {
       const token = req.headers['x-auth-token'];
-      console.log(`📌 Media POST token: ${token}`);
       if (!token) return res.status(401).json({ error: 'Требуется авторизация' });
       const email = verifyToken(token);
-      console.log(`📌 Media POST email: ${email}`);
       if (!email) return res.status(401).json({ error: 'Неверный токен' });
 
       const users = loadUsers();
@@ -299,7 +287,6 @@ export default async function handler(req, res) {
         message: '✅ Заявка подана!'
       });
     } catch (e) {
-      console.error('POST /api/media error:', e);
       return res.status(500).json({ error: 'Внутренняя ошибка' });
     }
   }
