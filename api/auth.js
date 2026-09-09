@@ -23,7 +23,6 @@ function saveUsers(users) {
   } catch (e) {}
 }
 
-// САМЫЙ ПРОСТОЙ ТОКЕН - КАК В КУКИ
 function generateToken(email) {
   const data = `${email}|${Date.now()}`;
   const hash = crypto.createHash('sha256').update(data + SECRET).digest('hex');

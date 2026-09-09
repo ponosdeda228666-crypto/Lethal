@@ -4,6 +4,7 @@ import path from 'path';
 
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 const PROMO_FILE = path.join(process.cwd(), 'promocodes.json');
+const SECRET = 'lethal-super-secret-2026';
 
 function loadUsers() {
   try {
@@ -30,11 +31,13 @@ function savePromocodes(promocodes) {
   try { fs.writeFileSync(PROMO_FILE, JSON.stringify(promocodes, null, 2)); } catch {}
 }
 
-function getUserIdFromToken(token) {
+function verifyToken(token) {
   try {
     if (!token) return null;
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    return decoded.payload?.userId || decoded.payload?.email || null;
+    const checkHash = crypto.createHash('sha256').update(`${decoded.email}|${decoded.time}` + SECRET).digest('hex');
+    if (decoded.hash !== checkHash) return null;
+    return decoded.email;
   } catch {
     return null;
   }
@@ -59,23 +62,14 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const userId = getUserIdFromToken(token);
-    if (!userId) {
+    const email = verifyToken(token);
+    if (!email) {
       return res.status(401).json({ error: 'Неверный токен' });
     }
 
     const users = loadUsers();
-    let foundUser = null;
-    let foundEmail = null;
-    for (const [email, user] of Object.entries(users)) {
-      if (user.id === userId || email === userId) {
-        foundUser = user;
-        foundEmail = email;
-        break;
-      }
-    }
-
-    if (!foundUser) {
+    const user = users[email];
+    if (!user) {
       return res.status(401).json({ error: 'Пользователь не найден' });
     }
 
@@ -84,7 +78,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Укажите промокод' });
     }
 
-    const hasAccess = foundUser.mediaApplications?.some(app => 
+    const hasAccess = user.mediaApplications?.some(app => 
       app.status === 'approved' && app.promoCode === promoCode
     );
 
@@ -99,17 +93,17 @@ export default async function handler(req, res) {
     }
 
     const amount = stats.reward;
-    foundUser.balance = (foundUser.balance || 0) + amount;
+    user.balance = (user.balance || 0) + amount;
     stats.reward = 0;
 
-    users[foundEmail] = foundUser;
+    users[email] = user;
     saveUsers(users);
     savePromocodes(promocodes);
 
     return res.status(200).json({
       success: true,
       amount: amount,
-      balance: foundUser.balance
+      balance: user.balance
     });
 
   } catch (error) {

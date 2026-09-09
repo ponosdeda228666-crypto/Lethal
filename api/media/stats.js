@@ -4,6 +4,7 @@ import path from 'path';
 
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 const PROMO_FILE = path.join(process.cwd(), 'promocodes.json');
+const SECRET = 'lethal-super-secret-2026';
 
 function loadUsers() {
   try {
@@ -22,11 +23,13 @@ function loadPromocodes() {
   } catch { return {}; }
 }
 
-function getUserIdFromToken(token) {
+function verifyToken(token) {
   try {
     if (!token) return null;
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    return decoded.payload?.userId || decoded.payload?.email || null;
+    const checkHash = crypto.createHash('sha256').update(`${decoded.email}|${decoded.time}` + SECRET).digest('hex');
+    if (decoded.hash !== checkHash) return null;
+    return decoded.email;
   } catch {
     return null;
   }
@@ -41,27 +44,24 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
     const token = req.headers['x-auth-token'];
     if (!token) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const userId = getUserIdFromToken(token);
-    if (!userId) {
+    const email = verifyToken(token);
+    if (!email) {
       return res.status(401).json({ error: 'Неверный токен' });
     }
 
     const users = loadUsers();
-    let foundUser = null;
-    for (const [email, user] of Object.entries(users)) {
-      if (user.id === userId || email === userId) {
-        foundUser = user;
-        break;
-      }
-    }
-
-    if (!foundUser) {
+    const user = users[email];
+    if (!user) {
       return res.status(401).json({ error: 'Пользователь не найден' });
     }
 
@@ -70,7 +70,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Укажите промокод' });
     }
 
-    const hasAccess = foundUser.mediaApplications?.some(app => 
+    const hasAccess = user.mediaApplications?.some(app => 
       app.status === 'approved' && app.promoCode === promo
     );
 

@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 const USERS_FILE = path.join(process.cwd(), 'users.json');
+const SECRET = 'lethal-super-secret-2026';
 
 function loadUsers() {
   try {
@@ -26,7 +27,9 @@ function verifyToken(token) {
   try {
     if (!token) return null;
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    return decoded.payload?.email || null;
+    const checkHash = crypto.createHash('sha256').update(`${decoded.email}|${decoded.time}` + SECRET).digest('hex');
+    if (decoded.hash !== checkHash) return null;
+    return decoded.email;
   } catch {
     return null;
   }
@@ -46,6 +49,10 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
