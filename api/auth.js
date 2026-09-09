@@ -41,56 +41,31 @@ function generateToken(userId, email) {
   return Buffer.from(JSON.stringify({ payload, signature })).toString('base64');
 }
 
-// ============================================================
-// ГЛАВНАЯ ФУНКЦИЯ - ИЩЕТ ПОЛЬЗОВАТЕЛЯ ПО ТОКЕНУ
-// ============================================================
 export function verifyTokenAndGetUser(token, users) {
   try {
-    if (!token) {
-      console.log('❌ Токен отсутствует');
-      return null;
-    }
+    if (!token) return null;
     
-    // Декодируем токен
-    let decoded;
-    try {
-      decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    } catch (e) {
-      console.log('❌ Не удалось декодировать токен:', e.message);
-      return null;
-    }
-    
-    // Проверяем подпись
+    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
     const expectedSignature = crypto
       .createHmac('sha256', JWT_SECRET)
       .update(JSON.stringify(decoded.payload))
       .digest('hex');
     
-    if (decoded.signature !== expectedSignature) {
-      console.log('❌ Неверная подпись токена');
-      return null;
-    }
+    if (decoded.signature !== expectedSignature) return null;
 
     const userId = decoded.payload.userId;
     const email = decoded.payload.email;
 
-    console.log('🔍 Поиск пользователя:', { userId, email });
-
-    // Ищем по userId
     for (const [userEmail, user] of Object.entries(users)) {
       if (user.id === userId) {
-        console.log('✅ Найден по ID:', userEmail);
         return { email: userEmail, user };
       }
     }
 
-    // Если не нашли по userId, пробуем по email
     if (email && users[email]) {
-      console.log('✅ Найден по email:', email);
       return { email, user: users[email] };
     }
 
-    console.log('❌ Пользователь не найден');
     return null;
   } catch (e) {
     console.error('❌ Ошибка проверки токена:', e);
@@ -107,11 +82,37 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
   try {
+    const users = loadUsers();
+
+    // === НОВЫЙ ЭНДПОИНТ: ПРОВЕРКА СЕССИИ ===
+    if (req.method === 'GET') {
+      const token = req.headers['x-auth-token'];
+      if (!token) {
+        return res.status(401).json({ error: 'Токен отсутствует' });
+      }
+      
+      const result = verifyTokenAndGetUser(token, users);
+      
+      if (!result) {
+        return res.status(401).json({ error: 'Недействительный токен' });
+      }
+      
+      return res.status(200).json({
+        success: true,
+        user: {
+          id: result.user.id,
+          email: result.email,
+          name: result.user.name,
+          balance: result.user.balance || 0
+        }
+      });
+    }
+
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method not allowed' });
+    }
+
     const { email, password, name, action } = req.body;
     
     console.log('📝 Auth request:', { email, action, hasPassword: !!password });
@@ -124,7 +125,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Пароль должен быть минимум 6 символов' });
     }
 
-    const users = loadUsers();
     const normalizedEmail = email.toLowerCase().trim();
 
     // === РЕГИСТРАЦИЯ ===
@@ -159,7 +159,6 @@ export default async function handler(req, res) {
       const token = generateToken(userId, normalizedEmail);
       
       console.log('✅ Регистрация успешна:', normalizedEmail);
-      console.log('📦 Создан пользователь:', JSON.stringify(newUser, null, 2));
       
       return res.status(200).json({
         success: true,
@@ -191,7 +190,6 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Неверный пароль' });
       }
 
-      // Если у пользователя нет id - создаем
       if (!user.id) {
         user.id = 'U' + crypto.randomBytes(6).toString('hex').toUpperCase();
         users[normalizedEmail] = user;
