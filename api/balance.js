@@ -22,16 +22,33 @@ function loadUsers() {
   }
 }
 
-function verifyToken(token) {
+function verifyTokenAndGetUser(token, users) {
   try {
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
     const expectedSignature = crypto
       .createHmac('sha256', JWT_SECRET)
       .update(JSON.stringify(decoded.payload))
       .digest('hex');
+    
     if (decoded.signature !== expectedSignature) return null;
-    if (Date.now() - decoded.payload.timestamp > 86400000) return null; // 24 часа
-    return decoded.payload.userId;
+
+    const userId = decoded.payload.userId;
+
+    for (const [email, user] of Object.entries(users)) {
+      if (user.id === userId) {
+        return { email, user };
+      }
+    }
+
+    // Если не нашли по id, пробуем по email
+    if (decoded.payload.email) {
+      const email = decoded.payload.email.toLowerCase();
+      if (users[email]) {
+        return { email, user: users[email] };
+      }
+    }
+
+    return null;
   } catch {
     return null;
   }
@@ -52,27 +69,16 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const userId = verifyToken(token);
-    if (!userId) {
-      return res.status(401).json({ error: 'Недействительный токен' });
-    }
-
     const users = loadUsers();
-    let foundUser = null;
-    for (const [key, user] of Object.entries(users)) {
-      if (user.id === userId) {
-        foundUser = user;
-        break;
-      }
-    }
-
-    if (!foundUser) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
+    const result = verifyTokenAndGetUser(token, users);
+    
+    if (!result) {
+      return res.status(401).json({ error: 'Недействительный токен' });
     }
 
     return res.status(200).json({
       success: true,
-      balance: foundUser.balance || 0,
+      balance: result.user.balance || 0,
       currency: 'RUB'
     });
 

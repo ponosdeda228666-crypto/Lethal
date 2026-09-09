@@ -18,6 +18,7 @@ function loadUsers() {
     const data = fs.readFileSync(USERS_FILE, 'utf8');
     return JSON.parse(data);
   } catch (e) {
+    console.error('Ошибка загрузки users.json:', e);
     return {};
   }
 }
@@ -26,22 +27,67 @@ function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
   } catch (e) {
-    console.error('Ошибка сохранения:', e);
+    console.error('Ошибка сохранения users.json:', e);
   }
 }
 
-function verifyToken(token) {
+// === ПРОВЕРКА ТОКЕНА И ПОИСК ПОЛЬЗОВАТЕЛЯ ===
+function verifyTokenAndGetUser(token, users) {
   try {
+    // Декодируем токен
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
     const expectedSignature = crypto
       .createHmac('sha256', JWT_SECRET)
       .update(JSON.stringify(decoded.payload))
       .digest('hex');
-    if (decoded.signature !== expectedSignature) return null;
-    return decoded.payload.userId;
-  } catch {
+    
+    if (decoded.signature !== expectedSignature) {
+      console.log('❌ Неверная подпись токена');
+      return null;
+    }
+
+    const userId = decoded.payload.userId;
+    console.log('🔍 Ищем пользователя по ID:', userId);
+
+    // Ищем пользователя по id
+    for (const [email, user] of Object.entries(users)) {
+      if (user.id === userId) {
+        console.log('✅ Найден пользователь по ID:', email);
+        return { email, user };
+      }
+    }
+
+    // Если не нашли по id, пробуем найти по email из payload
+    if (decoded.payload.email) {
+      const email = decoded.payload.email.toLowerCase();
+      if (users[email]) {
+        console.log('✅ Найден пользователь по email из токена:', email);
+        return { email, user: users[email] };
+      }
+    }
+
+    console.log('❌ Пользователь не найден');
+    return null;
+  } catch (e) {
+    console.error('❌ Ошибка проверки токена:', e);
     return null;
   }
+}
+
+// === ГЕНЕРАЦИЯ ID ДЛЯ СТАРЫХ ПОЛЬЗОВАТЕЛЕЙ ===
+function ensureUserIds(users) {
+  let changed = false;
+  for (const [email, user] of Object.entries(users)) {
+    if (!user.id) {
+      user.id = 'U' + crypto.randomBytes(6).toString('hex').toUpperCase();
+      console.log(`🆔 Создан ID для ${email}: ${user.id}`);
+      changed = true;
+    }
+  }
+  if (changed) {
+    saveUsers(users);
+  }
+  return users;
 }
 
 async function sendTelegramNotification(application, userEmail) {
@@ -122,25 +168,19 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const userId = verifyToken(token);
-    if (!userId) {
-      return res.status(401).json({ error: 'Недействительный токен' });
+    // Загружаем пользователей
+    let users = loadUsers();
+    
+    // Проверяем и создаем ID для старых пользователей
+    users = ensureUserIds(users);
+
+    // Находим пользователя по токену
+    const result = verifyTokenAndGetUser(token, users);
+    if (!result) {
+      return res.status(401).json({ error: 'Недействительный токен или пользователь не найден' });
     }
 
-    const users = loadUsers();
-    let foundUser = null;
-    let foundEmail = null;
-    for (const [key, user] of Object.entries(users)) {
-      if (user.id === userId) {
-        foundUser = user;
-        foundEmail = key;
-        break;
-      }
-    }
-
-    if (!foundUser) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
-    }
+    const { email: foundEmail, user: foundUser } = result;
 
     // GET - получение заявок
     if (req.method === 'GET') {
@@ -204,7 +244,7 @@ export default async function handler(req, res) {
         telegramContact: telegramContact,
         status: 'pending',
         createdAt: new Date().toISOString(),
-        userName: foundUser.name,
+        userName: foundUser.name || foundEmail.split('@')[0],
         userEmail: foundEmail
       };
 
@@ -212,8 +252,12 @@ export default async function handler(req, res) {
         foundUser.mediaApplications = [];
       }
       foundUser.mediaApplications.push(application);
+      
+      // Сохраняем
+      users[foundEmail] = foundUser;
       saveUsers(users);
 
+      // Отправляем уведомление в Telegram
       await sendTelegramNotification(application, foundEmail);
 
       return res.status(200).json({
@@ -227,6 +271,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('❌ Ошибка media:', error);
-    return res.status(500).json({ error: 'Внутренняя ошибка' });
+    return res.status(500).json({ error: 'Внутренняя ошибка сервера: ' + error.message });
   }
 }

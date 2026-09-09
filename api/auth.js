@@ -2,12 +2,12 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { verifyTokenAndGetUser } from '../auth.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
-const USERS_FILE = path.join(__dirname, '..', 'users.json');
+const USERS_FILE = path.join(__dirname, '..', '..', 'users.json');
 
 function loadUsers() {
   try {
@@ -18,7 +18,7 @@ function loadUsers() {
     const data = fs.readFileSync(USERS_FILE, 'utf8');
     return JSON.parse(data);
   } catch (e) {
-    console.error('Ошибка загрузки пользователей:', e);
+    console.error('Ошибка загрузки users.json:', e);
     return {};
   }
 }
@@ -27,135 +27,184 @@ function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
   } catch (e) {
-    console.error('Ошибка сохранения пользователей:', e);
+    console.error('Ошибка сохранения users.json:', e);
   }
 }
 
-function generateToken(userId) {
-  const payload = { 
-    userId: userId, 
-    timestamp: Date.now(),
-    random: crypto.randomBytes(16).toString('hex')
+async function sendTelegramNotification(application, userEmail) {
+  const BOT_TOKEN = process.env.BOT_TOKEN;
+  const CHAT_ID = process.env.CHAT_ID;
+
+  if (!BOT_TOKEN || !CHAT_ID) {
+    console.log('⚠️ Telegram не настроен');
+    return;
+  }
+
+  const message = `
+🎬 <b>НОВАЯ МЕДИА ЗАЯВКА!</b>
+
+👤 <b>Пользователь:</b> ${application.userName}
+📧 <b>Email:</b> ${userEmail}
+📱 <b>TikTok:</b> <a href="${application.tiktokUrl}">${application.tiktokUrl}</a>
+🏷 <b>Промокод:</b> <code>${application.promoCode}</code>
+📞 <b>Telegram:</b> ${application.telegramContact}
+🆔 <b>ID заявки:</b> <code>${application.id}</code>
+📅 <b>Дата:</b> ${new Date(application.createdAt).toLocaleString('ru-RU')}
+
+━━━━━━━━━━━━━━━━━━━━━━━
+<i>Нажмите кнопку ниже для обработки</i>
+  `;
+
+  const keyboard = {
+    inline_keyboard: [
+      [
+        { 
+          text: "✅ Одобрить", 
+          callback_data: `media_approve_${application.id}` 
+        },
+        { 
+          text: "❌ Отклонить", 
+          callback_data: `media_reject_${application.id}` 
+        }
+      ]
+    ]
   };
-  const signature = crypto
-    .createHmac('sha256', JWT_SECRET)
-    .update(JSON.stringify(payload))
-    .digest('hex');
-  return Buffer.from(JSON.stringify({ payload, signature })).toString('base64');
+
+  try {
+    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: message,
+        parse_mode: 'HTML',
+        reply_markup: keyboard,
+        disable_web_page_preview: true
+      })
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      console.error('❌ Ошибка Telegram:', result);
+    } else {
+      console.log('✅ Уведомление отправлено в Telegram');
+    }
+  } catch (e) {
+    console.error('❌ Ошибка отправки в Telegram:', e);
+  }
 }
 
 export default async function handler(req, res) {
-  // Настройка CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
   try {
-    const { email, password, name, action } = req.body;
-    
-    console.log('📝 Auth request:', { email, action, hasPassword: !!password });
-
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email и пароль обязательны' });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({ error: 'Пароль должен быть минимум 6 символов' });
+    const token = req.headers['x-auth-token'];
+    if (!token) {
+      return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
     const users = loadUsers();
-    const normalizedEmail = email.toLowerCase().trim();
+    const result = verifyTokenAndGetUser(token, users);
+    
+    if (!result) {
+      return res.status(401).json({ error: 'Недействительный токен или пользователь не найден' });
+    }
 
-    // РЕГИСТРАЦИЯ
-    if (action === 'register') {
-      console.log('📝 Регистрация:', normalizedEmail);
-      
-      if (users[normalizedEmail]) {
-        return res.status(400).json({ error: 'Пользователь с таким email уже существует' });
+    const { email: foundEmail, user: foundUser } = result;
+
+    // GET - получение заявок
+    if (req.method === 'GET') {
+      const applications = foundUser.mediaApplications || [];
+      return res.status(200).json({
+        success: true,
+        applications: applications
+      });
+    }
+
+    // POST - подача заявки
+    if (req.method === 'POST') {
+      const { tiktokUrl, promoCode, telegramContact } = req.body;
+
+      if (!tiktokUrl || !promoCode || !telegramContact) {
+        return res.status(400).json({ 
+          error: 'Заполните все поля' 
+        });
       }
 
-      const userId = 'U' + crypto.randomBytes(6).toString('hex').toUpperCase();
-      const passwordHash = crypto
-        .createHmac('sha256', JWT_SECRET)
-        .update(password)
-        .digest('hex');
+      const tiktokRegex = /^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/@[a-zA-Z0-9._]+(\/)?$/i;
+      if (!tiktokRegex.test(tiktokUrl)) {
+        return res.status(400).json({ 
+          error: 'Некорректная ссылка TikTok' 
+        });
+      }
 
-      users[normalizedEmail] = {
-        id: userId,
-        email: normalizedEmail,
-        name: name || normalizedEmail.split('@')[0],
-        passwordHash: passwordHash,
-        balance: 0,
-        keys: [],
-        withdrawals: [],
-        mediaApplications: [],
-        createdAt: new Date().toISOString()
+      const promoRegex = /^[A-Z0-9_]{3,12}$/;
+      if (!promoRegex.test(promoCode.toUpperCase())) {
+        return res.status(400).json({ 
+          error: 'Промокод: 3-12 латинских букв, цифр или _' 
+        });
+      }
+
+      const tgRegex = /^@[a-zA-Z0-9_]{3,32}$/;
+      if (!tgRegex.test(telegramContact)) {
+        return res.status(400).json({ 
+          error: 'Некорректный Telegram (@username)' 
+        });
+      }
+
+      // Проверка на дубликат промокода
+      for (const [key, user] of Object.entries(users)) {
+        if (user.mediaApplications) {
+          for (const app of user.mediaApplications) {
+            if (app.status === 'approved' && app.promoCode === promoCode.toUpperCase()) {
+              return res.status(400).json({ 
+                error: 'Этот промокод уже используется' 
+              });
+            }
+          }
+        }
+      }
+
+      const applicationId = 'M' + Date.now().toString(36).toUpperCase() + crypto.randomBytes(4).toString('hex').toUpperCase();
+      
+      const application = {
+        id: applicationId,
+        tiktokUrl: tiktokUrl,
+        promoCode: promoCode.toUpperCase(),
+        telegramContact: telegramContact,
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        userName: foundUser.name || foundEmail.split('@')[0],
+        userEmail: foundEmail
       };
 
+      if (!foundUser.mediaApplications) {
+        foundUser.mediaApplications = [];
+      }
+      foundUser.mediaApplications.push(application);
+      
+      users[foundEmail] = foundUser;
       saveUsers(users);
-      
-      const token = generateToken(userId);
-      
-      console.log('✅ Регистрация успешна:', normalizedEmail);
-      
+
+      await sendTelegramNotification(application, foundEmail);
+
       return res.status(200).json({
         success: true,
-        token: token,
-        user: {
-          id: userId,
-          email: normalizedEmail,
-          name: users[normalizedEmail].name,
-          balance: 0
-        }
+        application: application,
+        message: 'Заявка подана! Ожидайте подтверждения.'
       });
     }
 
-    // ЛОГИН
-    if (action === 'login') {
-      console.log('📝 Вход:', normalizedEmail);
-      
-      const user = users[normalizedEmail];
-      if (!user) {
-        return res.status(401).json({ error: 'Пользователь не найден' });
-      }
-
-      const passwordHash = crypto
-        .createHmac('sha256', JWT_SECRET)
-        .update(password)
-        .digest('hex');
-
-      if (user.passwordHash !== passwordHash) {
-        return res.status(401).json({ error: 'Неверный пароль' });
-      }
-
-      const token = generateToken(user.id);
-      
-      console.log('✅ Вход успешен:', normalizedEmail);
-      
-      return res.status(200).json({
-        success: true,
-        token: token,
-        user: {
-          id: user.id,
-          email: normalizedEmail,
-          name: user.name,
-          balance: user.balance || 0
-        }
-      });
-    }
-
-    return res.status(400).json({ error: 'Неизвестное действие' });
+    return res.status(405).json({ error: 'Method not allowed' });
 
   } catch (error) {
-    console.error('❌ Ошибка auth:', error);
-    return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    console.error('❌ Ошибка media:', error);
+    return res.status(500).json({ error: 'Внутренняя ошибка сервера: ' + error.message });
   }
 }
