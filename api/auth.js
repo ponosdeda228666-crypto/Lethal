@@ -41,12 +41,26 @@ function generateToken(userId, email) {
   return Buffer.from(JSON.stringify({ payload, signature })).toString('base64');
 }
 
-// ЭКСПОРТ ДЛЯ ИСПОЛЬЗОВАНИЯ В ДРУГИХ ФАЙЛАХ
+// ============================================================
+// ГЛАВНАЯ ФУНКЦИЯ - ИЩЕТ ПОЛЬЗОВАТЕЛЯ ПО ТОКЕНУ
+// ============================================================
 export function verifyTokenAndGetUser(token, users) {
   try {
-    if (!token) return null;
+    if (!token) {
+      console.log('❌ Токен отсутствует');
+      return null;
+    }
     
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    // Декодируем токен
+    let decoded;
+    try {
+      decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    } catch (e) {
+      console.log('❌ Не удалось декодировать токен:', e.message);
+      return null;
+    }
+    
+    // Проверяем подпись
     const expectedSignature = crypto
       .createHmac('sha256', JWT_SECRET)
       .update(JSON.stringify(decoded.payload))
@@ -60,19 +74,23 @@ export function verifyTokenAndGetUser(token, users) {
     const userId = decoded.payload.userId;
     const email = decoded.payload.email;
 
+    console.log('🔍 Поиск пользователя:', { userId, email });
+
     // Ищем по userId
     for (const [userEmail, user] of Object.entries(users)) {
       if (user.id === userId) {
+        console.log('✅ Найден по ID:', userEmail);
         return { email: userEmail, user };
       }
     }
 
-    // Если не нашли по userId, пробуем по email из токена
+    // Если не нашли по userId, пробуем по email
     if (email && users[email]) {
+      console.log('✅ Найден по email:', email);
       return { email, user: users[email] };
     }
 
-    console.log('❌ Пользователь не найден по токену');
+    console.log('❌ Пользователь не найден');
     return null;
   } catch (e) {
     console.error('❌ Ошибка проверки токена:', e);
@@ -81,7 +99,6 @@ export function verifyTokenAndGetUser(token, users) {
 }
 
 export default async function handler(req, res) {
-  // Настройка CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token');
@@ -142,6 +159,7 @@ export default async function handler(req, res) {
       const token = generateToken(userId, normalizedEmail);
       
       console.log('✅ Регистрация успешна:', normalizedEmail);
+      console.log('📦 Создан пользователь:', JSON.stringify(newUser, null, 2));
       
       return res.status(200).json({
         success: true,

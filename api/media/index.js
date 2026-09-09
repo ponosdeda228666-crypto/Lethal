@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { verifyTokenAndGetUser } from '../auth.js';
 
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 
 function loadUsers() {
@@ -14,7 +14,7 @@ function loadUsers() {
     const data = fs.readFileSync(USERS_FILE, 'utf8');
     return JSON.parse(data);
   } catch (e) {
-    console.error('Ошибка загрузки пользователей:', e);
+    console.error('Ошибка загрузки users.json:', e);
     return {};
   }
 }
@@ -23,7 +23,64 @@ function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
   } catch (e) {
-    console.error('Ошибка сохранения пользователей:', e);
+    console.error('Ошибка сохранения users.json:', e);
+  }
+}
+
+// ============================================================
+// ПРЯМАЯ ВЕРИФИКАЦИЯ ТОКЕНА (без импорта из auth.js)
+// ============================================================
+function verifyTokenAndGetUserDirect(token, users) {
+  try {
+    if (!token) {
+      console.log('❌ Токен отсутствует');
+      return null;
+    }
+    
+    let decoded;
+    try {
+      decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    } catch (e) {
+      console.log('❌ Ошибка декодирования токена:', e.message);
+      return null;
+    }
+    
+    const expectedSignature = crypto
+      .createHmac('sha256', JWT_SECRET)
+      .update(JSON.stringify(decoded.payload))
+      .digest('hex');
+    
+    if (decoded.signature !== expectedSignature) {
+      console.log('❌ Неверная подпись токена');
+      return null;
+    }
+
+    const userId = decoded.payload.userId;
+    const email = decoded.payload.email;
+
+    console.log('🔍 Поиск пользователя в media:', { userId, email });
+    console.log('📦 Всего пользователей в БД:', Object.keys(users).length);
+
+    // Ищем по userId
+    for (const [userEmail, user] of Object.entries(users)) {
+      if (user.id === userId) {
+        console.log('✅ Найден по ID:', userEmail);
+        return { email: userEmail, user };
+      }
+    }
+
+    // Если не нашли по userId, пробуем по email
+    if (email && users[email]) {
+      console.log('✅ Найден по email:', email);
+      return { email, user: users[email] };
+    }
+
+    console.log('❌ Пользователь не найден');
+    console.log('🔍 Доступные пользователи:', Object.keys(users));
+    return null;
+  } catch (e) {
+    console.error('❌ Ошибка проверки токена:', e);
+    return null;
   }
 }
 
@@ -90,7 +147,6 @@ async function sendTelegramNotification(application, userEmail) {
 }
 
 export default async function handler(req, res) {
-  // Настройка CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token');
@@ -101,15 +157,20 @@ export default async function handler(req, res) {
 
   try {
     const token = req.headers['x-auth-token'];
+    console.log('📝 Получен токен:', token ? 'Есть' : 'Нет');
+    
     if (!token) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
     const users = loadUsers();
-    const result = verifyTokenAndGetUser(token, users);
+    const result = verifyTokenAndGetUserDirect(token, users);
     
     if (!result) {
-      return res.status(401).json({ error: 'Недействительный токен или пользователь не найден' });
+      return res.status(401).json({ 
+        error: 'Пользователь не найден. Возможно, нужно перезайти в аккаунт.',
+        debug: 'Проверьте, что вы зарегистрированы и токен действителен'
+      });
     }
 
     const { email: foundEmail, user: foundUser } = result;
@@ -126,6 +187,8 @@ export default async function handler(req, res) {
     // POST - подача заявки
     if (req.method === 'POST') {
       const { tiktokUrl, promoCode, telegramContact } = req.body;
+
+      console.log('📝 Подача заявки:', { tiktokUrl, promoCode, telegramContact });
 
       if (!tiktokUrl || !promoCode || !telegramContact) {
         return res.status(400).json({ 
@@ -187,6 +250,8 @@ export default async function handler(req, res) {
       
       users[foundEmail] = foundUser;
       saveUsers(users);
+
+      console.log('✅ Заявка сохранена:', applicationId);
 
       await sendTelegramNotification(application, foundEmail);
 

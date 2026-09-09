@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { verifyTokenAndGetUser } from './auth.js';
 
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 
 function loadUsers() {
@@ -14,13 +14,28 @@ function loadUsers() {
     const data = fs.readFileSync(USERS_FILE, 'utf8');
     return JSON.parse(data);
   } catch (e) {
-    console.error('Ошибка загрузки пользователей:', e);
     return {};
   }
 }
 
+function verifyTokenAndGetUserDirect(token, users) {
+  try {
+    if (!token) return null;
+    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    const expectedSignature = crypto
+      .createHmac('sha256', JWT_SECRET)
+      .update(JSON.stringify(decoded.payload))
+      .digest('hex');
+    if (decoded.signature !== expectedSignature) return null;
+    const userId = decoded.payload.userId;
+    for (const [userEmail, user] of Object.entries(users)) {
+      if (user.id === userId) return { email: userEmail, user };
+    }
+    return null;
+  } catch { return null; }
+}
+
 export default async function handler(req, res) {
-  // Настройка CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token');
@@ -36,7 +51,7 @@ export default async function handler(req, res) {
     }
 
     const users = loadUsers();
-    const result = verifyTokenAndGetUser(token, users);
+    const result = verifyTokenAndGetUserDirect(token, users);
     
     if (!result) {
       return res.status(401).json({ error: 'Недействительный токен' });
