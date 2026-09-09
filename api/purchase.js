@@ -1,35 +1,33 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-it';
-const USERS_FILE = path.join(process.cwd(), 'users.json');
-const PROMO_FILE = path.join(process.cwd(), 'promocodes.json');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
+const USERS_FILE = path.join(__dirname, '..', 'users.json');
 
 function loadUsers() {
   try {
+    if (!fs.existsSync(USERS_FILE)) {
+      fs.writeFileSync(USERS_FILE, JSON.stringify({}, null, 2));
+      return {};
+    }
     const data = fs.readFileSync(USERS_FILE, 'utf8');
     return JSON.parse(data);
-  } catch {
+  } catch (e) {
     return {};
   }
 }
 
 function saveUsers(users) {
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-}
-
-function loadPromocodes() {
   try {
-    const data = fs.readFileSync(PROMO_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch {
-    return {};
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+  } catch (e) {
+    console.error('Ошибка сохранения:', e);
   }
-}
-
-function savePromocodes(promocodes) {
-  fs.writeFileSync(PROMO_FILE, JSON.stringify(promocodes, null, 2));
 }
 
 function verifyToken(token) {
@@ -46,6 +44,13 @@ function verifyToken(token) {
   }
 }
 
+const PRICES = { 
+  'month': 250, 
+  'quarter': 400, 
+  'lifetime': 600, 
+  'hwid': 400 
+};
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -55,97 +60,109 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const token = req.headers['x-auth-token'];
-  if (!token) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
-  const userId = verifyToken(token);
-  if (!userId) {
-    return res.status(401).json({ error: 'Invalid token' });
-  }
-
-  const { planId, promoCode } = req.body;
-  if (!planId) {
-    return res.status(400).json({ error: 'Plan ID required' });
-  }
-
-  const prices = {
-    'month': 250,
-    'quarter': 400,
-    'lifetime': 600,
-    'hwid': 400
-  };
-
-  const price = prices[planId];
-  if (!price) {
-    return res.status(400).json({ error: 'Invalid plan' });
-  }
-
-  const users = loadUsers();
-  let foundUser = null;
-  let foundEmail = null;
-  for (const [key, user] of Object.entries(users)) {
-    if (user.id === userId) {
-      foundUser = user;
-      foundEmail = key;
-      break;
+  try {
+    const token = req.headers['x-auth-token'];
+    if (!token) {
+      return res.status(401).json({ error: 'Требуется авторизация' });
     }
-  }
 
-  if (!foundUser) {
-    return res.status(404).json({ error: 'User not found' });
-  }
-
-  // Проверка промокода
-  let discount = 0;
-  if (promoCode) {
-    const promocodes = loadPromocodes();
-    if (promocodes[promoCode] && promocodes[promoCode].owner !== foundEmail) {
-      discount = Math.round(price * 0.10);
-      promocodes[promoCode].uses = (promocodes[promoCode].uses || 0) + 1;
-      promocodes[promoCode].volume = (promocodes[promoCode].volume || 0) + (price - discount);
-      promocodes[promoCode].reward = (promocodes[promoCode].reward || 0) + Math.round((price - discount) * 0.15);
-      savePromocodes(promocodes);
+    const userId = verifyToken(token);
+    if (!userId) {
+      return res.status(401).json({ error: 'Недействительный токен' });
     }
-  }
 
-  const finalPrice = Math.max(0, price - discount);
-  
-  if (foundUser.balance < finalPrice) {
-    return res.status(400).json({ error: 'Insufficient balance' });
-  }
+    const { planId } = req.body;
+    if (!planId) {
+      return res.status(400).json({ error: 'Укажите тариф' });
+    }
 
-  // Списываем баланс
-  foundUser.balance -= finalPrice;
+    const price = PRICES[planId];
+    if (!price) {
+      return res.status(400).json({ error: 'Неверный тариф' });
+    }
 
-  // Генерируем ключ
-  const key = 'L101N-' + crypto.randomBytes(6).toString('hex').toUpperCase();
+    const users = loadUsers();
+    let foundUser = null;
+    let foundEmail = null;
+    for (const [key, user] of Object.entries(users)) {
+      if (user.id === userId) {
+        foundUser = user;
+        foundEmail = key;
+        break;
+      }
+    }
 
-  if (!foundUser.keys) foundUser.keys = [];
-  foundUser.keys.push({
-    key: key,
-    plan: planId,
-    price: finalPrice,
-    date: new Date().toISOString()
-  });
+    if (!foundUser) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
 
-  if (planId === 'hwid') {
-    foundUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
-  } else {
-    foundUser.subscription = {
-      active: true,
+    if (foundUser.balance < price) {
+      return res.status(400).json({ 
+        error: 'Недостаточно средств',
+        balance: foundUser.balance,
+        required: price
+      });
+    }
+
+    // Списываем баланс
+    foundUser.balance -= price;
+    
+    // Генерируем ключ
+    const key = 'L101N-' + crypto.randomBytes(6).toString('hex').toUpperCase();
+
+    if (!foundUser.keys) foundUser.keys = [];
+    foundUser.keys.push({
+      key: key,
       plan: planId,
-      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-    };
+      price: price,
+      date: new Date().toISOString()
+    });
+
+    if (planId === 'hwid') {
+      foundUser.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
+    } else {
+      foundUser.subscription = {
+        active: true,
+        plan: planId,
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      };
+    }
+
+    saveUsers(users);
+
+    // Уведомление в Telegram
+    if (process.env.BOT_TOKEN && process.env.CHAT_ID) {
+      try {
+        const tgText = `🛒 <b>НОВАЯ ПОКУПКА!</b>\n\n` +
+                       `👤 <b>Пользователь:</b> ${foundEmail}\n` +
+                       `📦 <b>Тариф:</b> ${planId}\n` +
+                       `💰 <b>Сумма:</b> ${price} ₽\n` +
+                       `🔑 <b>Ключ:</b> ${key}\n` +
+                       `💳 <b>Остаток:</b> ${foundUser.balance} ₽`;
+        
+        await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: process.env.CHAT_ID,
+            text: tgText,
+            parse_mode: 'HTML'
+          })
+        });
+      } catch (e) {
+        console.error('Ошибка отправки в Telegram:', e);
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      key: key,
+      balance: foundUser.balance,
+      plan: planId
+    });
+
+  } catch (error) {
+    console.error('❌ Ошибка purchase:', error);
+    return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
   }
-
-  saveUsers(users);
-
-  return res.status(200).json({
-    success: true,
-    key: key,
-    balance: foundUser.balance,
-    plan: planId
-  });
 }

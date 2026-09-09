@@ -3,27 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lethal DLC — Premium Cheat</title>
+    <title>Lethal DLC — Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
     <style>
         /* ============================================================
-           СТРОГИЙ МОНОХРОМНЫЙ ДИЗАЙН (ЧЕРНО-БЕЛЫЙ)
+           ПОЛНЫЙ СТИЛЬ С АНИМАЦИЯМИ
            ============================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        input, textarea {
-            -webkit-user-select: text;
-            -moz-user-select: text;
-            -ms-user-select: text;
-            user-select: text;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        input, textarea { user-select: text; }
 
         @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap');
 
@@ -31,13 +18,10 @@
             --bg: #000000;
             --surface: #09090b;
             --surface-card: #0f0f11;
-            --surface-hover: #17171a;
             --border: rgba(255, 255, 255, 0.08);
             --border-hover: rgba(255, 255, 255, 0.25);
-            --border-focus: #ffffff;
             --text-primary: #ffffff;
             --text-secondary: #888888;
-            --text-muted: #444444;
             --shadow: 0 10px 40px rgba(0, 0, 0, 0.95);
             --radius: 12px;
             --radius-lg: 18px;
@@ -46,7 +30,7 @@
 
         html { scroll-behavior: smooth; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text-primary);
             min-height: 100vh;
@@ -55,6 +39,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* ФОН С АНИМАЦИЕЙ */
         .bg-container {
             position: fixed;
             top: 0;
@@ -69,21 +54,17 @@
         .bg-gradient {
             position: absolute;
             inset: -50%;
-            background:
-                radial-gradient(ellipse at 20% 30%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 70%, rgba(255, 255, 255, 0.02) 0%, transparent 45%),
-                radial-gradient(ellipse at 40% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 40%);
+            background: radial-gradient(ellipse at 20% 30%, rgba(255,255,255,0.03) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 70%, rgba(255,255,255,0.02) 0%, transparent 45%),
+                        radial-gradient(ellipse at 40% 80%, rgba(255,255,255,0.02) 0%, transparent 40%);
             animation: gradientShift 30s ease-in-out infinite alternate;
-            transform-origin: center;
         }
         .bg-gradient2 {
             position: absolute;
             inset: -50%;
-            background:
-                radial-gradient(ellipse at 60% 40%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
-                radial-gradient(ellipse at 30% 70%, rgba(255, 255, 255, 0.015) 0%, transparent 45%);
+            background: radial-gradient(ellipse at 60% 40%, rgba(255,255,255,0.02) 0%, transparent 50%),
+                        radial-gradient(ellipse at 30% 70%, rgba(255,255,255,0.015) 0%, transparent 45%);
             animation: gradientShift2 35s ease-in-out infinite alternate;
-            transform-origin: center;
         }
         @keyframes gradientShift {
             0% { transform: rotate(0deg) scale(1); }
@@ -98,9 +79,8 @@
         .bg-grid {
             position: absolute;
             inset: 0;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
             background-size: 55px 55px;
         }
         .bg-orb {
@@ -109,33 +89,9 @@
             filter: blur(90px);
             animation: orbFloat 25s ease-in-out infinite alternate;
         }
-        .bg-orb.orb1 {
-            width: 450px;
-            height: 450px;
-            background: rgba(255, 255, 255, 0.02);
-            top: -10%;
-            left: -5%;
-            animation-duration: 28s;
-        }
-        .bg-orb.orb2 {
-            width: 550px;
-            height: 550px;
-            background: rgba(255, 255, 255, 0.015);
-            bottom: -15%;
-            right: -10%;
-            animation-duration: 32s;
-            animation-delay: -6s;
-        }
-        .bg-orb.orb3 {
-            width: 380px;
-            height: 380px;
-            background: rgba(255, 255, 255, 0.02);
-            top: 40%;
-            left: 50%;
-            transform: translateX(-50%);
-            animation-duration: 24s;
-            animation-delay: -12s;
-        }
+        .bg-orb.orb1 { width: 450px; height: 450px; background: rgba(255,255,255,0.02); top: -10%; left: -5%; animation-duration: 28s; }
+        .bg-orb.orb2 { width: 550px; height: 550px; background: rgba(255,255,255,0.015); bottom: -15%; right: -10%; animation-duration: 32s; animation-delay: -6s; }
+        .bg-orb.orb3 { width: 380px; height: 380px; background: rgba(255,255,255,0.02); top: 40%; left: 50%; transform: translateX(-50%); animation-duration: 24s; animation-delay: -12s; }
         @keyframes orbFloat {
             0% { transform: translate(0, 0) scale(1); }
             50% { transform: translate(60px, -40px) scale(1.08); }
@@ -165,6 +121,7 @@
             flex-direction: column;
         }
 
+        /* ШАПКА */
         .header {
             display: flex;
             justify-content: space-between;
@@ -190,28 +147,6 @@
             gap: 1.5rem;
             flex-wrap: wrap;
         }
-        .language-selector {
-            display: flex;
-            gap: 0.2rem;
-            background: var(--surface);
-            padding: 0.2rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-        .lang-btn {
-            background: transparent;
-            border: none;
-            color: #666666;
-            padding: 0.3rem 0.8rem;
-            border-radius: 6px;
-            font-size: 0.65rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition);
-            text-transform: uppercase;
-        }
-        .lang-btn.active { background: #ffffff; color: #000000; }
-
         .nav {
             display: flex;
             gap: 2rem;
@@ -244,7 +179,6 @@
             border-radius: 8px;
             display: none;
         }
-
         .btn-sm {
             padding: 0.4rem 1.2rem;
             font-size: 0.65rem;
@@ -269,6 +203,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* ГЕРОЙ */
         .hero {
             padding: 4.5rem 0 2.5rem;
             min-height: 40vh;
@@ -331,6 +266,7 @@
         .btn-outline { background: transparent; color: #ffffff; border-color: #333333; }
         .btn-outline:hover { border-color: #ffffff; background: transparent; }
 
+        /* СЕКЦИИ */
         .section { padding: 3rem 0 2rem; border-top: 1px solid var(--border); }
         .section-header { margin-bottom: 2rem; }
         .section-title {
@@ -348,7 +284,6 @@
             gap: 1.8rem;
         }
         .feature-item {
-            position: relative;
             padding: 2.2rem 1.8rem;
             background: var(--surface-card);
             border: 1px solid var(--border);
@@ -360,6 +295,7 @@
         .feature-item h3 { font-size: 1.25rem; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem; }
         .feature-item p { color: #888888; font-size: 0.85rem; line-height: 1.7; }
 
+        /* ТАРИФЫ */
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -387,28 +323,12 @@
             color: #000000;
             font-size: 0.55rem;
             font-weight: 800;
-            text-transform: uppercase;
             padding: 0.2rem 0.8rem;
             border-radius: 20px;
         }
-        .price-card .amount {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #ffffff;
-            margin-top: 0.5rem;
-        }
-        .price-card .period {
-            color: #666666;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-        .price-card .desc {
-            color: #888888;
-            font-size: 0.85rem;
-            margin: 1.5rem 0 2rem;
-            line-height: 1.7;
-        }
+        .price-card .amount { font-size: 3rem; font-weight: 900; color: #ffffff; margin-top: 0.5rem; }
+        .price-card .period { color: #666666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; }
+        .price-card .desc { color: #888888; font-size: 0.85rem; margin: 1.5rem 0 2rem; line-height: 1.7; }
         .btn-buy {
             width: 100%;
             padding: 0.75rem;
@@ -438,6 +358,7 @@
             gap: 1rem;
         }
 
+        /* КАБИНЕТ */
         .cabinet-grid {
             display: grid;
             grid-template-columns: 320px 1fr;
@@ -467,7 +388,6 @@
         }
         .user-name-title { font-size: 1.15rem; font-weight: 700; color: #ffffff; }
         .user-email-sub { color: #666666; font-size: 0.8rem; margin-bottom: 1rem; word-break: break-all; }
-
         .id-badge {
             background: #000000;
             border: 1px solid var(--border);
@@ -479,7 +399,6 @@
             color: #ffffff;
             margin-bottom: 1rem;
         }
-
         .status-pill {
             display: inline-flex;
             align-items: center;
@@ -496,9 +415,7 @@
             margin-bottom: 1.2rem;
         }
         .status-pill.active { border-color: #ffffff; background: #ffffff; color: #000000; }
-
         .sidebar-divider { height: 1px; background: var(--border); margin: 1rem 0; }
-
         .info-row {
             display: flex;
             justify-content: space-between;
@@ -527,11 +444,7 @@
             text-align: left;
             width: 100%;
         }
-        .btn-side-tile:hover {
-            border-color: #ffffff;
-            background: #141414;
-            transform: translateX(4px);
-        }
+        .btn-side-tile:hover { border-color: #ffffff; background: #141414; transform: translateX(4px); }
         .btn-side-tile .icon-tag {
             width: 38px;
             height: 38px;
@@ -551,7 +464,6 @@
         .btn-side-tile .subtitle { font-size: 0.68rem; color: #888888; margin-top: 2px; }
 
         .cabinet-main { display: flex; flex-direction: column; gap: 1.5rem; }
-
         .metric-cards-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -577,7 +489,6 @@
         }
         .key-hub h3 { font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-bottom: 0.4rem; }
         .key-hub p { font-size: 0.8rem; color: #888888; margin-bottom: 1.5rem; }
-
         .key-display {
             background: #000000;
             border: 1px solid var(--border);
@@ -589,7 +500,6 @@
             margin-bottom: 1.5rem;
         }
         .key-display span { font-family: monospace; font-size: 1.1rem; font-weight: 700; letter-spacing: 2px; }
-
         .instructions-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -655,6 +565,7 @@
             color: #ffffff;
         }
 
+        /* МОДАЛКИ */
         .modal-wrap {
             position: fixed;
             inset: 0;
@@ -690,7 +601,6 @@
             text-align: center;
             margin-bottom: 1.5rem;
         }
-
         .auth-error {
             color: #ffffff;
             background: #141414;
@@ -704,7 +614,6 @@
             font-weight: 600;
         }
         .auth-error.show { display: block; }
-
         .toggle-auth {
             text-align: center;
             margin-top: 1.2rem;
@@ -879,10 +788,6 @@
         <header class="header">
             <div class="logo" data-page="main">Lethal <span>DLC</span></div>
             <div class="header-right">
-                <div class="language-selector">
-                    <button class="lang-btn active" data-lang="ru">Ru</button>
-                    <button class="lang-btn" data-lang="en">En</button>
-                </div>
                 <nav class="nav">
                     <a data-page="main" class="active-link">Главная</a>
                     <a data-page="pricing">Тарифы</a>
@@ -897,12 +802,13 @@
             </div>
         </header>
 
+        <!-- ГЛАВНАЯ -->
         <div class="page active" id="page-main">
             <section class="hero">
                 <div class="hero-tag">Strict Monochrome Edition</div>
                 <h1>
                     Lethal DLC
-                    <small>абсолютный контроль над игровой механикой</small>
+                    <small>абсолютный контроль</small>
                 </h1>
                 <p>
                     Бескомпромиссная система скрытности, мгновенный расчёт баланса и аппаратная привязка нового поколения.
@@ -921,37 +827,38 @@
                     <div class="feature-item">
                         <span class="index">01 / COMBAT</span>
                         <h3>Боевой модуль</h3>
-                        <p>Адаптивный аимбот с контролем отдачи, сглаживанием траектории и приоритетом уязвимых зон.</p>
+                        <p>Адаптивный аимбот с контролем отдачи и приоритетом уязвимых зон.</p>
                     </div>
                     <div class="feature-item">
                         <span class="index">02 / SECURITY</span>
                         <h3>Анти-детект</h3>
-                        <p>Изоляция в Ring-0, очистка системных логов и защита от сигнатурного анализа античитов.</p>
+                        <p>Изоляция в Ring-0, очистка системных логов и защита от античитов.</p>
                     </div>
                     <div class="feature-item">
                         <span class="index">03 / VISUALS</span>
                         <h3>ESP терминал</h3>
-                        <p>Контуры скелетов, дистанция, линии прицела и радар с частотой синхронизации 144+ FPS.</p>
+                        <p>Контуры скелетов, дистанция, линии прицела и радар 144+ FPS.</p>
                     </div>
                     <div class="feature-item">
                         <span class="index">04 / MISC</span>
                         <h3>Дополнительно</h3>
-                        <p>Бесконечная выносливость, отсутствие разброса и мгновенное взаимодействие с игровым миром.</p>
+                        <p>Бесконечная выносливость и мгновенное взаимодействие с игровым миром.</p>
                     </div>
                     <div class="feature-item">
                         <span class="index">05 / ANALYTICS</span>
                         <h3>Статистика</h3>
-                        <p>Логирование сессий, фиксация попаданий и детальный трекинг эффективности в реальном времени.</p>
+                        <p>Логирование сессий и детальный трекинг эффективности в реальном времени.</p>
                     </div>
                     <div class="feature-item">
                         <span class="index">06 / UPDATES</span>
                         <h3>Облачные патчи</h3>
-                        <p>Автоматическая доставка обновлений без необходимости повторного скачивания загрузчика.</p>
+                        <p>Автоматическая доставка обновлений без повторного скачивания.</p>
                     </div>
                 </div>
             </section>
         </div>
 
+        <!-- ТАРИФЫ -->
         <div class="page" id="page-pricing">
             <section class="section">
                 <div class="section-header">
@@ -962,13 +869,14 @@
                 <div class="hwid-box">
                     <div>
                         <h3 style="font-size:1.1rem; margin-bottom:4px;">Сброс HWID</h3>
-                        <p style="color:#888; font-size:0.85rem;">Перепривязка ключа к новому железу. Оплата с баланса или доплата.</p>
+                        <p style="color:#888; font-size:0.85rem;">Перепривязка ключа к новому железу.</p>
                     </div>
                     <button class="btn" id="hwidResetBtn">Сбросить за 400 ₽</button>
                 </div>
             </section>
         </div>
 
+        <!-- КАБИНЕТ -->
         <div class="page" id="page-cabinet">
             <section class="section">
                 <div class="section-header">
@@ -981,18 +889,18 @@
     </div>
 
     <script>
+        // ============================================================
+        // ПОЛНЫЙ КЛИЕНТСКИЙ КОД
+        // ============================================================
         (function() {
             'use strict';
 
-            // ============================================================
-            // ЗАЩИТА ОТ DEVTOOLS
-            // ============================================================
+            // === ЗАЩИТА ОТ DEVTOOLS ===
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'F12' || 
                     (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) || 
                     (e.ctrlKey && (e.key === 'U' || e.key === 'u')) ||
-                    (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) ||
-                    (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c'))) {
+                    (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j'))) {
                     e.preventDefault();
                     return false;
                 }
@@ -1003,108 +911,33 @@
             console.warn = function() {};
             console.error = function() {};
 
-            // ============================================================
-            // БЕЗОПАСНАЯ РАБОТА С HTML
-            // ============================================================
-            function sanitizeHTML(dirtyHTML) {
-                if (!dirtyHTML) return '';
-                return DOMPurify.sanitize(dirtyHTML, {
-                    USE_PROFILES: { html: true },
-                    ADD_TAGS: ['b', 'i', 'u', 's', 'code', 'pre', 'span', 'div', 'p', 'br', 'h2', 'h3', 'h4'],
-                    ADD_ATTR: ['style', 'class', 'data-*', 'id']
-                });
-            }
-
-            function createSafeText(text) {
-                return document.createTextNode(text !== undefined && text !== null ? String(text) : '');
-            }
-
-            // ============================================================
-            // API КЛИЕНТ
-            // ============================================================
+            // === API КЛИЕНТ ===
             const API_URL = '';
             let authToken = localStorage.getItem('auth_token');
             let currentUser = null;
             let currentTab = 'withdrawals';
 
             async function apiRequest(endpoint, data, method = 'POST') {
-                const headers = { 'Content-Type': 'application/json' };
-                if (authToken) headers['X-Auth-Token'] = authToken;
-                const response = await fetch(API_URL + endpoint, {
-                    method: method,
-                    headers: headers,
-                    body: JSON.stringify(data)
-                });
-                return await response.json();
-            }
-
-            // ============================================================
-            // АВТОРИЗАЦИЯ
-            // ============================================================
-            async function login(email, password) {
-                const result = await apiRequest('/api/auth', { email, password, action: 'login' });
-                if (result.success) {
-                    authToken = result.token;
-                    localStorage.setItem('auth_token', authToken);
-                    currentUser = result.user;
-                    updateUI();
-                    renderCabinet();
-                    addNotification('Успешно', `Добро пожаловать, ${currentUser.name}!`);
-                    return true;
+                try {
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (authToken) headers['X-Auth-Token'] = authToken;
+                    const response = await fetch(API_URL + endpoint, {
+                        method: method,
+                        headers: headers,
+                        body: JSON.stringify(data)
+                    });
+                    return await response.json();
+                } catch (e) {
+                    return { error: 'Ошибка сети' };
                 }
-                addNotification('Ошибка', result.error || 'Ошибка входа');
-                return false;
             }
 
-            async function register(email, password, name) {
-                const result = await apiRequest('/api/auth', { email, password, name, action: 'register' });
-                if (result.success) {
-                    authToken = result.token;
-                    localStorage.setItem('auth_token', authToken);
-                    currentUser = result.user;
-                    updateUI();
-                    renderCabinet();
-                    addNotification('Успешно', `Добро пожаловать, ${currentUser.name}!`);
-                    return true;
-                }
-                addNotification('Ошибка', result.error || 'Ошибка регистрации');
-                return false;
-            }
-
-            // ============================================================
-            // ПОКУПКА
-            // ============================================================
-            async function purchasePlan(planId, promoCode = null) {
-                const result = await apiRequest('/api/purchase', { planId, promoCode });
-                if (result.success) {
-                    currentUser.balance = result.balance;
-                    addNotification('Успешно', `Тариф активирован! Ключ: ${result.key}`);
-                    renderCabinet();
-                    return result;
-                }
-                addNotification('Ошибка', result.error || 'Ошибка покупки');
-                return null;
-            }
-
-            // ============================================================
-            // БАЛАНС
-            // ============================================================
-            async function getBalance() {
-                const result = await apiRequest('/api/balance', {}, 'GET');
-                if (result.balance !== undefined) {
-                    currentUser.balance = result.balance;
-                    renderCabinet();
-                }
-                return result;
-            }
-
-            // ============================================================
-            // УВЕДОМЛЕНИЯ
-            // ============================================================
-            function addNotification(title, body) {
+            // === УВЕДОМЛЕНИЯ ===
+            function addNotification(title, body, type = 'info') {
                 const container = document.getElementById('notifications');
                 const notif = document.createElement('div');
                 notif.className = 'notification';
+                notif.style.borderColor = type === 'error' ? '#ff4444' : '#ffffff';
                 const t = document.createElement('div');
                 t.className = 'notif-title';
                 t.textContent = title;
@@ -1117,9 +950,59 @@
                 setTimeout(() => notif.remove(), 4000);
             }
 
-            // ============================================================
-            // НАВИГАЦИЯ
-            // ============================================================
+            // === АВТОРИЗАЦИЯ ===
+            async function login(email, password) {
+                const result = await apiRequest('/api/auth', { email, password, action: 'login' });
+                if (result.success) {
+                    authToken = result.token;
+                    localStorage.setItem('auth_token', authToken);
+                    currentUser = result.user;
+                    updateUI();
+                    renderCabinet();
+                    addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`);
+                    return true;
+                }
+                addNotification('❌ Ошибка', result.error || 'Ошибка входа', 'error');
+                return false;
+            }
+
+            async function register(email, password, name) {
+                const result = await apiRequest('/api/auth', { email, password, name, action: 'register' });
+                if (result.success) {
+                    authToken = result.token;
+                    localStorage.setItem('auth_token', authToken);
+                    currentUser = result.user;
+                    updateUI();
+                    renderCabinet();
+                    addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`);
+                    return true;
+                }
+                addNotification('❌ Ошибка', result.error || 'Ошибка регистрации', 'error');
+                return false;
+            }
+
+            async function purchasePlan(planId) {
+                const result = await apiRequest('/api/purchase', { planId });
+                if (result.success) {
+                    currentUser.balance = result.balance;
+                    addNotification('✅ Успешно', `Тариф активирован! Ключ: ${result.key}`);
+                    renderCabinet();
+                    return result;
+                }
+                addNotification('❌ Ошибка', result.error || 'Ошибка покупки', 'error');
+                return null;
+            }
+
+            async function getBalance() {
+                const result = await apiRequest('/api/balance', {}, 'GET');
+                if (result.success) {
+                    currentUser.balance = result.balance;
+                    renderCabinet();
+                }
+                return result;
+            }
+
+            // === НАВИГАЦИЯ ===
             function navigateTo(page) {
                 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
                 document.querySelectorAll('.nav a').forEach(a => {
@@ -1141,84 +1024,69 @@
                 if (currentUser) {
                     badge.textContent = currentUser.email;
                     badge.style.display = 'inline-block';
-                    if (loginBtn) loginBtn.style.display = 'none';
-                    if (registerBtn) registerBtn.style.display = 'none';
-                    if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                    loginBtn.style.display = 'none';
+                    registerBtn.style.display = 'none';
+                    logoutBtn.style.display = 'inline-block';
                 } else {
                     badge.style.display = 'none';
-                    if (loginBtn) loginBtn.style.display = 'inline-block';
-                    if (registerBtn) registerBtn.style.display = 'inline-block';
-                    if (logoutBtn) logoutBtn.style.display = 'none';
+                    loginBtn.style.display = 'inline-block';
+                    registerBtn.style.display = 'inline-block';
+                    logoutBtn.style.display = 'none';
                 }
             }
 
-            // ============================================================
-            // ТАРИФЫ
-            // ============================================================
+            // === ТАРИФЫ ===
             const PLANS = [
-                { id: 'month', label: '1 Месяц', price: 250, desc: 'Полный функционал, автоматические обновления и обход защиты.' },
-                { id: 'quarter', label: '3 Месяца', price: 400, desc: 'Приоритетная линия обновлений и круглосуточная поддержка.', popular: true },
-                { id: 'lifetime', label: 'Навсегда', price: 600, desc: 'Пожизненный доступ ко всем последующим версиям чита.' }
+                { id: 'month', label: '1 Месяц', price: 250, desc: 'Полный функционал, автоматические обновления.' },
+                { id: 'quarter', label: '3 Месяца', price: 400, desc: 'Приоритетная поддержка и обновления.', popular: true },
+                { id: 'lifetime', label: 'Навсегда', price: 600, desc: 'Пожизненный доступ ко всем версиям.' }
             ];
 
             function renderPricing() {
                 const grid = document.getElementById('pricingGrid');
                 if (!grid) return;
-
                 grid.innerHTML = '';
                 PLANS.forEach(p => {
                     const card = document.createElement('div');
                     card.className = 'price-card';
-
                     if (p.popular) {
                         const badge = document.createElement('div');
                         badge.className = 'badge';
-                        badge.textContent = 'Популярный';
+                        badge.textContent = '🔥 Популярный';
                         card.appendChild(badge);
                     }
-
                     const amount = document.createElement('div');
                     amount.className = 'amount';
                     amount.textContent = `${p.price} ₽`;
                     card.appendChild(amount);
-
                     const period = document.createElement('div');
                     period.className = 'period';
                     period.textContent = p.label;
                     card.appendChild(period);
-
                     const desc = document.createElement('div');
                     desc.className = 'desc';
                     desc.textContent = p.desc;
                     card.appendChild(desc);
-
                     const btn = document.createElement('button');
                     btn.className = 'btn-buy';
                     btn.dataset.planId = p.id;
-                    btn.dataset.price = p.price;
                     btn.textContent = 'Купить';
                     btn.addEventListener('click', function() {
                         if (!currentUser) {
                             showAuthModal('login');
                             return;
                         }
-                        const price = parseInt(this.dataset.price);
-                        const planId = this.dataset.planId;
-                        openSmartPurchaseModal(price, planId);
+                        openPurchaseModal(this.dataset.planId);
                     });
                     card.appendChild(btn);
                     grid.appendChild(card);
                 });
             }
 
-            // ============================================================
-            // МОДАЛКА ПОКУПКИ
-            // ============================================================
-            function openSmartPurchaseModal(basePrice, planId, isHwid = false) {
-                const planObj = isHwid ? { label: 'Сброс HWID' } : (PLANS.find(p => p.id === planId) || { label: 'Подписка' });
-
-                let appliedPromo = null;
-                let promoDiscount = 0;
+            // === МОДАЛКА ПОКУПКИ ===
+            function openPurchaseModal(planId) {
+                const plan = PLANS.find(p => p.id === planId);
+                if (!plan) return;
 
                 const wrap = document.createElement('div');
                 wrap.className = 'modal-wrap';
@@ -1228,139 +1096,49 @@
                 wrap.appendChild(card);
 
                 const title = document.createElement('h2');
-                title.textContent = 'Оформление тарифа';
+                title.textContent = 'Подтверждение';
                 card.appendChild(title);
 
-                const subtitle = document.createElement('div');
-                subtitle.className = 'sub';
-                subtitle.textContent = planObj.label;
-                card.appendChild(subtitle);
+                const sub = document.createElement('div');
+                sub.className = 'sub';
+                sub.textContent = `${plan.label} — ${plan.price} ₽`;
+                card.appendChild(sub);
 
-                const promoRow = document.createElement('div');
-                promoRow.className = 'promo-input-row';
-                const promoInput = document.createElement('input');
-                promoInput.type = 'text';
-                promoInput.id = 'promoCodeInp';
-                promoInput.placeholder = 'Промокод (скидка 10%)';
-                promoInput.maxLength = 16;
-                promoRow.appendChild(promoInput);
-                const applyBtn = document.createElement('button');
-                applyBtn.id = 'applyPromoBtn';
-                applyBtn.textContent = 'Применить';
-                promoRow.appendChild(applyBtn);
-                card.appendChild(promoRow);
+                const info = document.createElement('div');
+                info.style.cssText = 'color:#888;font-size:0.85rem;text-align:center;margin-bottom:1.5rem;';
+                info.textContent = `Баланс: ${currentUser.balance || 0} ₽`;
+                card.appendChild(info);
 
-                const calcBox = document.createElement('div');
-                calcBox.className = 'split-calculation-box';
-                calcBox.id = 'calcDetailsBox';
-                card.appendChild(calcBox);
+                const btnGroup = document.createElement('div');
+                btnGroup.style.cssText = 'display:flex;gap:0.8rem;';
 
                 const confirmBtn = document.createElement('button');
                 confirmBtn.className = 'btn-modal-action';
-                confirmBtn.id = 'confirmPurchaseBtn';
-                confirmBtn.textContent = 'Оплатить';
-                card.appendChild(confirmBtn);
+                confirmBtn.textContent = 'Купить';
+                confirmBtn.addEventListener('click', async function() {
+                    this.textContent = '⏳ Обработка...';
+                    this.disabled = true;
+                    const result = await purchasePlan(planId);
+                    if (result) {
+                        wrap.remove();
+                    } else {
+                        this.textContent = 'Купить';
+                        this.disabled = false;
+                    }
+                });
+                btnGroup.appendChild(confirmBtn);
 
                 const cancelBtn = document.createElement('button');
                 cancelBtn.className = 'btn-modal-cancel';
-                cancelBtn.id = 'cancelPurchaseBtn';
                 cancelBtn.textContent = 'Отмена';
-                card.appendChild(cancelBtn);
-
-                document.body.appendChild(wrap);
-
-                function updateBillCalculation() {
-                    const priceAfterPromo = Math.max(0, basePrice - promoDiscount);
-                    const balance = currentUser ? (currentUser.balance || 0) : 0;
-                    const balanceDeduction = Math.min(balance, priceAfterPromo);
-                    const finalToPay = Math.max(0, priceAfterPromo - balanceDeduction);
-                    const isFullCover = finalToPay === 0;
-
-                    calcBox.innerHTML = '';
-
-                    const row1 = document.createElement('div');
-                    row1.className = 'split-row';
-                    row1.appendChild(createSafeText('Начальная стоимость'));
-                    const span1 = document.createElement('span');
-                    span1.textContent = `${basePrice} ₽`;
-                    row1.appendChild(span1);
-                    calcBox.appendChild(row1);
-
-                    if (appliedPromo) {
-                        const rowPromo = document.createElement('div');
-                        rowPromo.className = 'split-row';
-                        rowPromo.appendChild(createSafeText(`Промокод [${appliedPromo}] (-10%)`));
-                        const promoVal = document.createElement('span');
-                        promoVal.style.color = '#ffffff';
-                        promoVal.textContent = `-${promoDiscount} ₽`;
-                        rowPromo.appendChild(promoVal);
-                        calcBox.appendChild(rowPromo);
-                    }
-
-                    const rowBalance = document.createElement('div');
-                    rowBalance.className = 'split-row';
-                    rowBalance.appendChild(createSafeText('Списание с кошелька'));
-                    const balanceVal = document.createElement('span');
-                    balanceVal.style.color = '#ffffff';
-                    balanceVal.textContent = `-${balanceDeduction} ₽`;
-                    rowBalance.appendChild(balanceVal);
-                    calcBox.appendChild(rowBalance);
-
-                    const rowTotal = document.createElement('div');
-                    rowTotal.className = 'split-row total';
-                    rowTotal.appendChild(createSafeText('К оплате'));
-                    const totalSpan = document.createElement('span');
-                    totalSpan.textContent = `${finalToPay} ₽`;
-                    rowTotal.appendChild(totalSpan);
-                    calcBox.appendChild(rowTotal);
-
-                    confirmBtn.textContent = isFullCover ? `Оплатить с баланса (${priceAfterPromo} ₽)` : `Оплатить доплату (${finalToPay} ₽)`;
-                }
-
-                updateBillCalculation();
-
                 cancelBtn.addEventListener('click', () => wrap.remove());
+                btnGroup.appendChild(cancelBtn);
 
-                applyBtn.addEventListener('click', () => {
-                    const inputCode = promoInput.value.trim().toUpperCase();
-                    if (!inputCode) {
-                        addNotification('Ошибка', 'Введите промокод');
-                        return;
-                    }
-                    if (appliedPromo) {
-                        addNotification('Внимание', 'Промокод уже применен');
-                        return;
-                    }
-                    addNotification('Инфо', 'Промокоды временно недоступны через API');
-                });
-
-                confirmBtn.addEventListener('click', async function() {
-                    const priceAfterPromo = Math.max(0, basePrice - promoDiscount);
-                    const finalToPay = Math.max(0, priceAfterPromo - (currentUser.balance || 0));
-                    
-                    if (finalToPay === 0) {
-                        // Полная оплата с баланса
-                        const result = await purchasePlan(planId, appliedPromo);
-                        if (result) {
-                            wrap.remove();
-                        }
-                    } else {
-                        // Частичная оплата - перенаправление на DonationAlerts
-                        const daMsg = `USER_${currentUser.id} ${planId} (Promo:${appliedPromo || 'none'})`;
-                        const daUrl = new URL('https://www.donationalerts.com/r/lethaldlc');
-                        daUrl.searchParams.set('amount', String(finalToPay));
-                        daUrl.searchParams.set('currency', 'RUB');
-                        daUrl.searchParams.set('message', daMsg);
-                        window.open(daUrl.toString(), '_blank', 'noopener,noreferrer');
-                        wrap.remove();
-                        addNotification('Перенаправление', `Завершите оплату ${finalToPay} ₽ через DonationAlerts`);
-                    }
-                });
+                card.appendChild(btnGroup);
+                document.body.appendChild(wrap);
             }
 
-            // ============================================================
-            // МОДАЛКА: КОШЕЛЁК
-            // ============================================================
+            // === МОДАЛКА КОШЕЛЕК ===
             function openWalletModal() {
                 const wrap = document.createElement('div');
                 wrap.className = 'modal-wrap';
@@ -1370,147 +1148,74 @@
                 wrap.appendChild(card);
 
                 const title = document.createElement('h2');
-                title.textContent = 'Кошелёк';
+                title.textContent = '💰 Кошелёк';
                 card.appendChild(title);
 
                 const sub = document.createElement('div');
                 sub.className = 'sub';
-                const balanceText = document.createTextNode('Текущий баланс: ');
-                sub.appendChild(balanceText);
-                const bold = document.createElement('b');
-                bold.style.color = '#fff';
-                bold.textContent = `${currentUser ? currentUser.balance.toFixed(2) : '0.00'} ₽`;
-                sub.appendChild(bold);
+                sub.textContent = `Баланс: ${currentUser.balance || 0} ₽`;
                 card.appendChild(sub);
 
-                const btnGroup = document.createElement('div');
-                btnGroup.style.cssText = 'display:flex;gap:0.8rem;margin-bottom:1.5rem;';
-
-                const depositBtn = document.createElement('button');
-                depositBtn.className = 'btn-modal-action';
-                depositBtn.textContent = 'Пополнить';
-                depositBtn.id = 'btnDepositFlow';
-                btnGroup.appendChild(depositBtn);
-
-                card.appendChild(btnGroup);
+                const btn = document.createElement('button');
+                btn.className = 'btn-modal-action';
+                btn.textContent = 'Пополнить через DonationAlerts';
+                btn.addEventListener('click', () => {
+                    const url = new URL('https://www.donationalerts.com/r/lethaldlc');
+                    url.searchParams.set('message', `USER_${currentUser.id} TOPUP`);
+                    window.open(url.toString(), '_blank', 'noopener,noreferrer');
+                    wrap.remove();
+                    addNotification('🔄 Перенаправление', 'Оплата через DonationAlerts');
+                });
+                card.appendChild(btn);
 
                 const closeBtn = document.createElement('button');
                 closeBtn.className = 'btn-modal-cancel';
                 closeBtn.textContent = 'Закрыть';
-                closeBtn.id = 'closeWalletBtn';
+                closeBtn.addEventListener('click', () => wrap.remove());
                 card.appendChild(closeBtn);
 
                 document.body.appendChild(wrap);
-
-                closeBtn.addEventListener('click', () => wrap.remove());
-
-                depositBtn.addEventListener('click', function() {
-                    const currentWrap = wrap;
-                    currentWrap.innerHTML = '';
-
-                    const newCard = document.createElement('div');
-                    newCard.className = 'modal-card';
-                    currentWrap.appendChild(newCard);
-
-                    const depTitle = document.createElement('h2');
-                    depTitle.textContent = 'Пополнение';
-                    newCard.appendChild(depTitle);
-
-                    const depSub = document.createElement('div');
-                    depSub.className = 'sub';
-                    depSub.textContent = 'Средства зачисляются через DonationAlerts';
-                    newCard.appendChild(depSub);
-
-                    const fieldGroup = document.createElement('div');
-                    fieldGroup.className = 'field-group';
-                    const label = document.createElement('label');
-                    label.textContent = 'Сумма в рублях';
-                    fieldGroup.appendChild(label);
-                    const input = document.createElement('input');
-                    input.type = 'number';
-                    input.id = 'depAmountInp';
-                    input.min = '50';
-                    input.placeholder = 'От 50 ₽';
-                    fieldGroup.appendChild(input);
-                    newCard.appendChild(fieldGroup);
-
-                    const submitBtn = document.createElement('button');
-                    submitBtn.className = 'btn-modal-action';
-                    submitBtn.id = 'submitDepositBtn';
-                    submitBtn.textContent = 'Перейти к оплате';
-                    newCard.appendChild(submitBtn);
-
-                    const backBtn = document.createElement('button');
-                    backBtn.className = 'btn-modal-cancel';
-                    backBtn.id = 'cancelDepBtn';
-                    backBtn.textContent = 'Назад';
-                    newCard.appendChild(backBtn);
-
-                    backBtn.addEventListener('click', () => currentWrap.remove());
-
-                    submitBtn.addEventListener('click', () => {
-                        const amt = parseFloat(document.getElementById('depAmountInp').value);
-                        if (!amt || amt < 50) {
-                            addNotification('Ошибка', 'Минимальная сумма пополнения — 50 ₽');
-                            return;
-                        }
-                        const url = new URL('https://www.donationalerts.com/r/lethaldlc');
-                        url.searchParams.set('amount', String(amt));
-                        url.searchParams.set('currency', 'RUB');
-                        url.searchParams.set('message', `USER_${currentUser.id} TOPUP`);
-                        window.open(url.toString(), '_blank', 'noopener,noreferrer');
-                        currentWrap.remove();
-                    });
-                });
             }
 
-            // ============================================================
-            // МОДАЛКА: АВТОРИЗАЦИЯ
-            // ============================================================
+            // === МОДАЛКА АВТОРИЗАЦИИ ===
             function showAuthModal(mode = 'login') {
                 const wrap = document.createElement('div');
                 wrap.className = 'modal-wrap';
                 let isLogin = mode === 'login';
 
-                function renderAuthContent() {
+                function render() {
                     wrap.innerHTML = '';
-
                     const card = document.createElement('div');
                     card.className = 'modal-card';
                     wrap.appendChild(card);
 
-                    const tabsContainer = document.createElement('div');
-                    tabsContainer.style.cssText = 'display:flex;gap:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0.8rem;margin-bottom:1.5rem;justify-content:center;';
-
+                    // Вкладки
+                    const tabs = document.createElement('div');
+                    tabs.style.cssText = 'display:flex;gap:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0.8rem;margin-bottom:1.5rem;justify-content:center;';
+                    
                     const loginTab = document.createElement('button');
                     loginTab.className = `tab-trigger ${isLogin ? 'active' : ''}`;
-                    loginTab.id = 'tabAuthLoginBtn';
                     loginTab.style.fontSize = '0.85rem';
                     loginTab.textContent = 'Вход';
-                    loginTab.addEventListener('click', () => {
-                        if (!isLogin) { isLogin = true; renderAuthContent(); }
-                    });
-                    tabsContainer.appendChild(loginTab);
+                    loginTab.addEventListener('click', () => { isLogin = true; render(); });
+                    tabs.appendChild(loginTab);
 
                     const registerTab = document.createElement('button');
                     registerTab.className = `tab-trigger ${!isLogin ? 'active' : ''}`;
-                    registerTab.id = 'tabAuthRegisterBtn';
                     registerTab.style.fontSize = '0.85rem';
                     registerTab.textContent = 'Регистрация';
-                    registerTab.addEventListener('click', () => {
-                        if (isLogin) { isLogin = false; renderAuthContent(); }
-                    });
-                    tabsContainer.appendChild(registerTab);
+                    registerTab.addEventListener('click', () => { isLogin = false; render(); });
+                    tabs.appendChild(registerTab);
 
-                    card.appendChild(tabsContainer);
+                    card.appendChild(tabs);
 
                     const title = document.createElement('h2');
-                    title.textContent = isLogin ? 'Авторизация' : 'Регистрация';
+                    title.textContent = isLogin ? 'Вход' : 'Регистрация';
                     card.appendChild(title);
 
                     const sub = document.createElement('div');
                     sub.className = 'sub';
-                    sub.textContent = isLogin ? 'Войдите в личный кабинет' : 'Создайте новый аккаунт';
+                    sub.textContent = isLogin ? 'Войдите в аккаунт' : 'Создайте новый аккаунт';
                     card.appendChild(sub);
 
                     const errorEl = document.createElement('div');
@@ -1522,7 +1227,7 @@
                         const fg = document.createElement('div');
                         fg.className = 'field-group';
                         const label = document.createElement('label');
-                        label.textContent = 'Имя пользователя';
+                        label.textContent = 'Имя';
                         fg.appendChild(label);
                         const input = document.createElement('input');
                         input.type = 'text';
@@ -1535,7 +1240,7 @@
                     const fg1 = document.createElement('div');
                     fg1.className = 'field-group';
                     const l1 = document.createElement('label');
-                    l1.textContent = 'Email адрес';
+                    l1.textContent = 'Email';
                     fg1.appendChild(l1);
                     const inp1 = document.createElement('input');
                     inp1.type = 'email';
@@ -1565,33 +1270,34 @@
                     const toggle = document.createElement('div');
                     toggle.className = 'toggle-auth';
                     if (isLogin) {
-                        toggle.innerHTML = 'Нет аккаунта? <span id="toggleToRegBtn">Создать аккаунт</span>';
+                        toggle.innerHTML = 'Нет аккаунта? <span id="toggleToRegBtn">Создать</span>';
                     } else {
-                        toggle.innerHTML = 'Уже зарегистрированы? <span id="toggleToLogBtn">Войти</span>';
+                        toggle.innerHTML = 'Уже есть аккаунт? <span id="toggleToLogBtn">Войти</span>';
                     }
                     card.appendChild(toggle);
 
                     const cancelBtn = document.createElement('button');
                     cancelBtn.className = 'btn-modal-cancel';
-                    cancelBtn.id = 'cancelAuthBtn';
                     cancelBtn.textContent = 'Отмена';
+                    cancelBtn.addEventListener('click', () => wrap.remove());
                     card.appendChild(cancelBtn);
 
-                    cancelBtn.addEventListener('click', () => wrap.remove());
-
+                    // Обработчики
                     document.getElementById('toggleToRegBtn')?.addEventListener('click', () => {
                         isLogin = false;
-                        renderAuthContent();
+                        render();
                     });
                     document.getElementById('toggleToLogBtn')?.addEventListener('click', () => {
                         isLogin = true;
-                        renderAuthContent();
+                        render();
                     });
 
-                    card.querySelectorAll('input').forEach(inp => {
-                        inp.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter') document.getElementById('submitAuthBtn').click();
-                        });
+                    document.querySelectorAll('#authEmailInp, #authPassInp, #authNameInp').forEach(inp => {
+                        if (inp) {
+                            inp.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter') document.getElementById('submitAuthBtn').click();
+                            });
+                        }
                     });
 
                     document.getElementById('submitAuthBtn').addEventListener('click', async () => {
@@ -1600,20 +1306,15 @@
 
                         const email = document.getElementById('authEmailInp').value.trim().toLowerCase();
                         const pass = document.getElementById('authPassInp').value;
-                        const name = !isLogin ? document.getElementById('authNameInp').value.trim() : '';
+                        const name = document.getElementById('authNameInp')?.value.trim() || '';
 
-                        if (!email.includes('@') || email.length < 5) {
-                            errEl.textContent = 'Введите корректный адрес email';
+                        if (!email || !email.includes('@')) {
+                            errEl.textContent = 'Введите корректный email';
                             errEl.classList.add('show');
                             return;
                         }
                         if (pass.length < 6) {
-                            errEl.textContent = 'Пароль должен содержать от 6 символов';
-                            errEl.classList.add('show');
-                            return;
-                        }
-                        if (!isLogin && !name) {
-                            errEl.textContent = 'Укажите ваше имя';
+                            errEl.textContent = 'Пароль должен быть минимум 6 символов';
                             errEl.classList.add('show');
                             return;
                         }
@@ -1622,6 +1323,11 @@
                         if (isLogin) {
                             success = await login(email, pass);
                         } else {
+                            if (!name) {
+                                errEl.textContent = 'Укажите ваше имя';
+                                errEl.classList.add('show');
+                                return;
+                            }
                             success = await register(email, pass, name);
                         }
 
@@ -1632,12 +1338,10 @@
                 }
 
                 document.body.appendChild(wrap);
-                renderAuthContent();
+                render();
             }
 
-            // ============================================================
-            // РЕНДЕР КАБИНЕТА (УПРОЩЕННЫЙ)
-            // ============================================================
+            // === РЕНДЕР КАБИНЕТА ===
             function renderCabinet() {
                 const container = document.getElementById('cabinetWrapper');
                 if (!currentUser) {
@@ -1646,12 +1350,11 @@
                     placeholder.style.cssText = 'text-align:center;padding:4rem 0;';
                     const msg = document.createElement('h3');
                     msg.style.cssText = 'margin-bottom:1rem;color:#888;';
-                    msg.textContent = 'Требуется авторизация';
+                    msg.textContent = '🔒 Требуется авторизация';
                     placeholder.appendChild(msg);
                     const btn = document.createElement('button');
                     btn.className = 'btn';
-                    btn.id = 'cabLoginTrigger';
-                    btn.textContent = 'Войти в аккаунт';
+                    btn.textContent = 'Войти';
                     btn.addEventListener('click', () => showAuthModal('login'));
                     placeholder.appendChild(btn);
                     container.appendChild(placeholder);
@@ -1666,13 +1369,13 @@
                 const grid = document.createElement('div');
                 grid.className = 'cabinet-grid';
 
-                // Левая панель
+                // Sidebar
                 const sidebar = document.createElement('div');
                 sidebar.className = 'cabinet-sidebar';
 
                 const avatar = document.createElement('div');
                 avatar.className = 'avatar-box';
-                avatar.textContent = (currentUser.name ? currentUser.name[0].toUpperCase() : 'U');
+                avatar.textContent = currentUser.name ? currentUser.name[0].toUpperCase() : 'U';
                 sidebar.appendChild(avatar);
 
                 const nameEl = document.createElement('div');
@@ -1687,12 +1390,12 @@
 
                 const idBadge = document.createElement('div');
                 idBadge.className = 'id-badge';
-                idBadge.textContent = `USER_${currentUser.id}`;
+                idBadge.textContent = `ID: ${currentUser.id}`;
                 sidebar.appendChild(idBadge);
 
                 const statusPill = document.createElement('div');
                 statusPill.className = `status-pill ${isSubActive ? 'active' : ''}`;
-                statusPill.textContent = isSubActive ? '● Подписка активна' : '○ Нет подписки';
+                statusPill.textContent = isSubActive ? '✅ Подписка активна' : '⭕ Нет подписки';
                 sidebar.appendChild(statusPill);
 
                 const divider1 = document.createElement('div');
@@ -1701,7 +1404,7 @@
 
                 const infoRows = [
                     { label: 'Ключей', value: currentUser.keys?.length || 0 },
-                    { label: 'Тариф', value: currentUser.subscription?.plan || 'Отсутствует' },
+                    { label: 'Тариф', value: currentUser.subscription?.plan || 'Нет' },
                     { label: 'Баланс', value: `${currentUser.balance || 0} ₽` }
                 ];
                 infoRows.forEach(row => {
@@ -1727,10 +1430,9 @@
 
                 const walletBtn = document.createElement('button');
                 walletBtn.className = 'btn-side-tile';
-                walletBtn.id = 'openWalletBtn';
                 const icon1 = document.createElement('div');
                 icon1.className = 'icon-tag';
-                icon1.textContent = '₽';
+                icon1.textContent = '💰';
                 walletBtn.appendChild(icon1);
                 const tg1 = document.createElement('div');
                 tg1.className = 'text-group';
@@ -1740,29 +1442,16 @@
                 tg1.appendChild(t1);
                 const st1 = document.createElement('span');
                 st1.className = 'subtitle';
-                st1.textContent = `${currentUser.balance || 0} ₽ (Баланс)`;
+                st1.textContent = `${currentUser.balance || 0} ₽`;
                 tg1.appendChild(st1);
                 walletBtn.appendChild(tg1);
                 walletBtn.addEventListener('click', openWalletModal);
                 btnContainer.appendChild(walletBtn);
 
                 sidebar.appendChild(btnContainer);
-
-                const divider3 = document.createElement('div');
-                divider3.className = 'sidebar-divider';
-                sidebar.appendChild(divider3);
-
-                const buyBtn = document.createElement('button');
-                buyBtn.className = 'btn-sm';
-                buyBtn.style.width = '100%';
-                buyBtn.dataset.page = 'pricing';
-                buyBtn.textContent = 'Купить ключ';
-                buyBtn.addEventListener('click', () => navigateTo('pricing'));
-                sidebar.appendChild(buyBtn);
-
                 grid.appendChild(sidebar);
 
-                // Правая область
+                // Main
                 const main = document.createElement('div');
                 main.className = 'cabinet-main';
 
@@ -1771,29 +1460,28 @@
                 keyHub.className = 'key-hub';
 
                 const khTitle = document.createElement('h3');
-                khTitle.textContent = 'Лицензионный терминал';
+                khTitle.textContent = '🔑 Лицензионный ключ';
                 keyHub.appendChild(khTitle);
 
                 const khDesc = document.createElement('p');
-                khDesc.textContent = 'Скопируйте ваш ключ и введите его в инжекторе';
+                khDesc.textContent = 'Скопируйте ключ для активации';
                 keyHub.appendChild(khDesc);
 
                 const keyDisplay = document.createElement('div');
                 keyDisplay.className = 'key-display';
                 const keySpan = document.createElement('span');
                 keySpan.id = 'keyValueBox';
-                keySpan.textContent = lastKey ? lastKey.key : 'КЛЮЧ_НЕ_НАЙДЕН';
+                keySpan.textContent = lastKey ? lastKey.key : 'Нет активного ключа';
                 keyDisplay.appendChild(keySpan);
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'btn-sm primary';
-                copyBtn.id = 'copyKeyTrigger';
-                copyBtn.textContent = 'Копировать';
+                copyBtn.textContent = '📋 Копировать';
                 copyBtn.addEventListener('click', function() {
                     const text = document.getElementById('keyValueBox')?.textContent;
-                    if (text && text !== 'КЛЮЧ_НЕ_НАЙДЕН') {
+                    if (text && text !== 'Нет активного ключа') {
                         navigator.clipboard.writeText(text);
-                        this.textContent = 'Скопировано';
-                        setTimeout(() => this.textContent = 'Копировать', 2000);
+                        this.textContent = '✅ Скопировано';
+                        setTimeout(() => this.textContent = '📋 Копировать', 2000);
                     }
                 });
                 keyDisplay.appendChild(copyBtn);
@@ -1804,7 +1492,7 @@
                 const insts = [
                     'Скачайте лоадер: lethaldlc.com/loader',
                     'Запустите от имени администратора',
-                    'Вставьте ваш лицензионный ключ',
+                    'Вставьте лицензионный ключ',
                     'Нажмите "Inject" и войдите в игру'
                 ];
                 insts.forEach((text, index) => {
@@ -1813,7 +1501,9 @@
                     const b = document.createElement('b');
                     b.textContent = `${index + 1}.`;
                     box.appendChild(b);
-                    box.appendChild(createSafeText(text));
+                    const span = document.createElement('span');
+                    span.textContent = text;
+                    box.appendChild(span);
                     instGrid.appendChild(box);
                 });
                 keyHub.appendChild(instGrid);
@@ -1830,9 +1520,7 @@
                 });
             }
 
-            // ============================================================
-            // ЧАСТИЦЫ (КРАСИВЫЙ ФОН)
-            // ============================================================
+            // === ЧАСТИЦЫ ===
             const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
             let width, height;
@@ -1860,19 +1548,16 @@
             function loopParticles() {
                 ctx.clearRect(0, 0, width, height);
                 ctx.fillStyle = '#ffffff';
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
-
+                ctx.strokeStyle = 'rgba(255,255,255,0.04)';
                 for (let i = 0; i < particles.length; i++) {
                     const p = particles[i];
                     p.x += p.vx;
                     p.y += p.vy;
                     if (p.x < 0 || p.x > width) p.vx *= -1;
                     if (p.y < 0 || p.y > height) p.vy *= -1;
-
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
                     ctx.fill();
-
                     for (let j = i + 1; j < particles.length; j++) {
                         const p2 = particles[j];
                         const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
@@ -1888,18 +1573,16 @@
             }
             loopParticles();
 
-            // ============================================================
-            // ОБРАБОТЧИКИ КНОПОК
-            // ============================================================
+            // === ОБРАБОТЧИКИ КНОПОК ===
             document.getElementById('loginBtn')?.addEventListener('click', () => showAuthModal('login'));
             document.getElementById('registerBtn')?.addEventListener('click', () => showAuthModal('register'));
             document.getElementById('logoutBtn')?.addEventListener('click', () => {
                 localStorage.removeItem('auth_token');
-                localStorage.removeItem('lethal_session');
                 authToken = null;
                 currentUser = null;
                 updateUI();
                 navigateTo('main');
+                addNotification('👋 До свидания', 'Вы вышли из аккаунта');
             });
 
             document.getElementById('hwidResetBtn')?.addEventListener('click', () => {
@@ -1907,7 +1590,7 @@
                     showAuthModal('login');
                     return;
                 }
-                openSmartPurchaseModal(400, 'hwid', true);
+                openPurchaseModal('hwid');
             });
 
             document.querySelectorAll('[data-page]').forEach(el => {
@@ -1917,14 +1600,11 @@
                 });
             });
 
-            // ============================================================
-            // СТАРТ
-            // ============================================================
+            // === СТАРТ ===
             (async function init() {
-                // Восстановление сессии
                 if (authToken) {
                     const result = await getBalance();
-                    if (result.balance !== undefined) {
+                    if (result.success) {
                         // Пользователь авторизован
                     } else {
                         authToken = null;
