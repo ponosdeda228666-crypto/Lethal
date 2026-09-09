@@ -27,9 +27,10 @@ function saveUsers(users) {
   }
 }
 
-function generateToken(email) {
+function generateToken(email, userId) {
   const payload = { 
     email: email,
+    userId: userId,
     timestamp: Date.now(),
     random: crypto.randomBytes(16).toString('hex')
   };
@@ -49,7 +50,7 @@ export function verifyToken(token) {
       .update(JSON.stringify(decoded.payload))
       .digest('hex');
     if (decoded.signature !== expectedSignature) return null;
-    return decoded.payload.email;
+    return decoded.payload;
   } catch (e) {
     console.error('Ошибка verifyToken:', e);
     return null;
@@ -72,13 +73,13 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Нет токена' });
     }
     
-    const email = verifyToken(token);
-    if (!email) {
+    const payload = verifyToken(token);
+    if (!payload) {
       return res.status(401).json({ error: 'Неверный токен' });
     }
 
     const users = loadUsers();
-    const user = users[email];
+    const user = users[payload.email];
     if (!user) {
       return res.status(401).json({ error: 'Пользователь не найден' });
     }
@@ -86,7 +87,8 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       user: {
-        email: email,
+        id: user.id || 'U' + crypto.randomBytes(4).toString('hex').toUpperCase(),
+        email: payload.email,
         name: user.name || 'User',
         balance: user.balance || 0
       }
@@ -109,12 +111,14 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Пользователь уже существует' });
       }
 
+      const userId = 'U' + crypto.randomBytes(6).toString('hex').toUpperCase();
       const passwordHash = crypto
         .createHmac('sha256', JWT_SECRET)
         .update(password)
         .digest('hex');
 
       users[normalizedEmail] = {
+        id: userId,
         email: normalizedEmail,
         name: name || normalizedEmail.split('@')[0],
         passwordHash: passwordHash,
@@ -127,12 +131,13 @@ export default async function handler(req, res) {
 
       saveUsers(users);
       
-      const token = generateToken(normalizedEmail);
+      const token = generateToken(normalizedEmail, userId);
       
       return res.status(200).json({
         success: true,
         token: token,
         user: {
+          id: userId,
           email: normalizedEmail,
           name: users[normalizedEmail].name,
           balance: 0
@@ -158,12 +163,20 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Неверный пароль' });
       }
 
-      const token = generateToken(normalizedEmail);
+      // Если у пользователя нет id - создаем
+      if (!user.id) {
+        user.id = 'U' + crypto.randomBytes(6).toString('hex').toUpperCase();
+        users[normalizedEmail] = user;
+        saveUsers(users);
+      }
+
+      const token = generateToken(normalizedEmail, user.id);
       
       return res.status(200).json({
         success: true,
         token: token,
         user: {
+          id: user.id,
           email: normalizedEmail,
           name: user.name,
           balance: user.balance || 0

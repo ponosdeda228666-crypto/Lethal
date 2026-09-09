@@ -37,7 +37,7 @@ async function sendTelegramNotification(application, userEmail) {
 📱 <b>TikTok:</b> ${application.tiktokUrl}
 🏷 <b>Промокод:</b> <code>${application.promoCode}</code>
 📞 <b>Telegram:</b> ${application.telegramContact}
-🆔 <b>ID:</b> <code>${application.id}</code>
+🆔 <b>ID заявки:</b> <code>${application.id}</code>
 📅 <b>Дата:</b> ${new Date(application.createdAt).toLocaleString('ru-RU')}
   `;
 
@@ -60,7 +60,9 @@ async function sendTelegramNotification(application, userEmail) {
         disable_web_page_preview: true
       })
     });
-  } catch (e) {}
+  } catch (e) {
+    console.error('Ошибка отправки в Telegram:', e);
+  }
 }
 
 export default async function handler(req, res) {
@@ -78,13 +80,13 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const email = verifyToken(token);
-    if (!email) {
+    const payload = verifyToken(token);
+    if (!payload) {
       return res.status(401).json({ error: 'Неверный токен' });
     }
 
     const users = loadUsers();
-    const user = users[email];
+    const user = users[payload.email];
     if (!user) {
       return res.status(401).json({ 
         error: 'Пользователь не найден. Пожалуйста, перезайдите в аккаунт.'
@@ -93,9 +95,10 @@ export default async function handler(req, res) {
 
     // GET - получение заявок
     if (req.method === 'GET') {
+      const applications = user.mediaApplications || [];
       return res.status(200).json({
         success: true,
-        applications: user.mediaApplications || []
+        applications: applications
       });
     }
 
@@ -107,6 +110,33 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Заполните все поля' });
       }
 
+      // Валидация
+      const tiktokRegex = /^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/@[a-zA-Z0-9._]+(\/)?$/i;
+      if (!tiktokRegex.test(tiktokUrl)) {
+        return res.status(400).json({ error: 'Некорректная ссылка TikTok' });
+      }
+
+      const promoRegex = /^[A-Z0-9_]{3,12}$/;
+      if (!promoRegex.test(promoCode.toUpperCase())) {
+        return res.status(400).json({ error: 'Промокод: 3-12 латинских букв, цифр или _' });
+      }
+
+      const tgRegex = /^@[a-zA-Z0-9_]{3,32}$/;
+      if (!tgRegex.test(telegramContact)) {
+        return res.status(400).json({ error: 'Некорректный Telegram (@username)' });
+      }
+
+      // Проверка на дубликат промокода
+      for (const [key, u] of Object.entries(users)) {
+        if (u.mediaApplications) {
+          for (const app of u.mediaApplications) {
+            if (app.status === 'approved' && app.promoCode === promoCode.toUpperCase()) {
+              return res.status(400).json({ error: 'Этот промокод уже используется' });
+            }
+          }
+        }
+      }
+
       const applicationId = 'M' + Date.now().toString(36).toUpperCase() + crypto.randomBytes(4).toString('hex').toUpperCase();
       
       const application = {
@@ -116,8 +146,9 @@ export default async function handler(req, res) {
         telegramContact: telegramContact,
         status: 'pending',
         createdAt: new Date().toISOString(),
-        userName: user.name || email.split('@')[0],
-        userEmail: email
+        userName: user.name || payload.email.split('@')[0],
+        userEmail: payload.email,
+        userId: user.id || 'U' + crypto.randomBytes(4).toString('hex').toUpperCase()
       };
 
       if (!user.mediaApplications) {
@@ -125,15 +156,16 @@ export default async function handler(req, res) {
       }
       user.mediaApplications.push(application);
       
-      users[email] = user;
+      users[payload.email] = user;
       saveUsers(users);
 
-      await sendTelegramNotification(application, email);
+      // Отправка в Telegram
+      await sendTelegramNotification(application, payload.email);
 
       return res.status(200).json({
         success: true,
         application: application,
-        message: 'Заявка подана!'
+        message: 'Заявка подана! Ожидайте подтверждения.'
       });
     }
 

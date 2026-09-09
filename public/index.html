@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ВСЕ СТИЛИ ТЕ ЖЕ - ОСТАВЛЯЕМ БЕЗ ИЗМЕНЕНИЙ */
         * {
             margin: 0;
             padding: 0;
@@ -1519,6 +1518,8 @@
                     authToken = result.token;
                     localStorage.setItem('auth_token', authToken);
                     currentUser = result.user;
+                    // Сохраняем ID в куки
+                    document.cookie = `userId=${currentUser.id || 'U' + Math.random().toString(36).substring(2, 8).toUpperCase()}; path=/; max-age=86400`;
                     updateUI();
                     renderCabinet();
                     addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
@@ -1534,6 +1535,7 @@
                     authToken = result.token;
                     localStorage.setItem('auth_token', authToken);
                     currentUser = result.user;
+                    document.cookie = `userId=${currentUser.id}; path=/; max-age=86400`;
                     updateUI();
                     renderCabinet();
                     addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
@@ -2139,7 +2141,7 @@
 
                 const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
                 const isSubActive = currentUser.subscription?.active;
-                
+
                 // Получаем медиа заявки
                 let applications = [];
                 try {
@@ -2177,7 +2179,7 @@
 
                 const idBadge = document.createElement('div');
                 idBadge.className = 'id-badge';
-                idBadge.textContent = `Email: ${currentUser.email}`;
+                idBadge.textContent = `ID: ${currentUser.id || 'Не установлен'}`;
                 sidebar.appendChild(idBadge);
 
                 const statusPill = document.createElement('div');
@@ -2563,6 +2565,7 @@
             document.getElementById('registerBtn')?.addEventListener('click', () => showAuthModal('register'));
             document.getElementById('logoutBtn')?.addEventListener('click', () => {
                 localStorage.removeItem('auth_token');
+                document.cookie = 'userId=; path=/; max-age=0';
                 authToken = null;
                 currentUser = null;
                 updateUI();
@@ -2585,8 +2588,34 @@
                 });
             });
 
+            // === ФИКС: ПРОВЕРКА СЕССИИ ===
+            async function checkSession() {
+                const token = localStorage.getItem('auth_token');
+                if (!token) return false;
+
+                try {
+                    const response = await fetch('/api/auth', {
+                        headers: { 'X-Auth-Token': token }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        currentUser = data.user;
+                        document.cookie =
+                            `userId=${data.user.id || 'U' + Math.random().toString(36).substring(2, 8).toUpperCase()}; path=/; max-age=86400`;
+                        return true;
+                    } else {
+                        localStorage.removeItem('auth_token');
+                        document.cookie = 'userId=; path=/; max-age=0';
+                        return false;
+                    }
+                } catch (e) {
+                    return false;
+                }
+            }
+
             // === СТАРТ ===
             (async function init() {
+                await checkSession();
                 if (authToken) {
                     const result = await getBalance();
                     if (result && result.success) {

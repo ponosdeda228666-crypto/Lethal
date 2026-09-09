@@ -75,7 +75,7 @@ function verifyToken(token) {
       .update(JSON.stringify(decoded.payload))
       .digest('hex');
     if (decoded.signature !== expectedSignature) return null;
-    return decoded.payload.email;
+    return decoded.payload;
   } catch { return null; }
 }
 
@@ -115,6 +115,7 @@ async function processMediaApplication(applicationId, approve) {
       }
       promocodes[foundApp.promoCode] = {
         owner: foundEmail,
+        ownerId: foundUser.id || 'U' + crypto.randomBytes(4).toString('hex').toUpperCase(),
         uses: 0,
         volume: 0,
         reward: 0,
@@ -143,6 +144,7 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
+  // Настройка вебхука
   if (req.method === 'GET' && req.query.setup === 'webhook') {
     const host = req.headers.host;
     const proto = req.headers['x-forwarded-proto'] || 'https';
@@ -156,6 +158,7 @@ export default async function handler(req, res) {
     }
   }
 
+  // Проверка статуса заявки
   if (req.method === 'GET') {
     const { check } = req.query;
     if (check) {
@@ -165,6 +168,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ status: 'active' });
   }
 
+  // Обработка callback от Telegram
   if (req.method === 'POST' && req.body && req.body.callback_query) {
     try {
       const cb = req.body.callback_query;
@@ -241,6 +245,7 @@ export default async function handler(req, res) {
     }
   }
 
+  // Отправка сообщения
   if (req.method === 'POST') {
     const signature = req.headers['x-request-signature'];
     if (!signature) {
