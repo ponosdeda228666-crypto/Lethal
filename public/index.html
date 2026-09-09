@@ -1497,7 +1497,7 @@
 
     <script>
         // ============================================================
-        // ПОЛНАЯ КЛИЕНТСКАЯ ЛОГИКА
+        // ПОЛНАЯ КЛИЕНТСКАЯ ЛОГИКА - КАБИНЕТ ВЕРНУЛ!
         // ============================================================
         (function() {
             'use strict';
@@ -1521,11 +1521,12 @@
             console.warn = function() {};
             console.error = function() {};
 
-            // === API КЛИЕНТ ===
-            const API_URL = '';
+            // === API ===
             let authToken = localStorage.getItem('auth_token');
             let currentUser = null;
             let currentTab = 'withdrawals';
+
+            const API_URL = '';
 
             async function apiRequest(endpoint, data, method = 'POST') {
                 try {
@@ -1640,9 +1641,7 @@
 
             async function getMediaStats(promoCode) {
                 const result = await apiGet('/api/media/stats?promo=' + encodeURIComponent(promoCode));
-                if (result.success) {
-                    return result.stats;
-                }
+                if (result.success) return result.stats;
                 return { uses: 0, volume: 0, reward: 0 };
             }
 
@@ -2171,7 +2170,7 @@
                 render();
             }
 
-            // === РЕНДЕР КАБИНЕТА ===
+            // === РЕНДЕР КАБИНЕТА - ВЕРНУЛ ПОЛНОСТЬЮ! ===
             async function renderCabinet() {
                 const container = document.getElementById('cabinetWrapper');
                 if (!currentUser) {
@@ -2212,7 +2211,7 @@
                 const grid = document.createElement('div');
                 grid.className = 'cabinet-grid';
 
-                // SIDEBAR
+                // === SIDEBAR ===
                 const sidebar = document.createElement('div');
                 sidebar.className = 'cabinet-sidebar';
 
@@ -2355,10 +2354,11 @@
 
                 grid.appendChild(sidebar);
 
-                // MAIN
+                // === MAIN ===
                 const main = document.createElement('div');
                 main.className = 'cabinet-main';
 
+                // Метрики
                 const metricsRow = document.createElement('div');
                 metricsRow.className = 'metric-cards-row';
 
@@ -2392,6 +2392,7 @@
 
                 main.appendChild(metricsRow);
 
+                // Ключ
                 const keyHub = document.createElement('div');
                 keyHub.className = 'key-hub';
 
@@ -2446,6 +2447,7 @@
 
                 main.appendChild(keyHub);
 
+                // Вкладки
                 const tabsHub = document.createElement('div');
                 tabsHub.className = 'tabs-hub';
 
@@ -2638,7 +2640,7 @@
                 });
             });
 
-            // === СУПЕР ФИКС 401 ===
+            // === ФИКС СЕССИИ ===
             async function fixSession() {
                 const token = localStorage.getItem('auth_token');
                 if (!token) return false;
@@ -2653,11 +2655,9 @@
                         authToken = token;
                         updateUI();
                         renderCabinet();
-                        addNotification('✅ Сессия восстановлена', 'Добро пожаловать!', 'success');
                         return true;
                     } else {
                         localStorage.removeItem('auth_token');
-                        authToken = null;
                         currentUser = null;
                         updateUI();
                         renderCabinet();
@@ -2668,51 +2668,28 @@
                 }
             }
 
-            // Перехват fetch для обработки 401
             const originalFetch = window.fetch;
             window.fetch = function(...args) {
                 return originalFetch.apply(this, args).then(async response => {
-                    if (response.status === 401) {
-                        console.log('🔴 401 - Пробуем восстановить сессию...');
-                        const token = localStorage.getItem('auth_token');
-                        if (token) {
-                            try {
-                                const check = await fetch('/api/auth', {
-                                    headers: { 'X-Auth-Token': token }
-                                });
-                                const data = await check.json();
-                                if (data.success) {
-                                    currentUser = data.user;
-                                    authToken = token;
-                                    updateUI();
-                                    renderCabinet();
-                                    addNotification('✅ Сессия восстановлена', 'Добро пожаловать!',
-                                    'success');
-                                    return response;
-                                }
-                            } catch (e) {}
+                    const clonedResponse = response.clone();
+                    try {
+                        const data = await clonedResponse.json();
+                        if (data.error && (
+                                data.error.includes('пользователь не найден') ||
+                                data.error.includes('Пользователь не найден') ||
+                                data.error.includes('Недействительный токен')
+                            )) {
+                            console.log('🔴 Ошибка авторизации, восстанавливаем сессию...');
+                            setTimeout(() => fixSession(), 500);
                         }
-                        localStorage.removeItem('auth_token');
-                        authToken = null;
-                        currentUser = null;
-                        updateUI();
-                        renderCabinet();
-                        showAuthModal('login');
-                        addNotification('⏰ Сессия истекла', 'Пожалуйста, войдите заново', 'error');
-                    }
+                    } catch (e) {}
                     return response;
                 });
             };
 
-            // Принудительная проверка при загрузке
             setTimeout(async function() {
-                const token = localStorage.getItem('auth_token');
-                if (token) {
-                    await fixSession();
-                } else {
-                    setTimeout(() => showAuthModal('login'), 1000);
-                }
-            }, 1500);
+                await fixSession();
+            }, 1000);
 
             // === СТАРТ ===
             (async function init() {
@@ -2729,8 +2706,6 @@
                 renderPricing();
                 navigateTo('main');
             })();
-
-            console.log('✅ Приложение запущено!');
 
         })();
     </script>
