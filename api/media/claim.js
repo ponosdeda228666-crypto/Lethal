@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import { verifyToken } from '../auth.js';
 
-const JWT_SECRET = 'lethal-dlc-super-secret-key-2026';
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 const PROMO_FILE = path.join(process.cwd(), 'promocodes.json');
 
@@ -29,19 +29,6 @@ function loadPromocodes() {
 
 function savePromocodes(promocodes) {
   try { fs.writeFileSync(PROMO_FILE, JSON.stringify(promocodes, null, 2)); } catch {}
-}
-
-function verifyToken(token) {
-  try {
-    if (!token) return null;
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    const expectedSignature = crypto
-      .createHmac('sha256', JWT_SECRET)
-      .update(JSON.stringify(decoded.payload))
-      .digest('hex');
-    if (decoded.signature !== expectedSignature) return null;
-    return decoded.payload.email;
-  } catch { return null; }
 }
 
 export default async function handler(req, res) {

@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import { verifyToken } from './auth.js';
 
-const JWT_SECRET = 'lethal-dlc-super-secret-key-2026';
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 
 function loadUsers() {
@@ -21,21 +21,6 @@ function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
   } catch (e) {}
-}
-
-function verifyToken(token) {
-  try {
-    if (!token) return null;
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    const expectedSignature = crypto
-      .createHmac('sha256', JWT_SECRET)
-      .update(JSON.stringify(decoded.payload))
-      .digest('hex');
-    if (decoded.signature !== expectedSignature) return null;
-    return decoded.payload.email;
-  } catch (e) {
-    return null;
-  }
 }
 
 const PRICES = { 
@@ -113,6 +98,30 @@ export default async function handler(req, res) {
 
     users[email] = user;
     saveUsers(users);
+
+    // Уведомление в Telegram
+    if (process.env.BOT_TOKEN && process.env.CHAT_ID) {
+      try {
+        const tgText = `🛒 <b>НОВАЯ ПОКУПКА!</b>\n\n` +
+                       `👤 <b>Пользователь:</b> ${email}\n` +
+                       `📦 <b>Тариф:</b> ${planId}\n` +
+                       `💰 <b>Сумма:</b> ${price} ₽\n` +
+                       `🔑 <b>Ключ:</b> ${key}\n` +
+                       `💳 <b>Остаток:</b> ${user.balance} ₽`;
+        
+        await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: process.env.CHAT_ID,
+            text: tgText,
+            parse_mode: 'HTML'
+          })
+        });
+      } catch (e) {
+        console.error('Ошибка отправки в Telegram:', e);
+      }
+    }
 
     return res.status(200).json({
       success: true,

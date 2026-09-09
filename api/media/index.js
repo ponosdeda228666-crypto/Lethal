@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import { verifyToken } from '../auth.js';
 
-const JWT_SECRET = 'lethal-dlc-super-secret-key-2026';
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 
 function loadUsers() {
@@ -21,21 +21,6 @@ function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
   } catch (e) {}
-}
-
-function verifyToken(token) {
-  try {
-    if (!token) return null;
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    const expectedSignature = crypto
-      .createHmac('sha256', JWT_SECRET)
-      .update(JSON.stringify(decoded.payload))
-      .digest('hex');
-    if (decoded.signature !== expectedSignature) return null;
-    return decoded.payload.email;
-  } catch (e) {
-    return null;
-  }
 }
 
 async function sendTelegramNotification(application, userEmail) {
@@ -102,8 +87,7 @@ export default async function handler(req, res) {
     const user = users[email];
     if (!user) {
       return res.status(401).json({ 
-        error: 'Пользователь не найден. Пожалуйста, перезайдите в аккаунт.',
-        needRelogin: true
+        error: 'Пользователь не найден. Пожалуйста, перезайдите в аккаунт.'
       });
     }
 

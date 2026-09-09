@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
-const JWT_SECRET = 'lethal-dlc-super-secret-key-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 
 function loadUsers() {
@@ -14,6 +14,7 @@ function loadUsers() {
     const data = fs.readFileSync(USERS_FILE, 'utf8');
     return JSON.parse(data);
   } catch (e) {
+    console.error('Ошибка загрузки пользователей:', e);
     return {};
   }
 }
@@ -21,13 +22,16 @@ function loadUsers() {
 function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-  } catch (e) {}
+  } catch (e) {
+    console.error('Ошибка сохранения пользователей:', e);
+  }
 }
 
 function generateToken(email) {
   const payload = { 
     email: email,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    random: crypto.randomBytes(16).toString('hex')
   };
   const signature = crypto
     .createHmac('sha256', JWT_SECRET)
@@ -36,7 +40,7 @@ function generateToken(email) {
   return Buffer.from(JSON.stringify({ payload, signature })).toString('base64');
 }
 
-function verifyToken(token) {
+export function verifyToken(token) {
   try {
     if (!token) return null;
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
@@ -47,12 +51,12 @@ function verifyToken(token) {
     if (decoded.signature !== expectedSignature) return null;
     return decoded.payload.email;
   } catch (e) {
+    console.error('Ошибка verifyToken:', e);
     return null;
   }
 }
 
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token');

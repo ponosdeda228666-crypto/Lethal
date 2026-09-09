@@ -5,7 +5,7 @@ import path from 'path';
 const BOT_TOKEN = process.env.BOT_TOKEN || "8861768227:AAFbmUHocOR0zatOere_DcXopW-7JYyZbc4";
 const CHAT_ID = process.env.CHAT_ID || "8488940016";
 const USERS_FILE = path.join(process.cwd(), 'users.json');
-const JWT_SECRET = 'lethal-dlc-super-secret-key-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
 
 const processedRequests = new Map();
 

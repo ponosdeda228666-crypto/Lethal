@@ -7,9 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ============================================================
-           ВСЕ СТИЛИ (БЕЗ ИЗМЕНЕНИЙ - КРАСИВЫЙ ДИЗАЙН)
-           ============================================================ */
+        /* ВСЕ СТИЛИ ТЕ ЖЕ - ОСТАВЛЯЕМ БЕЗ ИЗМЕНЕНИЙ */
         * {
             margin: 0;
             padding: 0;
@@ -1452,7 +1450,7 @@
 
     <script>
         // ============================================================
-        // ВСЯ ЛОГИКА НА КЛИЕНТЕ - БЕЗ СЕРВЕРА!
+        // КЛИЕНТСКАЯ ЧАСТЬ - ВСЯ ЛОГИКА НА СЕРВЕРЕ
         // ============================================================
         (function() {
             'use strict';
@@ -1476,38 +1474,26 @@
             console.warn = function() {};
             console.error = function() {};
 
-            // === БАЗА ДАННЫХ В localStorage ===
-            function loadUsers() {
-                try {
-                    const data = localStorage.getItem('lethal_users');
-                    return data ? JSON.parse(data) : {};
-                } catch (e) {
-                    return {};
-                }
-            }
-
-            function saveUsers(users) {
-                localStorage.setItem('lethal_users', JSON.stringify(users));
-            }
-
-            function loadPromocodes() {
-                try {
-                    const data = localStorage.getItem('lethal_promocodes');
-                    return data ? JSON.parse(data) : {};
-                } catch (e) {
-                    return {};
-                }
-            }
-
-            function savePromocodes(promocodes) {
-                localStorage.setItem('lethal_promocodes', JSON.stringify(promocodes));
-            }
-
-            // === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
-            let users = loadUsers();
-            let promocodes = loadPromocodes();
+            // === API КЛИЕНТ ===
+            const API_URL = '';
+            let authToken = localStorage.getItem('auth_token');
             let currentUser = null;
             let currentTab = 'withdrawals';
+
+            async function apiRequest(endpoint, data, method = 'POST') {
+                try {
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (authToken) headers['X-Auth-Token'] = authToken;
+                    const response = await fetch(API_URL + endpoint, {
+                        method: method,
+                        headers: headers,
+                        body: JSON.stringify(data)
+                    });
+                    return await response.json();
+                } catch (e) {
+                    return { error: 'Ошибка сети' };
+                }
+            }
 
             // === УВЕДОМЛЕНИЯ ===
             function addNotification(title, body, type = 'info') {
@@ -1527,302 +1513,90 @@
             }
 
             // === АВТОРИЗАЦИЯ ===
-            function login(email, password) {
-                const users = loadUsers();
-                const user = users[email];
-                if (!user) {
-                    addNotification('❌ Ошибка', 'Пользователь не найден', 'error');
-                    return false;
+            async function login(email, password) {
+                const result = await apiRequest('/api/auth', { email, password, action: 'login' });
+                if (result.success) {
+                    authToken = result.token;
+                    localStorage.setItem('auth_token', authToken);
+                    currentUser = result.user;
+                    updateUI();
+                    renderCabinet();
+                    addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
+                    return true;
                 }
-                if (user.password !== password) {
-                    addNotification('❌ Ошибка', 'Неверный пароль', 'error');
-                    return false;
-                }
-                currentUser = user;
-                localStorage.setItem('lethal_session', email);
-                updateUI();
-                renderCabinet();
-                addNotification('✅ Успешно', `Добро пожаловать, ${user.name}!`, 'success');
-                return true;
+                addNotification('❌ Ошибка', result.error || 'Ошибка входа', 'error');
+                return false;
             }
 
-            function register(email, password, name) {
-                const users = loadUsers();
-                if (users[email]) {
-                    addNotification('❌ Ошибка', 'Пользователь уже существует', 'error');
-                    return false;
+            async function register(email, password, name) {
+                const result = await apiRequest('/api/auth', { email, password, name, action: 'register' });
+                if (result.success) {
+                    authToken = result.token;
+                    localStorage.setItem('auth_token', authToken);
+                    currentUser = result.user;
+                    updateUI();
+                    renderCabinet();
+                    addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
+                    return true;
                 }
-                const newUser = {
-                    email: email,
-                    name: name || email.split('@')[0],
-                    password: password,
-                    balance: 0,
-                    keys: [],
-                    withdrawals: [],
-                    mediaApplications: [],
-                    createdAt: new Date().toISOString()
-                };
-                users[email] = newUser;
-                saveUsers(users);
-                currentUser = newUser;
-                localStorage.setItem('lethal_session', email);
-                updateUI();
-                renderCabinet();
-                addNotification('✅ Успешно', `Добро пожаловать, ${newUser.name}!`, 'success');
-                return true;
+                addNotification('❌ Ошибка', result.error || 'Ошибка регистрации', 'error');
+                return false;
             }
 
-            function logout() {
-                localStorage.removeItem('lethal_session');
-                currentUser = null;
-                updateUI();
-                renderCabinet();
-                addNotification('👋 До свидания', 'Вы вышли из аккаунта');
-                navigateTo('main');
+            async function purchasePlan(planId) {
+                const result = await apiRequest('/api/purchase', { planId });
+                if (result.success) {
+                    currentUser.balance = result.balance;
+                    addNotification('✅ Успешно', `Тариф активирован! Ключ: ${result.key}`, 'success');
+                    renderCabinet();
+                    return result;
+                }
+                addNotification('❌ Ошибка', result.error || 'Ошибка покупки', 'error');
+                return null;
             }
 
-            // === ПОКУПКА ТАРИФА ===
-            function purchasePlan(planId) {
-                const users = loadUsers();
-                const user = users[currentUser.email];
-                const prices = {
-                    'month': 250,
-                    'quarter': 400,
-                    'lifetime': 600,
-                    'hwid': 400
-                };
-                const price = prices[planId];
-                if (!price) {
-                    addNotification('❌ Ошибка', 'Неверный тариф', 'error');
-                    return false;
+            async function getBalance() {
+                const result = await apiRequest('/api/balance', {}, 'GET');
+                if (result.success) {
+                    currentUser.balance = result.balance;
+                    renderCabinet();
+                    return result;
                 }
-                if (user.balance < price) {
-                    addNotification('❌ Ошибка', 'Недостаточно средств', 'error');
-                    return false;
-                }
-                user.balance -= price;
-                const key = 'L101N-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-                if (!user.keys) user.keys = [];
-                user.keys.push({
-                    key: key,
-                    plan: planId,
-                    price: price,
-                    date: new Date().toISOString()
-                });
-                if (planId === 'hwid') {
-                    user.hwid = 'RESET-' + Date.now().toString(36).toUpperCase();
-                } else {
-                    user.subscription = {
-                        active: true,
-                        plan: planId,
-                        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-                    };
-                }
-                users[user.email] = user;
-                saveUsers(users);
-                currentUser = user;
-                addNotification('✅ Успешно', `Тариф активирован! Ключ: ${key}`, 'success');
-                renderCabinet();
-                return true;
+                return null;
             }
 
-            // === ПОПОЛНЕНИЕ БАЛАНСА ===
-            function addBalance(amount) {
-                const users = loadUsers();
-                const user = users[currentUser.email];
-                user.balance += amount;
-                users[user.email] = user;
-                saveUsers(users);
-                currentUser = user;
-                addNotification('✅ Успешно', `Баланс пополнен на ${amount} ₽`, 'success');
-                renderCabinet();
-            }
-
-            // === МЕДИА ЗАЯВКИ ===
-            function submitMediaApplication(tiktokUrl, promoCode, telegramContact) {
-                const users = loadUsers();
-                const user = users[currentUser.email];
-                
-                const tiktokRegex = /^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/@[a-zA-Z0-9._]+(\/)?$/i;
-                if (!tiktokRegex.test(tiktokUrl)) {
-                    addNotification('❌ Ошибка', 'Некорректная ссылка TikTok', 'error');
-                    return false;
-                }
-
-                const promoRegex = /^[A-Z0-9_]{3,12}$/;
-                if (!promoRegex.test(promoCode)) {
-                    addNotification('❌ Ошибка', 'Промокод: 3-12 латинских букв или цифр', 'error');
-                    return false;
-                }
-
-                const tgRegex = /^@[a-zA-Z0-9_]{3,32}$/;
-                if (!tgRegex.test(telegramContact)) {
-                    addNotification('❌ Ошибка', 'Укажите корректный Telegram (@username)', 'error');
-                    return false;
-                }
-
-                // Проверка на дубликат
-                for (const [key, u] of Object.entries(users)) {
-                    if (u.mediaApplications) {
-                        for (const app of u.mediaApplications) {
-                            if (app.status === 'approved' && app.promoCode === promoCode) {
-                                addNotification('❌ Ошибка', 'Этот промокод уже используется', 'error');
-                                return false;
-                            }
-                        }
-                    }
-                }
-
-                const application = {
-                    id: 'M' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase(),
+            async function submitMediaApplication(tiktokUrl, promoCode, telegramContact) {
+                const result = await apiRequest('/api/media', {
                     tiktokUrl: tiktokUrl,
                     promoCode: promoCode,
-                    telegramContact: telegramContact,
-                    status: 'pending',
-                    createdAt: new Date().toISOString(),
-                    userName: user.name,
-                    userEmail: user.email
-                };
-
-                if (!user.mediaApplications) user.mediaApplications = [];
-                user.mediaApplications.push(application);
-                users[user.email] = user;
-                saveUsers(users);
-                currentUser = user;
-                addNotification('✅ Успешно', 'Заявка подана! Ожидайте подтверждения.', 'success');
-                renderCabinet();
-                return true;
-            }
-
-            // === ВЫВОД СРЕДСТВ ===
-            function withdrawFunds(amount, requisites, telegram) {
-                const users = loadUsers();
-                const user = users[currentUser.email];
-                if (amount < 100) {
-                    addNotification('❌ Ошибка', 'Минимальная сумма вывода 100 ₽', 'error');
-                    return false;
-                }
-                if (amount > user.balance) {
-                    addNotification('❌ Ошибка', 'Недостаточно средств', 'error');
-                    return false;
-                }
-                user.balance -= amount;
-                if (!user.withdrawals) user.withdrawals = [];
-                user.withdrawals.push({
-                    id: 'W-' + Date.now().toString(36).toUpperCase(),
-                    amount: amount,
-                    requisites: requisites,
-                    telegram: telegram,
-                    date: new Date().toLocaleDateString(),
-                    status: 'pending'
+                    telegramContact: telegramContact
                 });
-                users[user.email] = user;
-                saveUsers(users);
-                currentUser = user;
-                addNotification('✅ Успешно', 'Заявка на вывод отправлена', 'success');
-                renderCabinet();
-                return true;
+                if (result.success) {
+                    addNotification('✅ Успешно', 'Заявка подана! Ожидайте подтверждения.', 'success');
+                    renderCabinet();
+                    return true;
+                }
+                addNotification('❌ Ошибка', result.error || 'Ошибка подачи заявки', 'error');
+                return false;
             }
 
-            // === ВЫВОД РЕФЕРАЛЬНЫХ СРЕДСТВ ===
-            function claimReward(promoCode) {
-                const users = loadUsers();
-                const user = users[currentUser.email];
-                const promocodes = loadPromocodes();
-                const stat = promocodes[promoCode];
-                if (!stat || !stat.reward || stat.reward <= 0) {
-                    addNotification('❌ Ошибка', 'Нет средств для вывода', 'error');
-                    return false;
+            async function getMediaStats(promoCode) {
+                const result = await apiRequest('/api/media/stats?promo=' + encodeURIComponent(promoCode), {}, 'GET');
+                if (result.success) {
+                    return result.stats;
                 }
-                const amount = stat.reward;
-                user.balance += amount;
-                stat.reward = 0;
-                promocodes[promoCode] = stat;
-                users[user.email] = user;
-                saveUsers(users);
-                savePromocodes(promocodes);
-                currentUser = user;
-                addNotification('✅ Успешно', `Зачислено ${amount} ₽ на баланс!`, 'success');
-                renderCabinet();
-                return true;
+                return { uses: 0, volume: 0, reward: 0 };
             }
 
-            // === ПОЛУЧЕНИЕ СТАТИСТИКИ МЕДИА ===
-            function getMediaStats(promoCode) {
-                const promocodes = loadPromocodes();
-                return promocodes[promoCode] || { uses: 0, volume: 0, reward: 0 };
-            }
-
-            // === ОДОБРЕНИЕ/ОТКЛОНЕНИЕ МЕДИА ЗАЯВКИ (ДЛЯ АДМИНА) ===
-            // Просто для демонстрации - в реальности это делается через Telegram бота
-            window.approveMedia = function(applicationId) {
-                const users = loadUsers();
-                let found = false;
-                for (const [email, user] of Object.entries(users)) {
-                    if (user.mediaApplications) {
-                        for (const app of user.mediaApplications) {
-                            if (app.id === applicationId && app.status === 'pending') {
-                                app.status = 'approved';
-                                const promocodes = loadPromocodes();
-                                promocodes[app.promoCode] = {
-                                    owner: email,
-                                    uses: 0,
-                                    volume: 0,
-                                    reward: 0,
-                                    createdAt: new Date().toISOString()
-                                };
-                                savePromocodes(promocodes);
-                                users[email] = user;
-                                saveUsers(users);
-                                found = true;
-                                addNotification('✅ Заявка одобрена', `Промокод ${app.promoCode} активирован`, 'success');
-                                renderCabinet();
-                                break;
-                            }
-                        }
-                    }
-                    if (found) break;
+            async function claimReward(promoCode) {
+                const result = await apiRequest('/api/media/claim', { promoCode: promoCode });
+                if (result.success) {
+                    currentUser.balance = result.balance;
+                    addNotification('✅ Успешно', `Зачислено ${result.amount} ₽ на баланс!`, 'success');
+                    renderCabinet();
+                    return true;
                 }
-                if (!found) {
-                    addNotification('❌ Ошибка', 'Заявка не найдена', 'error');
-                }
-            };
-
-            window.rejectMedia = function(applicationId) {
-                const users = loadUsers();
-                let found = false;
-                for (const [email, user] of Object.entries(users)) {
-                    if (user.mediaApplications) {
-                        for (const app of user.mediaApplications) {
-                            if (app.id === applicationId && app.status === 'pending') {
-                                app.status = 'rejected';
-                                users[email] = user;
-                                saveUsers(users);
-                                found = true;
-                                addNotification('❌ Заявка отклонена', '', 'error');
-                                renderCabinet();
-                                break;
-                            }
-                        }
-                    }
-                    if (found) break;
-                }
-                if (!found) {
-                    addNotification('❌ Ошибка', 'Заявка не найдена', 'error');
-                }
-            };
-
-            // === ПОЛУЧЕНИЕ СЕССИИ ===
-            function getSession() {
-                const email = localStorage.getItem('lethal_session');
-                if (email) {
-                    const users = loadUsers();
-                    if (users[email]) {
-                        currentUser = users[email];
-                        return true;
-                    }
-                }
-                currentUser = null;
+                addNotification('❌ Ошибка', result.error || 'Ошибка', 'error');
                 return false;
             }
 
@@ -1942,9 +1716,15 @@
                 const confirmBtn = document.createElement('button');
                 confirmBtn.className = 'btn-modal-action';
                 confirmBtn.textContent = 'Купить';
-                confirmBtn.addEventListener('click', function() {
-                    if (purchasePlan(planId)) {
+                confirmBtn.addEventListener('click', async function() {
+                    this.textContent = '⏳ Обработка...';
+                    this.disabled = true;
+                    const result = await purchasePlan(planId);
+                    if (result) {
                         wrap.remove();
+                    } else {
+                        this.textContent = 'Купить';
+                        this.disabled = false;
                     }
                 });
                 btnGroup.appendChild(confirmBtn);
@@ -1977,102 +1757,17 @@
                 sub.textContent = `Баланс: ${currentUser.balance || 0} ₽`;
                 card.appendChild(sub);
 
-                const btnGroup = document.createElement('div');
-                btnGroup.style.cssText = 'display:flex;gap:0.8rem;margin-bottom:1rem;';
-
-                const depBtn = document.createElement('button');
-                depBtn.className = 'btn-modal-action';
-                depBtn.textContent = '💳 Пополнить (Тест)';
-                depBtn.addEventListener('click', () => {
-                    const amt = prompt('Введите сумму пополнения (тестовый режим):', '100');
-                    if (amt && parseInt(amt) > 0) {
-                        addBalance(parseInt(amt));
-                        wrap.remove();
-                    }
+                const btn = document.createElement('button');
+                btn.className = 'btn-modal-action';
+                btn.textContent = '💳 Пополнить через DonationAlerts';
+                btn.addEventListener('click', () => {
+                    const url = new URL('https://www.donationalerts.com/r/lethaldlc');
+                    url.searchParams.set('message', `USER_${currentUser.email} TOPUP`);
+                    window.open(url.toString(), '_blank', 'noopener,noreferrer');
+                    wrap.remove();
+                    addNotification('🔄 Перенаправление', 'Оплата через DonationAlerts');
                 });
-                btnGroup.appendChild(depBtn);
-
-                const withBtn = document.createElement('button');
-                withBtn.className = 'btn-modal-action';
-                withBtn.style.cssText = 'background:#000;color:#fff;';
-                withBtn.textContent = '💸 Вывести';
-                withBtn.addEventListener('click', () => {
-                    wrap.innerHTML = '';
-                    const newCard = document.createElement('div');
-                    newCard.className = 'modal-card';
-                    wrap.appendChild(newCard);
-
-                    const wdTitle = document.createElement('h2');
-                    wdTitle.textContent = 'Заявка на вывод';
-                    newCard.appendChild(wdTitle);
-
-                    const wdSub = document.createElement('div');
-                    wdSub.className = 'sub';
-                    wdSub.textContent = `Доступно: ${currentUser.balance || 0} ₽`;
-                    newCard.appendChild(wdSub);
-
-                    const fg1 = document.createElement('div');
-                    fg1.className = 'field-group';
-                    const l1 = document.createElement('label');
-                    l1.textContent = 'Сумма';
-                    fg1.appendChild(l1);
-                    const inp1 = document.createElement('input');
-                    inp1.type = 'number';
-                    inp1.id = 'withAmount';
-                    inp1.min = '100';
-                    inp1.placeholder = 'От 100 ₽';
-                    fg1.appendChild(inp1);
-                    newCard.appendChild(fg1);
-
-                    const fg2 = document.createElement('div');
-                    fg2.className = 'field-group';
-                    const l2 = document.createElement('label');
-                    l2.textContent = 'Реквизиты';
-                    fg2.appendChild(l2);
-                    const inp2 = document.createElement('input');
-                    inp2.type = 'text';
-                    inp2.id = 'withRequisites';
-                    inp2.placeholder = 'Номер карты или телефон';
-                    fg2.appendChild(inp2);
-                    newCard.appendChild(fg2);
-
-                    const fg3 = document.createElement('div');
-                    fg3.className = 'field-group';
-                    const l3 = document.createElement('label');
-                    l3.textContent = 'Telegram';
-                    fg3.appendChild(l3);
-                    const inp3 = document.createElement('input');
-                    inp3.type = 'text';
-                    inp3.id = 'withTelegram';
-                    inp3.placeholder = '@username';
-                    fg3.appendChild(inp3);
-                    newCard.appendChild(fg3);
-
-                    const sb = document.createElement('button');
-                    sb.className = 'btn-modal-action';
-                    sb.textContent = 'Отправить';
-                    sb.addEventListener('click', () => {
-                        const amt = parseInt(document.getElementById('withAmount').value);
-                        const req = document.getElementById('withRequisites').value.trim();
-                        const tg = document.getElementById('withTelegram').value.trim();
-                        if (withdrawFunds(amt, req, tg)) {
-                            wrap.remove();
-                        }
-                    });
-                    newCard.appendChild(sb);
-
-                    const bb = document.createElement('button');
-                    bb.className = 'btn-modal-cancel';
-                    bb.textContent = 'Назад';
-                    bb.addEventListener('click', () => {
-                        wrap.remove();
-                        openWalletModal();
-                    });
-                    newCard.appendChild(bb);
-                });
-                btnGroup.appendChild(withBtn);
-
-                card.appendChild(btnGroup);
+                card.appendChild(btn);
 
                 const closeBtn = document.createElement('button');
                 closeBtn.className = 'btn-modal-cancel';
@@ -2116,7 +1811,7 @@
                 const fg2 = document.createElement('div');
                 fg2.className = 'field-group';
                 const l2 = document.createElement('label');
-                l2.textContent = 'Промокод';
+                l2.textContent = 'Желаемый промокод (3-12 символов)';
                 fg2.appendChild(l2);
                 const inp2 = document.createElement('input');
                 inp2.type = 'text';
@@ -2129,7 +1824,7 @@
                 const fg3 = document.createElement('div');
                 fg3.className = 'field-group';
                 const l3 = document.createElement('label');
-                l3.textContent = 'Telegram';
+                l3.textContent = 'Ваш Telegram для связи';
                 fg3.appendChild(l3);
                 const inp3 = document.createElement('input');
                 inp3.type = 'text';
@@ -2140,29 +1835,63 @@
 
                 const submitBtn = document.createElement('button');
                 submitBtn.className = 'btn-modal-action';
+                submitBtn.id = 'submitMediaBtn';
                 submitBtn.textContent = '📤 Подать заявку';
-                submitBtn.addEventListener('click', () => {
-                    const tiktok = document.getElementById('mediaTiktok').value.trim();
-                    const promo = document.getElementById('mediaPromo').value.trim().toUpperCase();
-                    const tg = document.getElementById('mediaTelegram').value.trim();
-                    if (submitMediaApplication(tiktok, promo, tg)) {
-                        wrap.remove();
-                    }
-                });
                 card.appendChild(submitBtn);
 
                 const cancelBtn = document.createElement('button');
                 cancelBtn.className = 'btn-modal-cancel';
+                cancelBtn.id = 'cancelMediaBtn';
                 cancelBtn.textContent = 'Отмена';
-                cancelBtn.addEventListener('click', () => wrap.remove());
                 card.appendChild(cancelBtn);
 
                 document.body.appendChild(wrap);
+
+                cancelBtn.addEventListener('click', () => wrap.remove());
+
+                submitBtn.addEventListener('click', async function() {
+                    const tiktok = document.getElementById('mediaTiktok').value.trim();
+                    const promo = document.getElementById('mediaPromo').value.trim().toUpperCase();
+                    const tg = document.getElementById('mediaTelegram').value.trim();
+
+                    if (!tiktok || !promo || !tg) {
+                        addNotification('❌ Ошибка', 'Заполните все поля', 'error');
+                        return;
+                    }
+
+                    const tiktokRegex =
+                        /^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/@[a-zA-Z0-9._]+(\/)?$/i;
+                    if (!tiktokRegex.test(tiktok)) {
+                        addNotification('❌ Ошибка', 'Некорректная ссылка TikTok', 'error');
+                        return;
+                    }
+
+                    const promoRegex = /^[A-Z0-9_]{3,12}$/;
+                    if (!promoRegex.test(promo)) {
+                        addNotification('❌ Ошибка', 'Промокод: 3-12 латинских букв или цифр', 'error');
+                        return;
+                    }
+
+                    const tgRegex = /^@[a-zA-Z0-9_]{3,32}$/;
+                    if (!tgRegex.test(tg)) {
+                        addNotification('❌ Ошибка', 'Укажите корректный Telegram (@username)', 'error');
+                        return;
+                    }
+
+                    this.textContent = '⏳ Отправка...';
+                    this.disabled = true;
+
+                    if (await submitMediaApplication(tiktok, promo, tg)) {
+                        wrap.remove();
+                    } else {
+                        this.textContent = '📤 Подать заявку';
+                        this.disabled = false;
+                    }
+                });
             }
 
             // === МОДАЛКА СТАТИСТИКА МЕДИА ===
             function openMediaStatsModal(promoCode) {
-                const stat = getMediaStats(promoCode);
                 const wrap = document.createElement('div');
                 wrap.className = 'modal-wrap';
 
@@ -2182,44 +1911,28 @@
                 const box = document.createElement('div');
                 box.className = 'split-calculation-box';
 
-                const rows = [
-                    { label: 'Покупок по коду', value: stat.uses || 0 },
-                    { label: 'Сгенерированный оборот', value: `${stat.volume || 0} ₽` },
-                    { label: 'Доход партнёра (15%)', value: `${stat.reward || 0} ₽` }
-                ];
+                getMediaStats(promoCode).then(stat => {
+                    const rows = [
+                        { label: 'Покупок по коду', value: stat.uses || 0 },
+                        { label: 'Сгенерированный оборот', value: `${stat.volume || 0} ₽` },
+                        { label: 'Доход партнёра (15%)', value: `${stat.reward || 0} ₽` }
+                    ];
 
-                rows.forEach((row, index) => {
-                    const r = document.createElement('div');
-                    r.className = `split-row ${index === rows.length - 1 ? 'total' : ''}`;
-                    r.appendChild(document.createTextNode(row.label));
-                    const span = document.createElement('span');
-                    span.textContent = row.value;
-                    if (index === rows.length - 1) {
-                        span.style.color = '#ffffff';
-                    }
-                    r.appendChild(span);
-                    box.appendChild(r);
+                    rows.forEach((row, index) => {
+                        const r = document.createElement('div');
+                        r.className = `split-row ${index === rows.length - 1 ? 'total' : ''}`;
+                        r.appendChild(document.createTextNode(row.label));
+                        const span = document.createElement('span');
+                        span.textContent = row.value;
+                        if (index === rows.length - 1) {
+                            span.style.color = '#ffffff';
+                        }
+                        r.appendChild(span);
+                        box.appendChild(r);
+                    });
                 });
 
                 card.appendChild(box);
-
-                if (stat.reward && stat.reward > 0) {
-                    const claimBtn = document.createElement('button');
-                    claimBtn.className = 'btn-modal-action';
-                    claimBtn.textContent = `💰 Забрать ${stat.reward} ₽`;
-                    claimBtn.addEventListener('click', () => {
-                        if (claimReward(promoCode)) {
-                            wrap.remove();
-                        }
-                    });
-                    card.appendChild(claimBtn);
-                } else {
-                    const msg = document.createElement('p');
-                    msg.style.cssText =
-                    'text-align:center;font-size:0.75rem;color:#666;margin-bottom:1rem;';
-                    msg.textContent = 'Пока нет накопленных реферальных средств';
-                    card.appendChild(msg);
-                }
 
                 const closeBtn = document.createElement('button');
                 closeBtn.className = 'btn-modal-cancel';
@@ -2359,7 +2072,7 @@
                         }
                     });
 
-                    document.getElementById('submitAuthBtn').addEventListener('click', function() {
+                    document.getElementById('submitAuthBtn').addEventListener('click', async function() {
                         const errEl = document.getElementById('authError');
                         errEl.classList.remove('show');
 
@@ -2380,14 +2093,14 @@
 
                         let success;
                         if (isLogin) {
-                            success = login(email, pass);
+                            success = await login(email, pass);
                         } else {
                             if (!name) {
                                 errEl.textContent = 'Укажите ваше имя';
                                 errEl.classList.add('show');
                                 return;
                             }
-                            success = register(email, pass, name);
+                            success = await register(email, pass, name);
                         }
 
                         if (success) {
@@ -2401,7 +2114,7 @@
             }
 
             // === РЕНДЕР КАБИНЕТА ===
-            function renderCabinet() {
+            async function renderCabinet() {
                 const container = document.getElementById('cabinetWrapper');
                 if (!currentUser) {
                     container.innerHTML = '';
@@ -2421,9 +2134,22 @@
                     return;
                 }
 
+                // Получаем актуальный баланс
+                await getBalance();
+
                 const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
                 const isSubActive = currentUser.subscription?.active;
-                const approvedMedia = currentUser.mediaApplications?.find(a => a.status === 'approved');
+                
+                // Получаем медиа заявки
+                let applications = [];
+                try {
+                    const result = await apiRequest('/api/media', {}, 'GET');
+                    if (result.success) {
+                        applications = result.applications || [];
+                    }
+                } catch (e) {}
+
+                const approvedMedia = applications.find(a => a.status === 'approved');
 
                 container.innerHTML = '';
 
@@ -2726,8 +2452,8 @@
                         tabContent.appendChild(empty);
                     }
                 } else {
-                    if (currentUser.mediaApplications && currentUser.mediaApplications.length > 0) {
-                        currentUser.mediaApplications.forEach(m => {
+                    if (applications.length > 0) {
+                        applications.forEach(m => {
                             const row = document.createElement('div');
                             row.className = 'history-row';
                             const left = document.createElement('div');
@@ -2832,10 +2558,17 @@
             }
             loopParticles();
 
-            // === ОБРАБОТЧИКИ КНОПОК ===
+            // === ОБРАБОТЧИКИ ===
             document.getElementById('loginBtn')?.addEventListener('click', () => showAuthModal('login'));
             document.getElementById('registerBtn')?.addEventListener('click', () => showAuthModal('register'));
-            document.getElementById('logoutBtn')?.addEventListener('click', logout);
+            document.getElementById('logoutBtn')?.addEventListener('click', () => {
+                localStorage.removeItem('auth_token');
+                authToken = null;
+                currentUser = null;
+                updateUI();
+                navigateTo('main');
+                addNotification('👋 До свидания', 'Вы вышли из аккаунта');
+            });
 
             document.getElementById('hwidResetBtn')?.addEventListener('click', () => {
                 if (!currentUser) {
@@ -2853,14 +2586,20 @@
             });
 
             // === СТАРТ ===
-            getSession();
-            updateUI();
-            renderPricing();
-            navigateTo('main');
-
-            // Выводим в консоль для отладки (только если разработчик)
-            console.log('✅ Пользователи в БД:', loadUsers());
-            console.log('✅ Текущий пользователь:', currentUser);
+            (async function init() {
+                if (authToken) {
+                    const result = await getBalance();
+                    if (result && result.success) {
+                        // Пользователь авторизован
+                    } else {
+                        authToken = null;
+                        localStorage.removeItem('auth_token');
+                    }
+                }
+                updateUI();
+                renderPricing();
+                navigateTo('main');
+            })();
 
         })();
     </script>

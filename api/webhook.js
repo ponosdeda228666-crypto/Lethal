@@ -1,13 +1,9 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const DA_SECRET = process.env.DA_SECRET || 'fallback-da-secret';
-const USERS_FILE = path.join(__dirname, '..', 'users.json');
+const USERS_FILE = path.join(process.cwd(), 'users.json');
 const verifiedTransactions = new Map();
 
 function loadUsers() {
@@ -16,8 +12,7 @@ function loadUsers() {
       fs.writeFileSync(USERS_FILE, JSON.stringify({}, null, 2));
       return {};
     }
-    const data = fs.readFileSync(USERS_FILE, 'utf8');
-    return JSON.parse(data);
+    return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
   } catch (e) {
     return {};
   }
@@ -26,9 +21,7 @@ function loadUsers() {
 function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-  } catch (e) {
-    console.error('Ошибка сохранения:', e);
-  }
+  } catch (e) {}
 }
 
 function verifyDASignature(body, signature) {
@@ -67,12 +60,10 @@ export default async function handler(req, res) {
     const email = data.email || data.receiver || data.user_email;
     const amount = parseFloat(data.amount || data.amount_total || 0);
     const currency = data.currency || 'RUB';
-    const username = data.username || data.name || 'User';
     const transactionId = data.id || data.transaction_id || Date.now().toString();
 
-    console.log(`📥 Получен донат: ${username} (${email}) - ${amount} ${currency}`);
+    console.log(`📥 Получен донат: ${email} - ${amount} ${currency}`);
 
-    // Защита от повторной отправки
     if (verifiedTransactions.has(transactionId)) {
       console.log('⚠️ Повторная транзакция:', transactionId);
       return res.status(200).json({ status: 'already_processed' });
@@ -99,14 +90,12 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Фиксируем транзакцию
     verifiedTransactions.set(transactionId, {
       timestamp: Date.now(),
       email: foundEmail,
       amount: amount
     });
 
-    // Начисляем баланс
     foundUser.balance = (foundUser.balance || 0) + amount;
     
     if (!foundUser.deposits) foundUser.deposits = [];
@@ -119,6 +108,26 @@ export default async function handler(req, res) {
     });
 
     saveUsers(users);
+
+    // Уведомление в Telegram
+    if (process.env.BOT_TOKEN && process.env.CHAT_ID) {
+      try {
+        const tgText = `💰 <b>ПОПОЛНЕНИЕ БАЛАНСА!</b>\n\n` +
+                       `👤 <b>Пользователь:</b> ${foundEmail}\n` +
+                       `💵 <b>Сумма:</b> ${amount} ${currency}\n` +
+                       `💳 <b>Новый баланс:</b> ${foundUser.balance} ₽`;
+        
+        await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: process.env.CHAT_ID,
+            text: tgText,
+            parse_mode: 'HTML'
+          })
+        });
+      } catch (e) {}
+    }
 
     console.log(`✅ Баланс пополнен: ${foundEmail} +${amount} ${currency}`);
 
