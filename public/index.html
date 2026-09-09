@@ -1497,7 +1497,7 @@
 
     <script>
         // ============================================================
-        // ПОЛНАЯ КЛИЕНТСКАЯ ЛОГИКА - КАБИНЕТ ВЕРНУЛ!
+        // ПОЛНАЯ КЛИЕНТСКАЯ ЛОГИКА - ИСПРАВЛЕННАЯ ВЕРСИЯ
         // ============================================================
         (function() {
             'use strict';
@@ -1521,12 +1521,13 @@
             console.warn = function() {};
             console.error = function() {};
 
-            // === API ===
+            // === API - ИСПРАВЛЕННЫЙ ===
             let authToken = localStorage.getItem('auth_token');
             let currentUser = null;
             let currentTab = 'withdrawals';
 
-            const API_URL = '';
+            // Используем текущий домен для API запросов
+            const API_URL = window.location.origin;
 
             async function apiRequest(endpoint, data, method = 'POST') {
                 try {
@@ -1539,6 +1540,7 @@
                     });
                     return await response.json();
                 } catch (e) {
+                    console.error('API Error:', e);
                     return { error: 'Ошибка сети' };
                 }
             }
@@ -1550,6 +1552,7 @@
                     const response = await fetch(API_URL + endpoint, { headers });
                     return await response.json();
                 } catch (e) {
+                    console.error('API Error:', e);
                     return { error: 'Ошибка сети' };
                 }
             }
@@ -1617,7 +1620,7 @@
             async function getBalance() {
                 const result = await apiGet('/api/balance');
                 if (result.success) {
-                    currentUser.balance = result.balance;
+                    if (currentUser) currentUser.balance = result.balance;
                     renderCabinet();
                     return result;
                 }
@@ -1648,7 +1651,7 @@
             async function claimReward(promoCode) {
                 const result = await apiRequest('/api/media/claim', { promoCode: promoCode });
                 if (result.success) {
-                    currentUser.balance = result.balance;
+                    if (currentUser) currentUser.balance = result.balance;
                     addNotification('✅ Успешно', `Зачислено ${result.amount} ₽ на баланс!`, 'success');
                     renderCabinet();
                     return true;
@@ -2170,7 +2173,7 @@
                 render();
             }
 
-            // === РЕНДЕР КАБИНЕТА - ВЕРНУЛ ПОЛНОСТЬЮ! ===
+            // === РЕНДЕР КАБИНЕТА ===
             async function renderCabinet() {
                 const container = document.getElementById('cabinetWrapper');
                 if (!currentUser) {
@@ -2640,7 +2643,7 @@
                 });
             });
 
-            // === ФИКС СЕССИИ ===
+            // === ВОССТАНОВЛЕНИЕ СЕССИИ ===
             async function fixSession() {
                 const token = localStorage.getItem('auth_token');
                 if (!token) return false;
@@ -2668,6 +2671,7 @@
                 }
             }
 
+            // Перехват ошибок авторизации
             const originalFetch = window.fetch;
             window.fetch = function(...args) {
                 return originalFetch.apply(this, args).then(async response => {
@@ -2679,17 +2683,12 @@
                                 data.error.includes('Пользователь не найден') ||
                                 data.error.includes('Недействительный токен')
                             )) {
-                            console.log('🔴 Ошибка авторизации, восстанавливаем сессию...');
                             setTimeout(() => fixSession(), 500);
                         }
                     } catch (e) {}
                     return response;
                 });
             };
-
-            setTimeout(async function() {
-                await fixSession();
-            }, 1000);
 
             // === СТАРТ ===
             (async function init() {
