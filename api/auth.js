@@ -7,7 +7,6 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // GET - проверка сессии
   if (req.method === 'GET') {
     const token = req.headers['x-auth-token'];
     if (!token) {
@@ -33,7 +32,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ⚠️ РУЧНОЙ ПАРСИНГ ТЕЛА
+    // ⚠️ РУЧНОЙ ПАРСИНГ ТЕЛА ДЛЯ VERCEL
     let body = '';
     for await (const chunk of req) {
       body += chunk;
@@ -57,7 +56,6 @@ export default async function handler(req, res) {
     const normalizedEmail = email.toLowerCase().trim();
     const users = loadUsers();
 
-    // РЕГИСТРАЦИЯ
     if (action === 'register') {
       if (users[normalizedEmail]) {
         return res.status(400).json({ error: 'Пользователь уже существует' });
@@ -87,7 +85,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // ЛОГИН
     if (action === 'login') {
       const user = users[normalizedEmail];
       if (!user) {
