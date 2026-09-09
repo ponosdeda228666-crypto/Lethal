@@ -11,7 +11,7 @@ function loadUsers() {
       return {};
     }
     return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
-  } catch (e) {
+  } catch {
     return {};
   }
 }
@@ -19,7 +19,7 @@ function loadUsers() {
 function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-  } catch (e) {}
+  } catch {}
 }
 
 function verifyToken(token) {
@@ -107,28 +107,6 @@ export default async function handler(req, res) {
 
     users[email] = user;
     saveUsers(users);
-
-    // Уведомление в Telegram
-    if (process.env.BOT_TOKEN && process.env.CHAT_ID) {
-      try {
-        const tgText = `🛒 <b>НОВАЯ ПОКУПКА!</b>\n\n` +
-                       `👤 <b>Пользователь:</b> ${email}\n` +
-                       `📦 <b>Тариф:</b> ${planId}\n` +
-                       `💰 <b>Сумма:</b> ${price} ₽\n` +
-                       `🔑 <b>Ключ:</b> ${key}\n` +
-                       `💳 <b>Остаток:</b> ${user.balance} ₽`;
-        
-        await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: process.env.CHAT_ID,
-            text: tgText,
-            parse_mode: 'HTML'
-          })
-        });
-      } catch (e) {}
-    }
 
     return res.status(200).json({
       success: true,

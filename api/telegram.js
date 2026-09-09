@@ -159,14 +159,6 @@ export default async function handler(req, res) {
       const chatId = cb.message?.chat?.id;
 
       if (String(chatId) !== String(CHAT_ID)) {
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            callback_query_id: cb.id,
-            text: "❌ Доступ запрещен"
-          })
-        });
         return res.status(200).json({ status: "error" });
       }
 
@@ -177,29 +169,10 @@ export default async function handler(req, res) {
         const appId = data.replace("media_approve_", "");
         response = await processMediaApplication(appId, true);
         statusText = response.success ? '✅ ОДОБРЕНО' : '❌ Ошибка';
-        
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            callback_query_id: cb.id,
-            text: response.success ? "✅ Заявка одобрена!" : "❌ Ошибка"
-          })
-        });
-
       } else if (data.startsWith("media_reject_")) {
         const appId = data.replace("media_reject_", "");
         response = await processMediaApplication(appId, false);
         statusText = response.success ? '❌ ОТКЛОНЕНО' : '❌ Ошибка';
-        
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            callback_query_id: cb.id,
-            text: response.success ? "❌ Заявка отклонена" : "❌ Ошибка"
-          })
-        });
       }
 
       if (messageId && response.success) {
@@ -222,7 +195,6 @@ export default async function handler(req, res) {
       return res.status(200).json({ status: "ok" });
 
     } catch (error) {
-      console.error('❌ Ошибка обработки callback:', error);
       return res.status(200).json({ status: "error" });
     }
   }
@@ -243,13 +215,6 @@ export default async function handler(req, res) {
       return res.status(200).json({ status: 'already_processed' });
     }
     processedRequests.set(key, Date.now());
-    
-    const now = Date.now();
-    for (const [k, time] of processedRequests.entries()) {
-      if (now - time > 600000) {
-        processedRequests.delete(k);
-      }
-    }
 
     try {
       const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {

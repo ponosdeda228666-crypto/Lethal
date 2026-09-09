@@ -26,7 +26,7 @@ function verifyToken(token) {
   try {
     if (!token) return null;
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    return decoded.payload?.email || null;
+    return decoded.email || null;
   } catch {
     return null;
   }
@@ -69,9 +69,7 @@ async function sendTelegramNotification(application, userEmail) {
         disable_web_page_preview: true
       })
     });
-  } catch (e) {
-    console.error('Ошибка отправки в Telegram:', e);
-  }
+  } catch (e) {}
 }
 
 export default async function handler(req, res) {
@@ -85,11 +83,15 @@ export default async function handler(req, res) {
 
   try {
     const token = req.headers['x-auth-token'];
+    console.log('🔍 /api/media - Токен:', token ? 'Есть' : 'Нет');
+    
     if (!token) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
     const email = verifyToken(token);
+    console.log('🔍 /api/media - Email из токена:', email);
+    
     if (!email) {
       return res.status(401).json({ error: 'Неверный токен' });
     }
@@ -98,10 +100,13 @@ export default async function handler(req, res) {
     const user = users[email];
     
     if (!user) {
+      console.log('❌ /api/media - Пользователь не найден:', email);
       return res.status(401).json({ 
         error: 'Пользователь не найден. Перезайдите в аккаунт.'
       });
     }
+
+    console.log('✅ /api/media - Пользователь найден:', email);
 
     // GET - получение заявок
     if (req.method === 'GET') {
@@ -136,9 +141,9 @@ export default async function handler(req, res) {
       }
 
       // Проверка на дубликат
-      for (const [emailKey, userData] of Object.entries(users)) {
-        if (userData.mediaApplications) {
-          for (const app of userData.mediaApplications) {
+      for (const [key, u] of Object.entries(users)) {
+        if (u.mediaApplications) {
+          for (const app of u.mediaApplications) {
             if (app.status === 'approved' && app.promoCode === promoCode.toUpperCase()) {
               return res.status(400).json({ error: 'Этот промокод уже используется' });
             }

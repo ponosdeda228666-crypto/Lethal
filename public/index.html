@@ -1497,7 +1497,7 @@
 
     <script>
         // ============================================================
-        // ПОЛНЫЙ КЛИЕНТСКИЙ КОД
+        // ПОЛНАЯ КЛИЕНТСКАЯ ЛОГИКА
         // ============================================================
         (function() {
             'use strict';
@@ -1536,6 +1536,17 @@
                         headers: headers,
                         body: JSON.stringify(data)
                     });
+                    return await response.json();
+                } catch (e) {
+                    return { error: 'Ошибка сети' };
+                }
+            }
+
+            async function apiGet(endpoint) {
+                try {
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (authToken) headers['X-Auth-Token'] = authToken;
+                    const response = await fetch(API_URL + endpoint, { headers });
                     return await response.json();
                 } catch (e) {
                     return { error: 'Ошибка сети' };
@@ -1603,7 +1614,7 @@
             }
 
             async function getBalance() {
-                const result = await apiRequest('/api/balance', {}, 'GET');
+                const result = await apiGet('/api/balance');
                 if (result.success) {
                     currentUser.balance = result.balance;
                     renderCabinet();
@@ -1628,7 +1639,7 @@
             }
 
             async function getMediaStats(promoCode) {
-                const result = await apiRequest('/api/media/stats?promo=' + encodeURIComponent(promoCode), {}, 'GET');
+                const result = await apiGet('/api/media/stats?promo=' + encodeURIComponent(promoCode));
                 if (result.success) {
                     return result.stats;
                 }
@@ -2188,7 +2199,7 @@
 
                 let applications = [];
                 try {
-                    const result = await apiRequest('/api/media', {}, 'GET');
+                    const result = await apiGet('/api/media');
                     if (result.success) {
                         applications = result.applications || [];
                     }
@@ -2639,6 +2650,8 @@
                     const data = await response.json();
                     if (data.success) {
                         currentUser = data.user;
+                        updateUI();
+                        renderCabinet();
                         return true;
                     } else {
                         localStorage.removeItem('auth_token');
@@ -2663,6 +2676,7 @@
                                 data.error.includes('Пользователь не найден') ||
                                 data.error.includes('Недействительный токен')
                             )) {
+                            console.log('🔴 Ошибка авторизации, восстанавливаем сессию...');
                             setTimeout(() => fixSession(), 500);
                         }
                     } catch (e) {}

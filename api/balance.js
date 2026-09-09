@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
@@ -11,7 +10,7 @@ function loadUsers() {
       return {};
     }
     return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
-  } catch (e) {
+  } catch {
     return {};
   }
 }
@@ -20,7 +19,7 @@ function verifyToken(token) {
   try {
     if (!token) return null;
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    return decoded.payload?.email || null;
+    return decoded.email || null;
   } catch {
     return null;
   }
@@ -54,8 +53,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      balance: user.balance || 0,
-      currency: 'RUB'
+      balance: user.balance || 0
     });
 
   } catch (error) {
