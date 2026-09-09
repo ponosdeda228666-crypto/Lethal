@@ -1,13 +1,9 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { verifyTokenAndGetUser } from '../auth.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
-const USERS_FILE = path.join(__dirname, '..', '..', 'users.json');
+const USERS_FILE = path.join(process.cwd(), 'users.json');
 
 function loadUsers() {
   try {
@@ -18,7 +14,7 @@ function loadUsers() {
     const data = fs.readFileSync(USERS_FILE, 'utf8');
     return JSON.parse(data);
   } catch (e) {
-    console.error('Ошибка загрузки users.json:', e);
+    console.error('Ошибка загрузки пользователей:', e);
     return {};
   }
 }
@@ -27,67 +23,8 @@ function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
   } catch (e) {
-    console.error('Ошибка сохранения users.json:', e);
+    console.error('Ошибка сохранения пользователей:', e);
   }
-}
-
-// === ПРОВЕРКА ТОКЕНА И ПОИСК ПОЛЬЗОВАТЕЛЯ ===
-function verifyTokenAndGetUser(token, users) {
-  try {
-    // Декодируем токен
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    const expectedSignature = crypto
-      .createHmac('sha256', JWT_SECRET)
-      .update(JSON.stringify(decoded.payload))
-      .digest('hex');
-    
-    if (decoded.signature !== expectedSignature) {
-      console.log('❌ Неверная подпись токена');
-      return null;
-    }
-
-    const userId = decoded.payload.userId;
-    console.log('🔍 Ищем пользователя по ID:', userId);
-
-    // Ищем пользователя по id
-    for (const [email, user] of Object.entries(users)) {
-      if (user.id === userId) {
-        console.log('✅ Найден пользователь по ID:', email);
-        return { email, user };
-      }
-    }
-
-    // Если не нашли по id, пробуем найти по email из payload
-    if (decoded.payload.email) {
-      const email = decoded.payload.email.toLowerCase();
-      if (users[email]) {
-        console.log('✅ Найден пользователь по email из токена:', email);
-        return { email, user: users[email] };
-      }
-    }
-
-    console.log('❌ Пользователь не найден');
-    return null;
-  } catch (e) {
-    console.error('❌ Ошибка проверки токена:', e);
-    return null;
-  }
-}
-
-// === ГЕНЕРАЦИЯ ID ДЛЯ СТАРЫХ ПОЛЬЗОВАТЕЛЕЙ ===
-function ensureUserIds(users) {
-  let changed = false;
-  for (const [email, user] of Object.entries(users)) {
-    if (!user.id) {
-      user.id = 'U' + crypto.randomBytes(6).toString('hex').toUpperCase();
-      console.log(`🆔 Создан ID для ${email}: ${user.id}`);
-      changed = true;
-    }
-  }
-  if (changed) {
-    saveUsers(users);
-  }
-  return users;
 }
 
 async function sendTelegramNotification(application, userEmail) {
@@ -142,9 +79,8 @@ async function sendTelegramNotification(application, userEmail) {
       })
     });
 
-    const result = await response.json();
     if (!response.ok) {
-      console.error('❌ Ошибка Telegram:', result);
+      console.error('❌ Ошибка Telegram:', await response.text());
     } else {
       console.log('✅ Уведомление отправлено в Telegram');
     }
@@ -154,6 +90,7 @@ async function sendTelegramNotification(application, userEmail) {
 }
 
 export default async function handler(req, res) {
+  // Настройка CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token');
@@ -168,14 +105,9 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    // Загружаем пользователей
-    let users = loadUsers();
-    
-    // Проверяем и создаем ID для старых пользователей
-    users = ensureUserIds(users);
-
-    // Находим пользователя по токену
+    const users = loadUsers();
     const result = verifyTokenAndGetUser(token, users);
+    
     if (!result) {
       return res.status(401).json({ error: 'Недействительный токен или пользователь не найден' });
     }
@@ -253,11 +185,9 @@ export default async function handler(req, res) {
       }
       foundUser.mediaApplications.push(application);
       
-      // Сохраняем
       users[foundEmail] = foundUser;
       saveUsers(users);
 
-      // Отправляем уведомление в Telegram
       await sendTelegramNotification(application, foundEmail);
 
       return res.status(200).json({

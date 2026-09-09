@@ -1,13 +1,9 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { verifyTokenAndGetUser } from './auth.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
-const USERS_FILE = path.join(__dirname, '..', 'users.json');
+const USERS_FILE = path.join(process.cwd(), 'users.json');
 
 function loadUsers() {
   try {
@@ -18,6 +14,7 @@ function loadUsers() {
     const data = fs.readFileSync(USERS_FILE, 'utf8');
     return JSON.parse(data);
   } catch (e) {
+    console.error('Ошибка загрузки пользователей:', e);
     return {};
   }
 }
@@ -26,21 +23,7 @@ function saveUsers(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
   } catch (e) {
-    console.error('Ошибка сохранения:', e);
-  }
-}
-
-function verifyToken(token) {
-  try {
-    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    const expectedSignature = crypto
-      .createHmac('sha256', JWT_SECRET)
-      .update(JSON.stringify(decoded.payload))
-      .digest('hex');
-    if (decoded.signature !== expectedSignature) return null;
-    return decoded.payload.userId;
-  } catch {
-    return null;
+    console.error('Ошибка сохранения пользователей:', e);
   }
 }
 
@@ -52,6 +35,7 @@ const PRICES = {
 };
 
 export default async function handler(req, res) {
+  // Настройка CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token');
@@ -66,12 +50,16 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'Требуется авторизация' });
     }
 
-    const userId = verifyToken(token);
-    if (!userId) {
+    const users = loadUsers();
+    const result = verifyTokenAndGetUser(token, users);
+    
+    if (!result) {
       return res.status(401).json({ error: 'Недействительный токен' });
     }
 
+    const { email: foundEmail, user: foundUser } = result;
     const { planId } = req.body;
+
     if (!planId) {
       return res.status(400).json({ error: 'Укажите тариф' });
     }
@@ -79,21 +67,6 @@ export default async function handler(req, res) {
     const price = PRICES[planId];
     if (!price) {
       return res.status(400).json({ error: 'Неверный тариф' });
-    }
-
-    const users = loadUsers();
-    let foundUser = null;
-    let foundEmail = null;
-    for (const [key, user] of Object.entries(users)) {
-      if (user.id === userId) {
-        foundUser = user;
-        foundEmail = key;
-        break;
-      }
-    }
-
-    if (!foundUser) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
     }
 
     if (foundUser.balance < price) {
@@ -104,10 +77,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // Списываем баланс
     foundUser.balance -= price;
     
-    // Генерируем ключ
     const key = 'L101N-' + crypto.randomBytes(6).toString('hex').toUpperCase();
 
     if (!foundUser.keys) foundUser.keys = [];
@@ -128,6 +99,7 @@ export default async function handler(req, res) {
       };
     }
 
+    users[foundEmail] = foundUser;
     saveUsers(users);
 
     // Уведомление в Telegram
@@ -163,6 +135,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('❌ Ошибка purchase:', error);
-    return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    return res.status(500).json({ error: 'Внутренняя ошибка сервера: ' + error.message });
   }
 }

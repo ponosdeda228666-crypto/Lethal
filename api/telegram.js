@@ -1,14 +1,10 @@
 import fs from 'fs';
 import crypto from 'crypto';
 import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const BOT_TOKEN = process.env.BOT_TOKEN || "8861768227:AAFbmUHocOR0zatOere_DcXopW-7JYyZbc4";
 const CHAT_ID = process.env.CHAT_ID || "8488940016";
-const USERS_FILE = path.join(__dirname, '..', 'users.json');
+const USERS_FILE = path.join(process.cwd(), 'users.json');
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me';
 
 const processedRequests = new Map();
@@ -54,21 +50,54 @@ async function syncDecisionCloud(id, status) {
   } catch {}
 }
 
+async function getDecisionCloud(id) {
+  const local = getLocalDecisions();
+  if (local[id]) return local[id];
+  try {
+    const res = await fetch(`https://kvdb.io/8861768227_lethal_dlc/${id}`);
+    if (res.ok) {
+      const val = (await res.text()).trim();
+      if (val) {
+        saveLocalDecision(id, val);
+        return val;
+      }
+    }
+  } catch {}
+  return null;
+}
+
+function verifyTokenAndGetUser(token, users) {
+  try {
+    if (!token) return null;
+    const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
+    const expectedSignature = crypto
+      .createHmac('sha256', JWT_SECRET)
+      .update(JSON.stringify(decoded.payload))
+      .digest('hex');
+    if (decoded.signature !== expectedSignature) return null;
+    const userId = decoded.payload.userId;
+    const email = decoded.payload.email;
+    for (const [userEmail, user] of Object.entries(users)) {
+      if (user.id === userId) return { email: userEmail, user };
+    }
+    if (email && users[email]) return { email, user: users[email] };
+    return null;
+  } catch { return null; }
+}
+
 async function processMediaApplication(applicationId, approve) {
   const users = loadUsers();
   let foundUser = null;
   let foundEmail = null;
   let foundApp = null;
-  let appIndex = -1;
 
   for (const [email, user] of Object.entries(users)) {
     if (user.mediaApplications) {
-      for (let i = 0; i < user.mediaApplications.length; i++) {
-        if (user.mediaApplications[i].id === applicationId) {
+      for (const app of user.mediaApplications) {
+        if (app.id === applicationId) {
           foundUser = user;
           foundEmail = email;
-          foundApp = user.mediaApplications[i];
-          appIndex = i;
+          foundApp = app;
           break;
         }
       }
@@ -85,7 +114,7 @@ async function processMediaApplication(applicationId, approve) {
 
   if (approve) {
     try {
-      const PROMO_FILE = path.join(__dirname, '..', 'promocodes.json');
+      const PROMO_FILE = path.join(process.cwd(), 'promocodes.json');
       let promocodes = {};
       if (fs.existsSync(PROMO_FILE)) {
         promocodes = JSON.parse(fs.readFileSync(PROMO_FILE, 'utf8'));
