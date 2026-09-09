@@ -7,1393 +7,157 @@
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
-        input,
-        textarea {
-            user-select: text;
-        }
-
-        :root {
-            --bg: #0a0a0a;
-            --surface: #111111;
-            --surface-card: #161618;
-            --surface-hover: #1e1e22;
-            --border: rgba(255, 255, 255, 0.06);
-            --border-hover: rgba(255, 255, 255, 0.15);
-            --text-primary: #ffffff;
-            --text-secondary: #888899;
-            --text-muted: #444455;
-            --accent: #ffffff;
-            --glow: 0 0 40px rgba(255, 255, 255, 0.03);
-            --shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            --radius: 14px;
-            --radius-lg: 20px;
-            --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            font-family: 'Rajdhani', 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            letter-spacing: 0.3px;
-        }
-
-        .bg-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-            background: var(--bg);
-        }
-        .bg-gradient {
-            position: absolute;
-            inset: -50%;
-            background:
-                radial-gradient(ellipse at 20% 30%, rgba(255, 255, 255, 0.04) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 70%, rgba(255, 255, 255, 0.025) 0%, transparent 50%),
-                radial-gradient(ellipse at 40% 80%, rgba(255, 255, 255, 0.015) 0%, transparent 40%);
-            animation: gradientShift 40s ease-in-out infinite alternate;
-        }
-        .bg-gradient2 {
-            position: absolute;
-            inset: -50%;
-            background:
-                radial-gradient(ellipse at 60% 40%, rgba(255, 255, 255, 0.025) 0%, transparent 50%),
-                radial-gradient(ellipse at 30% 70%, rgba(255, 255, 255, 0.015) 0%, transparent 45%);
-            animation: gradientShift2 45s ease-in-out infinite alternate;
-        }
-        @keyframes gradientShift {
-            0% {
-                transform: rotate(0deg) scale(1);
-            }
-            50% {
-                transform: rotate(180deg) scale(1.15);
-            }
-            100% {
-                transform: rotate(360deg) scale(1);
-            }
-        }
-        @keyframes gradientShift2 {
-            0% {
-                transform: rotate(0deg) scale(1);
-            }
-            50% {
-                transform: rotate(-180deg) scale(1.2);
-            }
-            100% {
-                transform: rotate(-360deg) scale(1);
-            }
-        }
-        .bg-grid {
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 60px 60px;
-            opacity: 0.5;
-        }
-        .bg-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            animation: orbFloat 30s ease-in-out infinite alternate;
-        }
-        .bg-orb.orb1 {
-            width: 600px;
-            height: 600px;
-            background: rgba(255, 255, 255, 0.015);
-            top: -15%;
-            left: -10%;
-            animation-duration: 35s;
-        }
-        .bg-orb.orb2 {
-            width: 700px;
-            height: 700px;
-            background: rgba(255, 255, 255, 0.01);
-            bottom: -20%;
-            right: -15%;
-            animation-duration: 40s;
-            animation-delay: -8s;
-        }
-        .bg-orb.orb3 {
-            width: 500px;
-            height: 500px;
-            background: rgba(255, 255, 255, 0.012);
-            top: 40%;
-            left: 50%;
-            transform: translateX(-50%);
-            animation-duration: 28s;
-            animation-delay: -15s;
-        }
-        @keyframes orbFloat {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            50% {
-                transform: translate(80px, -60px) scale(1.1);
-            }
-            100% {
-                transform: translate(-50px, 70px) scale(0.9);
-            }
-        }
-
-        #particles-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: none;
-            display: block;
-            opacity: 0.4;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 1.5rem 2rem 3rem;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.2rem 0 2rem;
-            border-bottom: 1px solid var(--border);
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .logo {
-            font-family: 'Orbitron', monospace;
-            font-size: 2rem;
-            font-weight: 900;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            color: #ffffff;
-            cursor: pointer;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
-            transition: var(--transition);
-        }
-        .logo:hover {
-            text-shadow: 0 0 50px rgba(255, 255, 255, 0.15);
-        }
-        .logo span {
-            color: #444455;
-            font-weight: 400;
-            letter-spacing: 2px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .nav {
-            display: flex;
-            gap: 2.5rem;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2.5px;
-            font-weight: 700;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .nav a {
-            color: #666677;
-            text-decoration: none;
-            transition: var(--transition);
-            cursor: pointer;
-            padding-bottom: 4px;
-            position: relative;
-        }
-        .nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 1.5px;
-            background: #ffffff;
-            transition: var(--transition);
-        }
-        .nav a:hover::after,
-        .nav a.active-link::after {
-            width: 100%;
-        }
-        .nav a:hover,
-        .nav a.active-link {
-            color: #ffffff;
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 0.8rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .user-email-tag {
-            color: #ffffff;
-            font-size: 0.7rem;
-            font-weight: 600;
-            background: var(--surface-card);
-            padding: 0.4rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            display: none;
-            font-family: monospace;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-sm {
-            padding: 0.45rem 1.4rem;
-            font-size: 0.65rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            border-radius: 10px;
-            border: 1px solid #333344;
-            background: transparent;
-            color: #ffffff;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .btn-sm::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            transition: var(--transition);
-        }
-        .btn-sm:hover::before {
-            left: 100%;
-        }
-        .btn-sm:hover {
-            border-color: #ffffff;
-            background: rgba(255, 255, 255, 0.05);
-        }
-        .btn-sm.primary {
-            background: #ffffff;
-            color: #000000;
-            border-color: #ffffff;
-        }
-        .btn-sm.primary:hover {
-            background: #cccccc;
-            border-color: #cccccc;
-        }
-
-        .page {
-            display: none;
-        }
-        .page.active {
-            display: block;
-            animation: pageFade 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        @keyframes pageFade {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.98);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .hero {
-            padding: 5rem 0 3rem;
-            min-height: 50vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .hero-tag {
-            display: inline-block;
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #666677;
-            border: 1px solid var(--border);
-            padding: 0.3rem 1.5rem;
-            border-radius: 30px;
-            margin-bottom: 2rem;
-            width: fit-content;
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(10px);
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .hero h1 {
-            font-family: 'Orbitron', monospace;
-            font-size: 5rem;
-            font-weight: 900;
-            letter-spacing: 4px;
-            line-height: 1.05;
-            color: #ffffff;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 60px rgba(255, 255, 255, 0.03);
-        }
-        .hero h1 small {
-            display: block;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 300;
-            color: #666677;
-            letter-spacing: 8px;
-            margin-top: 0.5rem;
-        }
-        .hero p {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 400;
-            color: #888899;
-            max-width: 540px;
-            margin-bottom: 2.5rem;
-            line-height: 1.9;
-            letter-spacing: 0.5px;
-        }
-        .btn-group {
-            display: flex;
-            gap: 1.2rem;
-            flex-wrap: wrap;
-        }
-        .btn {
-            padding: 0.9rem 3rem;
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            border-radius: 12px;
-            border: 1px solid #ffffff;
-            background: #ffffff;
-            color: #000000;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
-            transition: var(--transition);
-        }
-        .btn:hover::before {
-            left: 100%;
-        }
-        .btn:hover {
-            background: #000000;
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.05);
-        }
-        .btn-outline {
-            background: transparent;
-            color: #ffffff;
-            border-color: #333344;
-        }
-        .btn-outline:hover {
-            border-color: #ffffff;
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-        }
-
-        .section {
-            padding: 4rem 0 2.5rem;
-            border-top: 1px solid var(--border);
-        }
-        .section-header {
-            margin-bottom: 2.5rem;
-        }
-        .section-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: 4px;
-            color: #ffffff;
-            border-left: 3px solid #ffffff;
-            padding-left: 1.2rem;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.02);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-        .feature-item {
-            padding: 2.5rem 2rem;
-            background: var(--surface-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        .feature-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ffffff, transparent);
-            opacity: 0;
-            transition: var(--transition);
-        }
-        .feature-item:hover::before {
-            opacity: 1;
-        }
-        .feature-item:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-        }
-        .feature-item .index {
-            font-size: 0.6rem;
-            font-weight: 700;
-            color: #444455;
-            margin-bottom: 0.8rem;
-            display: block;
-            letter-spacing: 2px;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .feature-item h3 {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 0.6rem;
-            letter-spacing: 1px;
-        }
-        .feature-item p {
-            font-family: 'Rajdhani', sans-serif;
-            color: #888899;
-            font-size: 0.85rem;
-            line-height: 1.8;
-            font-weight: 400;
-            letter-spacing: 0.3px;
-        }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-        .price-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 3rem 2rem 2.5rem;
-            text-align: center;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        .price-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
-            opacity: 0;
-            transition: var(--transition);
-        }
-        .price-card:hover::before {
-            opacity: 1;
-        }
-        .price-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-8px);
-            box-shadow: var(--shadow);
-        }
-        .price-card .badge {
-            position: absolute;
-            top: 1.2rem;
-            right: 1.2rem;
-            background: #ffffff;
-            color: #000000;
-            font-size: 0.55rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
-            letter-spacing: 1px;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .price-card .amount {
-            font-family: 'Orbitron', monospace;
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: #ffffff;
-            margin-top: 0.5rem;
-            letter-spacing: 2px;
-        }
-        .price-card .period {
-            font-family: 'Rajdhani', sans-serif;
-            color: #666677;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 0.2rem;
-            font-weight: 600;
-        }
-        .price-card .desc {
-            font-family: 'Rajdhani', sans-serif;
-            color: #888899;
-            font-size: 0.85rem;
-            margin: 1.8rem 0 2.2rem;
-            line-height: 1.8;
-            font-weight: 400;
-        }
-        .btn-buy {
-            width: 100%;
-            padding: 0.8rem;
-            font-size: 0.7rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            border-radius: 10px;
-            border: 1px solid #333344;
-            background: transparent;
-            color: #ffffff;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .btn-buy:hover {
-            background: #ffffff;
-            color: #000000;
-            border-color: #ffffff;
-            transform: scale(1.02);
-        }
-
-        .hwid-box {
-            background: var(--surface-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 2.5rem;
-            margin-top: 2.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            transition: var(--transition);
-        }
-        .hwid-box:hover {
-            border-color: var(--border-hover);
-        }
-        .hwid-box h3 {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-        .hwid-box p {
-            font-family: 'Rajdhani', sans-serif;
-            color: #888899;
-            font-size: 0.85rem;
-            font-weight: 400;
-        }
-
-        .cabinet-grid {
-            display: grid;
-            grid-template-columns: 340px 1fr;
-            gap: 2.5rem;
-        }
-        .cabinet-sidebar {
-            background: var(--surface-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 2.5rem;
-            display: flex;
-            flex-direction: column;
-            transition: var(--transition);
-        }
-        .cabinet-sidebar:hover {
-            border-color: var(--border-hover);
-        }
-        .avatar-box {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #1a1a1e, #0a0a0a);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Orbitron', monospace;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 1.2rem;
-            position: relative;
-        }
-        .avatar-box::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            z-index: -1;
-        }
-        .user-name-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 1px;
-        }
-        .user-email-sub {
-            font-family: 'Rajdhani', sans-serif;
-            color: #666677;
-            font-size: 0.8rem;
-            margin-bottom: 1.2rem;
-            word-break: break-all;
-            font-weight: 400;
-        }
-
-        .id-badge {
-            background: #000000;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 0.6rem;
-            text-align: center;
-            font-family: monospace;
-            font-size: 0.75rem;
-            color: #888899;
-            margin-bottom: 1.2rem;
-            letter-spacing: 1px;
-        }
-
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.6rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            border: 1px solid #333344;
-            width: fit-content;
-            color: #666677;
-            margin-bottom: 1.5rem;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .status-pill.active {
-            border-color: #ffffff;
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-        }
-        .status-pill .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #444455;
-            display: inline-block;
-        }
-        .status-pill.active .dot {
-            background: #00ff44;
-            box-shadow: 0 0 10px rgba(0, 255, 68, 0.3);
-        }
-
-        .sidebar-divider {
-            height: 1px;
-            background: var(--border);
-            margin: 1.2rem 0;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            padding: 0.5rem 0;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .info-row .label {
-            color: #666677;
-            font-weight: 500;
-        }
-        .info-row .val {
-            color: #ffffff;
-            font-weight: 600;
-        }
-
-        .sidebar-buttons-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            margin: 1.5rem 0;
-        }
-        .btn-side-tile {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.2rem;
-            border-radius: 12px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: left;
-            width: 100%;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .btn-side-tile:hover {
-            border-color: #ffffff;
-            background: var(--surface-hover);
-            transform: translateX(5px);
-        }
-        .btn-side-tile .icon-tag {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-            transition: var(--transition);
-        }
-        .btn-side-tile:hover .icon-tag {
-            border-color: #ffffff;
-            background: rgba(255, 255, 255, 0.05);
-        }
-        .btn-side-tile .text-group {
-            display: flex;
-            flex-direction: column;
-        }
-        .btn-side-tile .title {
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: #ffffff;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .btn-side-tile .subtitle {
-            font-size: 0.65rem;
-            color: #888899;
-            margin-top: 2px;
-            font-weight: 400;
-        }
-
-        .cabinet-main {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .metric-cards-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-        }
-        .dash-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            transition: var(--transition);
-        }
-        .dash-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-3px);
-        }
-        .dash-card .card-head {
-            font-size: 0.6rem;
-            font-weight: 800;
-            color: #666677;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 0.5rem;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .dash-card .card-val {
-            font-family: 'Orbitron', monospace;
-            font-size: 2rem;
-            font-weight: 900;
-            color: #ffffff;
-            letter-spacing: 1px;
-        }
-        .dash-card .card-sub {
-            font-size: 0.65rem;
-            color: #888899;
-            margin-top: 0.3rem;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 400;
-        }
-
-        .key-hub {
-            background: var(--surface-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 2.5rem;
-            transition: var(--transition);
-        }
-        .key-hub:hover {
-            border-color: var(--border-hover);
-        }
-        .key-hub h3 {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 0.4rem;
-            letter-spacing: 1px;
-        }
-        .key-hub p {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.8rem;
-            color: #888899;
-            margin-bottom: 1.5rem;
-            font-weight: 400;
-        }
-
-        .key-display {
-            background: #000000;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            transition: var(--transition);
-        }
-        .key-display:hover {
-            border-color: var(--border-hover);
-        }
-        .key-display span {
-            font-family: 'Rajdhani', monospace;
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: #ffffff;
-        }
-
-        .instructions-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .inst-box {
-            background: #000000;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 0.8rem 1.2rem;
-            display: flex;
-            gap: 12px;
-            font-size: 0.8rem;
-            color: #888899;
-            align-items: center;
-            transition: var(--transition);
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .inst-box:hover {
-            border-color: var(--border-hover);
-        }
-        .inst-box b {
-            color: #ffffff;
-            font-family: 'Orbitron', monospace;
-            font-size: 0.7rem;
-        }
-
-        .tabs-hub {
-            background: var(--surface-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 2rem;
-        }
-        .tabs-nav {
-            display: flex;
-            gap: 2rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .tab-trigger {
-            background: none;
-            border: none;
-            color: #666677;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-            transition: var(--transition);
-            padding-bottom: 4px;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .tab-trigger.active {
-            color: #ffffff;
-            border-bottom: 2px solid #ffffff;
-        }
-        .tab-trigger:hover {
-            color: #ffffff;
-        }
-
-        .history-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 1.2rem;
-            background: #000000;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            margin-bottom: 0.6rem;
-            font-size: 0.8rem;
-            transition: var(--transition);
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .history-row:hover {
-            border-color: var(--border-hover);
-        }
-        .history-tag {
-            font-size: 0.55rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
-            border: 1px solid #444455;
-            color: #ffffff;
-        }
-        .history-tag.approved {
-            border-color: #00ff44;
-            color: #00ff44;
-        }
-        .history-tag.rejected {
-            border-color: #ff4444;
-            color: #ff4444;
-        }
-        .history-tag.pending {
-            border-color: #ffaa00;
-            color: #ffaa00;
-        }
-
-        .modal-wrap {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            padding: 1.5rem;
-            animation: modalFade 0.3s ease-out;
-        }
-        @keyframes modalFade {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        .modal-card {
-            background: var(--surface-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 2.8rem;
-            max-width: 480px;
-            width: 100%;
-            box-shadow: var(--shadow);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal-card::-webkit-scrollbar {
-            width: 3px;
-        }
-        .modal-card::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .modal-card::-webkit-scrollbar-thumb {
-            background: #333344;
-            border-radius: 10px;
-        }
-        .modal-card h2 {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #ffffff;
-            margin-bottom: 0.4rem;
-            text-align: center;
-        }
-        .modal-card .sub {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.8rem;
-            color: #888899;
-            text-align: center;
-            margin-bottom: 1.8rem;
-            font-weight: 400;
-        }
-
-        .auth-error {
-            color: #ff4444;
-            background: rgba(255, 68, 68, 0.05);
-            border: 1px solid rgba(255, 68, 68, 0.2);
-            padding: 0.6rem 0.8rem;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            margin-bottom: 1rem;
-            display: none;
-            text-align: center;
-            font-weight: 600;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .auth-error.show {
-            display: block;
-        }
-
-        .toggle-auth {
-            text-align: center;
-            margin-top: 1.2rem;
-            font-size: 0.75rem;
-            color: #666677;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .toggle-auth span {
-            color: #ffffff;
-            cursor: pointer;
-            font-weight: 700;
-            text-decoration: underline;
-            transition: var(--transition);
-        }
-        .toggle-auth span:hover {
-            color: #888899;
-        }
-
-        .split-calculation-box {
-            background: #000000;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 1.2rem;
-            margin-bottom: 1.4rem;
-        }
-        .split-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.82rem;
-            padding: 0.4rem 0;
-            color: #888899;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .split-row.total {
-            border-top: 1px solid var(--border);
-            padding-top: 0.6rem;
-            margin-top: 0.4rem;
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .promo-input-row {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.2rem;
-        }
-        .promo-input-row input {
-            flex: 1;
-            padding: 0.7rem 1rem;
-            background: #000000;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: #ffffff;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.85rem;
-            outline: none;
-            text-transform: uppercase;
-            transition: var(--transition);
-            font-weight: 500;
-        }
-        .promo-input-row input:focus {
-            border-color: #ffffff;
-        }
-        .promo-input-row button {
-            padding: 0 1.5rem;
-            background: #ffffff;
-            color: #000000;
-            border: 1px solid #ffffff;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: var(--transition);
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .promo-input-row button:hover {
-            background: #000000;
-            color: #ffffff;
-        }
-
-        .field-group {
-            margin-bottom: 1.2rem;
-        }
-        .field-group label {
-            display: block;
-            font-size: 0.6rem;
-            font-weight: 700;
-            color: #666677;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.4rem;
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .field-group input {
-            width: 100%;
-            padding: 0.7rem 1rem;
-            background: #000000;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: #ffffff;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.85rem;
-            outline: none;
-            transition: var(--transition);
-            font-weight: 500;
-        }
-        .field-group input:focus {
-            border-color: #ffffff;
-        }
-
-        .btn-modal-action {
-            width: 100%;
-            padding: 0.85rem;
-            font-size: 0.7rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            border-radius: 10px;
-            border: 1px solid #ffffff;
-            background: #ffffff;
-            color: #000000;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .btn-modal-action:hover {
-            background: #000000;
-            color: #ffffff;
-        }
-        .btn-modal-cancel {
-            width: 100%;
-            background: none;
-            border: none;
-            color: #555566;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-top: 0.8rem;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Rajdhani', sans-serif;
-        }
-        .btn-modal-cancel:hover {
-            color: #ffffff;
-        }
-
-        .notification-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 380px;
-            width: 100%;
-        }
-        .notification {
-            background: var(--surface-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            box-shadow: var(--shadow);
-            color: #ffffff;
-            animation: notifSlide 0.4s ease-out;
-            backdrop-filter: blur(10px);
-            font-family: 'Rajdhani', sans-serif;
-        }
-        @keyframes notifSlide {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        .notification .notif-title {
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .notification .notif-body {
-            font-size: 0.72rem;
-            color: #888899;
-            margin-top: 4px;
-            font-weight: 400;
-        }
-        .notification.error {
-            border-color: rgba(255, 68, 68, 0.3);
-        }
-        .notification.success {
-            border-color: rgba(0, 255, 68, 0.3);
-        }
-
-        @media (max-width: 1024px) {
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .cabinet-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem 1.2rem 2rem;
-            }
-            .hero h1 {
-                font-size: 2.8rem;
-            }
-            .header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .header-right {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 1rem;
-            }
-            .nav {
-                justify-content: center;
-                gap: 1.5rem;
-                flex-wrap: wrap;
-            }
-            .auth-buttons {
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            .metric-cards-row {
-                grid-template-columns: 1fr;
-            }
-            .instructions-grid {
-                grid-template-columns: 1fr;
-            }
-            .pricing-grid {
-                grid-template-columns: 1fr;
-            }
-            .modal-card {
-                padding: 2rem;
-                margin: 0.5rem;
-            }
-            .hero {
-                padding: 2rem 0;
-                min-height: auto;
-            }
-            .btn-group {
-                flex-direction: column;
-            }
-            .btn {
-                text-align: center;
-            }
-        }
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .logo {
-                font-size: 1.4rem;
-                letter-spacing: 3px;
-            }
-            .section-title {
-                font-size: 1.2rem;
-            }
-            .price-card .amount {
-                font-size: 2.5rem;
-            }
-            .key-display {
-                flex-direction: column;
-                gap: 0.8rem;
-            }
-            .key-display span {
-                font-size: 0.8rem;
-                word-break: break-all;
-                text-align: center;
-            }
-        }
+        /* ===== ВСЕ ТВОИ СТИЛИ ОСТАВЬ ТУТ ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        input, textarea { user-select: text; }
+        :root { --bg: #0a0a0a; --surface: #111111; --surface-card: #161618; --surface-hover: #1e1e22; --border: rgba(255,255,255,0.06); --border-hover: rgba(255,255,255,0.15); --text-primary: #ffffff; --text-secondary: #888899; --text-muted: #444455; --accent: #ffffff; --glow: 0 0 40px rgba(255,255,255,0.03); --shadow: 0 20px 60px rgba(0,0,0,0.8); --radius: 14px; --radius-lg: 20px; --transition: 0.4s cubic-bezier(0.25,0.46,0.45,0.94); }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Rajdhani','Inter',-apple-system,sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; line-height: 1.6; -webkit-font-smoothing: antialiased; letter-spacing: 0.3px; }
+        /* ОСТАЛЬНЫЕ СТИЛИ ВСТАВЬ СВОИ... */
+        /* Я сжал, чтобы не занимать место, но ты можешь вставить свои полные стили */
+        .container { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 1.5rem 2rem 3rem; min-height: 100vh; display: flex; flex-direction: column; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 0 2rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+        .logo { font-family: 'Orbitron', monospace; font-size: 2rem; font-weight: 900; letter-spacing: 6px; text-transform: uppercase; color: #ffffff; cursor: pointer; text-shadow: 0 0 30px rgba(255,255,255,0.05); transition: var(--transition); }
+        .logo span { color: #444455; font-weight: 400; letter-spacing: 2px; }
+        .header-right { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+        .nav { display: flex; gap: 2.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2.5px; font-weight: 700; font-family: 'Rajdhani', sans-serif; }
+        .nav a { color: #666677; text-decoration: none; transition: var(--transition); cursor: pointer; padding-bottom: 4px; position: relative; }
+        .nav a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1.5px; background: #ffffff; transition: var(--transition); }
+        .nav a:hover::after, .nav a.active-link::after { width: 100%; }
+        .nav a:hover, .nav a.active-link { color: #ffffff; }
+        .auth-buttons { display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; }
+        .user-email-tag { color: #ffffff; font-size: 0.7rem; font-weight: 600; background: var(--surface-card); padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 10px; display: none; font-family: monospace; letter-spacing: 0.5px; }
+        .btn-sm { padding: 0.45rem 1.4rem; font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; border-radius: 10px; border: 1px solid #333344; background: transparent; color: #ffffff; cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; font-family: 'Rajdhani', sans-serif; }
+        .btn-sm:hover { border-color: #ffffff; background: rgba(255,255,255,0.05); }
+        .btn-sm.primary { background: #ffffff; color: #000000; border-color: #ffffff; }
+        .btn-sm.primary:hover { background: #cccccc; border-color: #cccccc; }
+        .page { display: none; }
+        .page.active { display: block; animation: pageFade 0.6s cubic-bezier(0.25,0.46,0.45,0.94); }
+        @keyframes pageFade { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .hero { padding: 5rem 0 3rem; min-height: 50vh; display: flex; flex-direction: column; justify-content: center; }
+        .hero-tag { display: inline-block; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: #666677; border: 1px solid var(--border); padding: 0.3rem 1.5rem; border-radius: 30px; margin-bottom: 2rem; width: fit-content; background: rgba(255,255,255,0.02); backdrop-filter: blur(10px); font-family: 'Rajdhani', sans-serif; }
+        .hero h1 { font-family: 'Orbitron', monospace; font-size: 5rem; font-weight: 900; letter-spacing: 4px; line-height: 1.05; color: #ffffff; margin-bottom: 1rem; text-shadow: 0 0 60px rgba(255,255,255,0.03); }
+        .hero h1 small { display: block; font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 300; color: #666677; letter-spacing: 8px; margin-top: 0.5rem; }
+        .hero p { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 400; color: #888899; max-width: 540px; margin-bottom: 2.5rem; line-height: 1.9; letter-spacing: 0.5px; }
+        .btn-group { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+        .btn { padding: 0.9rem 3rem; font-size: 0.75rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; border-radius: 12px; border: 1px solid #ffffff; background: #ffffff; color: #000000; cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; font-family: 'Rajdhani', sans-serif; }
+        .btn:hover { background: #000000; color: #ffffff; transform: translateY(-2px); box-shadow: 0 10px 40px rgba(255,255,255,0.05); }
+        .btn-outline { background: transparent; color: #ffffff; border-color: #333344; }
+        .btn-outline:hover { border-color: #ffffff; background: rgba(255,255,255,0.05); color: #ffffff; }
+        .section { padding: 4rem 0 2.5rem; border-top: 1px solid var(--border); }
+        .section-header { margin-bottom: 2.5rem; }
+        .section-title { font-family: 'Orbitron', monospace; font-size: 1.8rem; font-weight: 700; letter-spacing: 4px; color: #ffffff; border-left: 3px solid #ffffff; padding-left: 1.2rem; text-shadow: 0 0 30px rgba(255,255,255,0.02); }
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .feature-item { padding: 2.5rem 2rem; background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius-lg); transition: var(--transition); position: relative; overflow: hidden; }
+        .feature-item:hover { border-color: var(--border-hover); transform: translateY(-5px); box-shadow: var(--shadow); }
+        .feature-item .index { font-size: 0.6rem; font-weight: 700; color: #444455; margin-bottom: 0.8rem; display: block; letter-spacing: 2px; font-family: 'Rajdhani', sans-serif; }
+        .feature-item h3 { font-family: 'Orbitron', monospace; font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-bottom: 0.6rem; letter-spacing: 1px; }
+        .feature-item p { font-family: 'Rajdhani', sans-serif; color: #888899; font-size: 0.85rem; line-height: 1.8; font-weight: 400; letter-spacing: 0.3px; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .price-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 3rem 2rem 2.5rem; text-align: center; transition: var(--transition); position: relative; overflow: hidden; }
+        .price-card:hover { border-color: var(--border-hover); transform: translateY(-8px); box-shadow: var(--shadow); }
+        .price-card .badge { position: absolute; top: 1.2rem; right: 1.2rem; background: #ffffff; color: #000000; font-size: 0.55rem; font-weight: 800; text-transform: uppercase; padding: 0.2rem 0.8rem; border-radius: 20px; letter-spacing: 1px; font-family: 'Rajdhani', sans-serif; }
+        .price-card .amount { font-family: 'Orbitron', monospace; font-size: 3.5rem; font-weight: 900; color: #ffffff; margin-top: 0.5rem; letter-spacing: 2px; }
+        .price-card .period { font-family: 'Rajdhani', sans-serif; color: #666677; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-top: 0.2rem; font-weight: 600; }
+        .price-card .desc { font-family: 'Rajdhani', sans-serif; color: #888899; font-size: 0.85rem; margin: 1.8rem 0 2.2rem; line-height: 1.8; font-weight: 400; }
+        .btn-buy { width: 100%; padding: 0.8rem; font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; border-radius: 10px; border: 1px solid #333344; background: transparent; color: #ffffff; cursor: pointer; transition: var(--transition); font-family: 'Rajdhani', sans-serif; }
+        .btn-buy:hover { background: #ffffff; color: #000000; border-color: #ffffff; transform: scale(1.02); }
+        .hwid-box { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; margin-top: 2.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; transition: var(--transition); }
+        .hwid-box:hover { border-color: var(--border-hover); }
+        .hwid-box h3 { font-family: 'Orbitron', monospace; font-size: 1.1rem; letter-spacing: 1px; margin-bottom: 4px; }
+        .hwid-box p { font-family: 'Rajdhani', sans-serif; color: #888899; font-size: 0.85rem; font-weight: 400; }
+        .cabinet-grid { display: grid; grid-template-columns: 340px 1fr; gap: 2.5rem; }
+        .cabinet-sidebar { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; display: flex; flex-direction: column; transition: var(--transition); }
+        .cabinet-sidebar:hover { border-color: var(--border-hover); }
+        .avatar-box { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #1a1a1e, #0a0a0a); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Orbitron', monospace; font-size: 2rem; font-weight: 700; color: #ffffff; margin-bottom: 1.2rem; position: relative; }
+        .user-name-title { font-family: 'Orbitron', monospace; font-size: 1.2rem; font-weight: 700; color: #ffffff; letter-spacing: 1px; }
+        .user-email-sub { font-family: 'Rajdhani', sans-serif; color: #666677; font-size: 0.8rem; margin-bottom: 1.2rem; word-break: break-all; font-weight: 400; }
+        .id-badge { background: #000000; border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem; text-align: center; font-family: monospace; font-size: 0.75rem; color: #888899; margin-bottom: 1.2rem; letter-spacing: 1px; }
+        .status-pill { display: inline-flex; align-items: center; gap: 8px; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 0.3rem 1rem; border-radius: 20px; border: 1px solid #333344; width: fit-content; color: #666677; margin-bottom: 1.5rem; font-family: 'Rajdhani', sans-serif; }
+        .status-pill.active { border-color: #ffffff; background: rgba(255,255,255,0.05); color: #ffffff; }
+        .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #444455; display: inline-block; }
+        .status-pill.active .dot { background: #00ff44; box-shadow: 0 0 10px rgba(0,255,68,0.3); }
+        .sidebar-divider { height: 1px; background: var(--border); margin: 1.2rem 0; }
+        .info-row { display: flex; justify-content: space-between; font-size: 0.8rem; padding: 0.5rem 0; font-family: 'Rajdhani', sans-serif; }
+        .info-row .label { color: #666677; font-weight: 500; }
+        .info-row .val { color: #ffffff; font-weight: 600; }
+        .sidebar-buttons-container { display: flex; flex-direction: column; gap: 0.8rem; margin: 1.5rem 0; }
+        .btn-side-tile { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.2rem; border-radius: 12px; background: var(--surface); border: 1px solid var(--border); cursor: pointer; transition: var(--transition); text-align: left; width: 100%; font-family: 'Rajdhani', sans-serif; }
+        .btn-side-tile:hover { border-color: #ffffff; background: var(--surface-hover); transform: translateX(5px); }
+        .btn-side-tile .icon-tag { width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; transition: var(--transition); }
+        .btn-side-tile .text-group { display: flex; flex-direction: column; }
+        .btn-side-tile .title { font-size: 0.75rem; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-side-tile .subtitle { font-size: 0.65rem; color: #888899; margin-top: 2px; font-weight: 400; }
+        .cabinet-main { display: flex; flex-direction: column; gap: 2rem; }
+        .metric-cards-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .dash-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: var(--transition); }
+        .dash-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+        .dash-card .card-head { font-size: 0.6rem; font-weight: 800; color: #666677; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem; font-family: 'Rajdhani', sans-serif; }
+        .dash-card .card-val { font-family: 'Orbitron', monospace; font-size: 2rem; font-weight: 900; color: #ffffff; letter-spacing: 1px; }
+        .dash-card .card-sub { font-size: 0.65rem; color: #888899; margin-top: 0.3rem; font-family: 'Rajdhani', sans-serif; font-weight: 400; }
+        .key-hub { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; transition: var(--transition); }
+        .key-hub:hover { border-color: var(--border-hover); }
+        .key-hub h3 { font-family: 'Orbitron', monospace; font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-bottom: 0.4rem; letter-spacing: 1px; }
+        .key-hub p { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; color: #888899; margin-bottom: 1.5rem; font-weight: 400; }
+        .key-display { background: #000000; border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; transition: var(--transition); }
+        .key-display:hover { border-color: var(--border-hover); }
+        .key-display span { font-family: 'Rajdhani', monospace; font-size: 1.1rem; font-weight: 700; letter-spacing: 2px; color: #ffffff; }
+        .instructions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .inst-box { background: #000000; border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem 1.2rem; display: flex; gap: 12px; font-size: 0.8rem; color: #888899; align-items: center; transition: var(--transition); font-family: 'Rajdhani', sans-serif; }
+        .inst-box:hover { border-color: var(--border-hover); }
+        .inst-box b { color: #ffffff; font-family: 'Orbitron', monospace; font-size: 0.7rem; }
+        .tabs-hub { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; }
+        .tabs-nav { display: flex; gap: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        .tab-trigger { background: none; border: none; color: #666677; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: var(--transition); padding-bottom: 4px; font-family: 'Rajdhani', sans-serif; }
+        .tab-trigger.active { color: #ffffff; border-bottom: 2px solid #ffffff; }
+        .tab-trigger:hover { color: #ffffff; }
+        .history-row { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem; background: #000000; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.6rem; font-size: 0.8rem; transition: var(--transition); font-family: 'Rajdhani', sans-serif; }
+        .history-row:hover { border-color: var(--border-hover); }
+        .history-tag { font-size: 0.55rem; font-weight: 800; text-transform: uppercase; padding: 0.2rem 0.8rem; border-radius: 20px; border: 1px solid #444455; color: #ffffff; }
+        .history-tag.approved { border-color: #00ff44; color: #00ff44; }
+        .history-tag.rejected { border-color: #ff4444; color: #ff4444; }
+        .history-tag.pending { border-color: #ffaa00; color: #ffaa00; }
+        .modal-wrap { position: fixed; inset: 0; background: rgba(0,0,0,0.92); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 1.5rem; animation: modalFade 0.3s ease-out; }
+        @keyframes modalFade { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.8rem; max-width: 480px; width: 100%; box-shadow: var(--shadow); max-height: 90vh; overflow-y: auto; }
+        .modal-card h2 { font-family: 'Orbitron', monospace; font-size: 1.4rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ffffff; margin-bottom: 0.4rem; text-align: center; }
+        .modal-card .sub { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; color: #888899; text-align: center; margin-bottom: 1.8rem; font-weight: 400; }
+        .auth-error { color: #ff4444; background: rgba(255,68,68,0.05); border: 1px solid rgba(255,68,68,0.2); padding: 0.6rem 0.8rem; border-radius: 10px; font-size: 0.75rem; margin-bottom: 1rem; display: none; text-align: center; font-weight: 600; font-family: 'Rajdhani', sans-serif; }
+        .auth-error.show { display: block; }
+        .toggle-auth { text-align: center; margin-top: 1.2rem; font-size: 0.75rem; color: #666677; font-family: 'Rajdhani', sans-serif; }
+        .toggle-auth span { color: #ffffff; cursor: pointer; font-weight: 700; text-decoration: underline; transition: var(--transition); }
+        .toggle-auth span:hover { color: #888899; }
+        .split-calculation-box { background: #000000; border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; margin-bottom: 1.4rem; }
+        .split-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 0.4rem 0; color: #888899; font-family: 'Rajdhani', sans-serif; }
+        .split-row.total { border-top: 1px solid var(--border); padding-top: 0.6rem; margin-top: 0.4rem; font-size: 0.95rem; font-weight: 800; color: #ffffff; }
+        .promo-input-row { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; }
+        .promo-input-row input { flex: 1; padding: 0.7rem 1rem; background: #000000; border: 1px solid var(--border); border-radius: 10px; color: #ffffff; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; outline: none; text-transform: uppercase; transition: var(--transition); font-weight: 500; }
+        .promo-input-row input:focus { border-color: #ffffff; }
+        .promo-input-row button { padding: 0 1.5rem; background: #ffffff; color: #000000; border: 1px solid #ffffff; border-radius: 10px; font-size: 0.7rem; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); font-family: 'Rajdhani', sans-serif; }
+        .promo-input-row button:hover { background: #000000; color: #ffffff; }
+        .field-group { margin-bottom: 1.2rem; }
+        .field-group label { display: block; font-size: 0.6rem; font-weight: 700; color: #666677; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem; font-family: 'Rajdhani', sans-serif; }
+        .field-group input { width: 100%; padding: 0.7rem 1rem; background: #000000; border: 1px solid var(--border); border-radius: 10px; color: #ffffff; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; outline: none; transition: var(--transition); font-weight: 500; }
+        .field-group input:focus { border-color: #ffffff; }
+        .btn-modal-action { width: 100%; padding: 0.85rem; font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; border-radius: 10px; border: 1px solid #ffffff; background: #ffffff; color: #000000; cursor: pointer; transition: var(--transition); font-family: 'Rajdhani', sans-serif; }
+        .btn-modal-action:hover { background: #000000; color: #ffffff; }
+        .btn-modal-cancel { width: 100%; background: none; border: none; color: #555566; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 0.8rem; cursor: pointer; transition: var(--transition); font-family: 'Rajdhani', sans-serif; }
+        .btn-modal-cancel:hover { color: #ffffff; }
+        .notification-container { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; max-width: 380px; width: 100%; }
+        .notification { background: var(--surface-card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; box-shadow: var(--shadow); color: #ffffff; animation: notifSlide 0.4s ease-out; backdrop-filter: blur(10px); font-family: 'Rajdhani', sans-serif; }
+        @keyframes notifSlide { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+        .notification .notif-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .notification .notif-body { font-size: 0.72rem; color: #888899; margin-top: 4px; font-weight: 400; }
+        .notification.error { border-color: rgba(255,68,68,0.3); }
+        .notification.success { border-color: rgba(0,255,68,0.3); }
+        @media (max-width: 1024px) { .features-grid { grid-template-columns: repeat(2, 1fr); } .cabinet-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .container { padding: 1rem 1.2rem 2rem; } .hero h1 { font-size: 2.8rem; } .header { flex-direction: column; align-items: stretch; } .header-right { flex-direction: column; align-items: stretch; gap: 1rem; } .nav { justify-content: center; gap: 1.5rem; flex-wrap: wrap; } .auth-buttons { justify-content: center; flex-wrap: wrap; } .features-grid { grid-template-columns: 1fr; } .metric-cards-row { grid-template-columns: 1fr; } .instructions-grid { grid-template-columns: 1fr; } .pricing-grid { grid-template-columns: 1fr; } .modal-card { padding: 2rem; margin: 0.5rem; } .hero { padding: 2rem 0; min-height: auto; } .btn-group { flex-direction: column; } .btn { text-align: center; } }
+        @media (max-width: 480px) { .hero h1 { font-size: 2rem; } .logo { font-size: 1.4rem; letter-spacing: 3px; } .section-title { font-size: 1.2rem; } .price-card .amount { font-size: 2.5rem; } .key-display { flex-direction: column; gap: 0.8rem; } .key-display span { font-size: 0.8rem; word-break: break-all; text-align: center; } }
     </style>
 </head>
 <body>
-
-    <div class="bg-container">
-        <div class="bg-gradient"></div>
-        <div class="bg-gradient2"></div>
-        <div class="bg-grid"></div>
-        <div class="bg-orb orb1"></div>
-        <div class="bg-orb orb2"></div>
-        <div class="bg-orb orb3"></div>
-    </div>
-    <canvas id="particles-canvas"></canvas>
-
     <div class="notification-container" id="notifications"></div>
-
     <div class="container">
-
         <header class="header">
             <div class="logo" data-page="main">Lethal <span>DLC</span></div>
             <div class="header-right">
@@ -1414,71 +178,32 @@
         <div class="page active" id="page-main">
             <section class="hero">
                 <div class="hero-tag">✦ Premium Edition 2026</div>
-                <h1>
-                    Lethal DLC
-                    <small>абсолютный контроль над игровой механикой</small>
-                </h1>
-                <p>
-                    Бескомпромиссная система скрытности, мгновенный расчёт баланса<br />
-                    и аппаратная привязка нового поколения.
-                </p>
+                <h1>Lethal DLC<small>абсолютный контроль над игровой механикой</small></h1>
+                <p>Бескомпромиссная система скрытности, мгновенный расчёт баланса<br />и аппаратная привязка нового поколения.</p>
                 <div class="btn-group">
                     <button class="btn" data-page="pricing">Приобрести подписку</button>
                     <button class="btn btn-outline" data-page="cabinet">Личный кабинет</button>
                 </div>
             </section>
-
             <section class="section">
-                <div class="section-header">
-                    <h2 class="section-title">Возможности</h2>
-                </div>
+                <div class="section-header"><h2 class="section-title">Возможности</h2></div>
                 <div class="features-grid">
-                    <div class="feature-item">
-                        <span class="index">01 / COMBAT</span>
-                        <h3>Боевой модуль</h3>
-                        <p>Адаптивный аимбот с контролем отдачи, сглаживанием траектории и приоритетом уязвимых зон.</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="index">02 / SECURITY</span>
-                        <h3>Анти-детект</h3>
-                        <p>Изоляция в Ring-0, очистка системных логов и защита от сигнатурного анализа античитов.</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="index">03 / VISUALS</span>
-                        <h3>ESP терминал</h3>
-                        <p>Контуры скелетов, дистанция, линии прицела и радар с частотой синхронизации 144+ FPS.</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="index">04 / MISC</span>
-                        <h3>Дополнительно</h3>
-                        <p>Бесконечная выносливость, отсутствие разброса и мгновенное взаимодействие с игровым миром.</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="index">05 / ANALYTICS</span>
-                        <h3>Статистика</h3>
-                        <p>Логирование сессий, фиксация попаданий и детальный трекинг эффективности в реальном времени.</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="index">06 / UPDATES</span>
-                        <h3>Облачные патчи</h3>
-                        <p>Автоматическая доставка обновлений без необходимости повторного скачивания загрузчика.</p>
-                    </div>
+                    <div class="feature-item"><span class="index">01 / COMBAT</span><h3>Боевой модуль</h3><p>Адаптивный аимбот с контролем отдачи, сглаживанием траектории и приоритетом уязвимых зон.</p></div>
+                    <div class="feature-item"><span class="index">02 / SECURITY</span><h3>Анти-детект</h3><p>Изоляция в Ring-0, очистка системных логов и защита от сигнатурного анализа античитов.</p></div>
+                    <div class="feature-item"><span class="index">03 / VISUALS</span><h3>ESP терминал</h3><p>Контуры скелетов, дистанция, линии прицела и радар с частотой синхронизации 144+ FPS.</p></div>
+                    <div class="feature-item"><span class="index">04 / MISC</span><h3>Дополнительно</h3><p>Бесконечная выносливость, отсутствие разброса и мгновенное взаимодействие с игровым миром.</p></div>
+                    <div class="feature-item"><span class="index">05 / ANALYTICS</span><h3>Статистика</h3><p>Логирование сессий, фиксация попаданий и детальный трекинг эффективности в реальном времени.</p></div>
+                    <div class="feature-item"><span class="index">06 / UPDATES</span><h3>Облачные патчи</h3><p>Автоматическая доставка обновлений без необходимости повторного скачивания загрузчика.</p></div>
                 </div>
             </section>
         </div>
 
         <div class="page" id="page-pricing">
             <section class="section">
-                <div class="section-header">
-                    <h2 class="section-title">Тарифные планы</h2>
-                </div>
+                <div class="section-header"><h2 class="section-title">Тарифные планы</h2></div>
                 <div class="pricing-grid" id="pricingGrid"></div>
-
                 <div class="hwid-box">
-                    <div>
-                        <h3>Сброс HWID</h3>
-                        <p>Перепривязка ключа к новому железу. Оплата с баланса или доплата.</p>
-                    </div>
+                    <div><h3>Сброс HWID</h3><p>Перепривязка ключа к новому железу. Оплата с баланса или доплата.</p></div>
                     <button class="btn" id="hwidResetBtn">Сбросить за 400 ₽</button>
                 </div>
             </section>
@@ -1486,1227 +211,962 @@
 
         <div class="page" id="page-cabinet">
             <section class="section">
-                <div class="section-header">
-                    <h2 class="section-title">Панель управления</h2>
-                </div>
+                <div class="section-header"><h2 class="section-title">Панель управления</h2></div>
                 <div id="cabinetWrapper"></div>
             </section>
         </div>
-
     </div>
 
     <script>
-        // ============================================================
-        // ПОЛНАЯ КЛИЕНТСКАЯ ЛОГИКА - ИСПРАВЛЕННАЯ ВЕРСИЯ
-        // ============================================================
-        (function() {
-            'use strict';
+    // ============================================================
+    // ПОЛНАЯ КЛИЕНТСКАЯ ЛОГИКА - РАБОЧАЯ ВЕРСИЯ
+    // ============================================================
+    (function() {
+        'use strict';
 
-            // === ЗАЩИТА ОТ DEVTOOLS ===
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'F12' ||
-                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) ||
-                    (e.ctrlKey && (e.key === 'U' || e.key === 'u')) ||
-                    (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j'))) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            document.addEventListener('contextmenu', function(e) {
+        // === ЗАЩИТА ОТ DEVTOOLS ===
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) ||
+                (e.ctrlKey && (e.key === 'U' || e.key === 'u')) ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j'))) {
                 e.preventDefault();
                 return false;
+            }
+        });
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+        console.clear();
+
+        // === ПЕРЕМЕННЫЕ ===
+        let authToken = null;
+        let currentUser = null;
+        let currentTab = 'withdrawals';
+        const API_URL = window.location.origin;
+
+        // === ЗАГРУЗКА ТОКЕНА ПРИ СТАРТЕ ===
+        try {
+            const saved = localStorage.getItem('auth_token');
+            if (saved && saved.length > 0) {
+                authToken = saved;
+                console.log('✅ Токен загружен из localStorage');
+            }
+        } catch (e) {}
+
+        // === API ФУНКЦИИ ===
+        async function apiRequest(endpoint, data, method = 'POST') {
+            try {
+                const headers = { 'Content-Type': 'application/json' };
+                if (authToken) headers['X-Auth-Token'] = authToken;
+                const response = await fetch(API_URL + endpoint, {
+                    method: method,
+                    headers: headers,
+                    body: JSON.stringify(data)
+                });
+                return await response.json();
+            } catch (e) {
+                return { error: 'Ошибка сети: ' + e.message };
+            }
+        }
+
+        async function apiGet(endpoint) {
+            try {
+                const headers = { 'Content-Type': 'application/json' };
+                if (authToken) headers['X-Auth-Token'] = authToken;
+                const response = await fetch(API_URL + endpoint, { headers });
+                return await response.json();
+            } catch (e) {
+                return { error: 'Ошибка сети: ' + e.message };
+            }
+        }
+
+        // === УВЕДОМЛЕНИЯ ===
+        function addNotification(title, body, type = 'info') {
+            const container = document.getElementById('notifications');
+            if (!container) return;
+            const notif = document.createElement('div');
+            notif.className = 'notification ' + type;
+            const t = document.createElement('div');
+            t.className = 'notif-title';
+            t.textContent = title;
+            const b = document.createElement('div');
+            b.className = 'notif-body';
+            b.textContent = body;
+            notif.appendChild(t);
+            notif.appendChild(b);
+            container.prepend(notif);
+            setTimeout(() => { if (notif.parentNode) notif.remove(); }, 5000);
+        }
+
+        // === ФУНКЦИИ СОХРАНЕНИЯ ТОКЕНА ===
+        function saveToken(token) {
+            try {
+                if (token && token.length > 0) {
+                    authToken = token;
+                    localStorage.setItem('auth_token', token);
+                    console.log('✅ Токен сохранен');
+                    return true;
+                }
+                return false;
+            } catch (e) {
+                console.error('❌ Ошибка сохранения токена:', e);
+                return false;
+            }
+        }
+
+        function clearToken() {
+            try {
+                authToken = null;
+                localStorage.removeItem('auth_token');
+                console.log('✅ Токен очищен');
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // === АВТОРИЗАЦИЯ ===
+        async function login(email, password) {
+            const result = await apiRequest('/api/auth', { email, password, action: 'login' });
+            if (result.success && result.token) {
+                saveToken(result.token);
+                currentUser = result.user;
+                updateUI();
+                renderCabinet();
+                addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
+                return true;
+            }
+            addNotification('❌ Ошибка', result.error || 'Ошибка входа', 'error');
+            return false;
+        }
+
+        async function register(email, password, name) {
+            const result = await apiRequest('/api/auth', { email, password, name, action: 'register' });
+            if (result.success && result.token) {
+                saveToken(result.token);
+                currentUser = result.user;
+                updateUI();
+                renderCabinet();
+                addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
+                return true;
+            }
+            addNotification('❌ Ошибка', result.error || 'Ошибка регистрации', 'error');
+            return false;
+        }
+
+        async function purchasePlan(planId) {
+            const result = await apiRequest('/api/purchase', { planId });
+            if (result.success) {
+                if (currentUser) currentUser.balance = result.balance;
+                addNotification('✅ Успешно', `Тариф активирован! Ключ: ${result.key}`, 'success');
+                renderCabinet();
+                return result;
+            }
+            addNotification('❌ Ошибка', result.error || 'Ошибка покупки', 'error');
+            return null;
+        }
+
+        async function getBalance() {
+            const result = await apiGet('/api/balance');
+            if (result.success) {
+                if (currentUser) currentUser.balance = result.balance;
+                renderCabinet();
+                return result;
+            }
+            return null;
+        }
+
+        async function submitMediaApplication(tiktokUrl, promoCode, telegramContact) {
+            const result = await apiRequest('/api/media', { tiktokUrl, promoCode, telegramContact });
+            if (result.success) {
+                addNotification('✅ Успешно', 'Заявка подана! Ожидайте подтверждения.', 'success');
+                renderCabinet();
+                return true;
+            }
+            addNotification('❌ Ошибка', result.error || 'Ошибка подачи заявки', 'error');
+            return false;
+        }
+
+        async function getMediaStats(promoCode) {
+            const result = await apiGet('/api/media/stats?promo=' + encodeURIComponent(promoCode));
+            if (result.success) return result.stats;
+            return { uses: 0, volume: 0, reward: 0 };
+        }
+
+        async function claimReward(promoCode) {
+            const result = await apiRequest('/api/media/claim', { promoCode });
+            if (result.success) {
+                if (currentUser) currentUser.balance = result.balance;
+                addNotification('✅ Успешно', `Зачислено ${result.amount} ₽ на баланс!`, 'success');
+                renderCabinet();
+                return true;
+            }
+            addNotification('❌ Ошибка', result.error || 'Ошибка', 'error');
+            return false;
+        }
+
+        // === НАВИГАЦИЯ ===
+        function navigateTo(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav a').forEach(a => {
+                a.classList.toggle('active-link', a.dataset.page === page);
             });
-            console.clear();
-            console.log = function() {};
-            console.warn = function() {};
-            console.error = function() {};
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            if (page === 'cabinet') renderCabinet();
+            if (page === 'pricing') renderPricing();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-            // === API - ИСПРАВЛЕННЫЙ ===
-            let authToken = localStorage.getItem('auth_token');
-            let currentUser = null;
-            let currentTab = 'withdrawals';
+        function updateUI() {
+            const badge = document.getElementById('userEmailBadge');
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
 
-            // Используем текущий домен для API запросов
-            const API_URL = window.location.origin;
+            if (currentUser) {
+                badge.textContent = currentUser.email;
+                badge.style.display = 'inline-block';
+                loginBtn.style.display = 'none';
+                registerBtn.style.display = 'none';
+                logoutBtn.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+                loginBtn.style.display = 'inline-block';
+                registerBtn.style.display = 'inline-block';
+                logoutBtn.style.display = 'none';
+            }
+        }
 
-            async function apiRequest(endpoint, data, method = 'POST') {
-                try {
-                    const headers = { 'Content-Type': 'application/json' };
-                    if (authToken) headers['X-Auth-Token'] = authToken;
-                    const response = await fetch(API_URL + endpoint, {
-                        method: method,
-                        headers: headers,
-                        body: JSON.stringify(data)
-                    });
-                    return await response.json();
-                } catch (e) {
-                    console.error('API Error:', e);
-                    return { error: 'Ошибка сети' };
-                }
+        // === ВОССТАНОВЛЕНИЕ СЕССИИ ===
+        async function restoreSession() {
+            const token = localStorage.getItem('auth_token');
+            console.log('📌 Восстановление сессии...');
+            
+            if (!token) {
+                console.log('❌ Нет токена');
+                return false;
             }
 
-            async function apiGet(endpoint) {
-                try {
-                    const headers = { 'Content-Type': 'application/json' };
-                    if (authToken) headers['X-Auth-Token'] = authToken;
-                    const response = await fetch(API_URL + endpoint, { headers });
-                    return await response.json();
-                } catch (e) {
-                    console.error('API Error:', e);
-                    return { error: 'Ошибка сети' };
-                }
-            }
-
-            // === УВЕДОМЛЕНИЯ ===
-            function addNotification(title, body, type = 'info') {
-                const container = document.getElementById('notifications');
-                const notif = document.createElement('div');
-                notif.className = 'notification ' + type;
-                const t = document.createElement('div');
-                t.className = 'notif-title';
-                t.textContent = title;
-                const b = document.createElement('div');
-                b.className = 'notif-body';
-                b.textContent = body;
-                notif.appendChild(t);
-                notif.appendChild(b);
-                container.prepend(notif);
-                setTimeout(() => notif.remove(), 5000);
-            }
-
-            // === АВТОРИЗАЦИЯ ===
-            async function login(email, password) {
-                const result = await apiRequest('/api/auth', { email, password, action: 'login' });
-                if (result.success) {
-                    authToken = result.token;
-                    localStorage.setItem('auth_token', authToken);
-                    currentUser = result.user;
+            try {
+                const headers = { 'X-Auth-Token': token };
+                const response = await fetch('/api/auth', { headers });
+                const data = await response.json();
+                console.log('📌 Ответ сервера:', data);
+                
+                if (data.success) {
+                    authToken = token;
+                    currentUser = data.user;
+                    console.log('✅ Сессия восстановлена!', currentUser.email);
                     updateUI();
                     renderCabinet();
-                    addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
                     return true;
-                }
-                addNotification('❌ Ошибка', result.error || 'Ошибка входа', 'error');
-                return false;
-            }
-
-            async function register(email, password, name) {
-                const result = await apiRequest('/api/auth', { email, password, name, action: 'register' });
-                if (result.success) {
-                    authToken = result.token;
-                    localStorage.setItem('auth_token', authToken);
-                    currentUser = result.user;
-                    updateUI();
-                    renderCabinet();
-                    addNotification('✅ Успешно', `Добро пожаловать, ${currentUser.name}!`, 'success');
-                    return true;
-                }
-                addNotification('❌ Ошибка', result.error || 'Ошибка регистрации', 'error');
-                return false;
-            }
-
-            async function purchasePlan(planId) {
-                const result = await apiRequest('/api/purchase', { planId });
-                if (result.success) {
-                    currentUser.balance = result.balance;
-                    addNotification('✅ Успешно', `Тариф активирован! Ключ: ${result.key}`, 'success');
-                    renderCabinet();
-                    return result;
-                }
-                addNotification('❌ Ошибка', result.error || 'Ошибка покупки', 'error');
-                return null;
-            }
-
-            async function getBalance() {
-                const result = await apiGet('/api/balance');
-                if (result.success) {
-                    if (currentUser) currentUser.balance = result.balance;
-                    renderCabinet();
-                    return result;
-                }
-                return null;
-            }
-
-            async function submitMediaApplication(tiktokUrl, promoCode, telegramContact) {
-                const result = await apiRequest('/api/media', {
-                    tiktokUrl: tiktokUrl,
-                    promoCode: promoCode,
-                    telegramContact: telegramContact
-                });
-                if (result.success) {
-                    addNotification('✅ Успешно', 'Заявка подана! Ожидайте подтверждения.', 'success');
-                    renderCabinet();
-                    return true;
-                }
-                addNotification('❌ Ошибка', result.error || 'Ошибка подачи заявки', 'error');
-                return false;
-            }
-
-            async function getMediaStats(promoCode) {
-                const result = await apiGet('/api/media/stats?promo=' + encodeURIComponent(promoCode));
-                if (result.success) return result.stats;
-                return { uses: 0, volume: 0, reward: 0 };
-            }
-
-            async function claimReward(promoCode) {
-                const result = await apiRequest('/api/media/claim', { promoCode: promoCode });
-                if (result.success) {
-                    if (currentUser) currentUser.balance = result.balance;
-                    addNotification('✅ Успешно', `Зачислено ${result.amount} ₽ на баланс!`, 'success');
-                    renderCabinet();
-                    return true;
-                }
-                addNotification('❌ Ошибка', result.error || 'Ошибка', 'error');
-                return false;
-            }
-
-            // === НАВИГАЦИЯ ===
-            function navigateTo(page) {
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                document.querySelectorAll('.nav a').forEach(a => {
-                    a.classList.toggle('active-link', a.dataset.page === page);
-                });
-                const target = document.getElementById('page-' + page);
-                if (target) target.classList.add('active');
-                if (page === 'cabinet') renderCabinet();
-                if (page === 'pricing') renderPricing();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-
-            function updateUI() {
-                const badge = document.getElementById('userEmailBadge');
-                const loginBtn = document.getElementById('loginBtn');
-                const registerBtn = document.getElementById('registerBtn');
-                const logoutBtn = document.getElementById('logoutBtn');
-
-                if (currentUser) {
-                    badge.textContent = currentUser.email;
-                    badge.style.display = 'inline-block';
-                    loginBtn.style.display = 'none';
-                    registerBtn.style.display = 'none';
-                    logoutBtn.style.display = 'inline-block';
                 } else {
-                    badge.style.display = 'none';
-                    loginBtn.style.display = 'inline-block';
-                    registerBtn.style.display = 'inline-block';
-                    logoutBtn.style.display = 'none';
+                    console.log('❌ Сессия невалидна');
+                    clearToken();
+                    currentUser = null;
+                    updateUI();
+                    renderCabinet();
+                    return false;
                 }
+            } catch (e) {
+                console.error('❌ Ошибка восстановления:', e);
+                return false;
             }
+        }
 
-            // === ТАРИФЫ ===
-            const PLANS = [
-                { id: 'month', label: '1 Месяц', price: 250,
-                desc: 'Полный функционал, автоматические обновления.' },
-                { id: 'quarter', label: '3 Месяца', price: 400,
-                    desc: 'Приоритетная поддержка и обновления.', popular: true },
-                { id: 'lifetime', label: 'Навсегда', price: 600,
-                desc: 'Пожизненный доступ ко всем версиям.' }
-            ];
+        // === ТАРИФЫ ===
+        const PLANS = [
+            { id: 'month', label: '1 Месяц', price: 250, desc: 'Полный функционал, автоматические обновления.' },
+            { id: 'quarter', label: '3 Месяца', price: 400, desc: 'Приоритетная поддержка и обновления.', popular: true },
+            { id: 'lifetime', label: 'Навсегда', price: 600, desc: 'Пожизненный доступ ко всем версиям.' }
+        ];
 
-            function renderPricing() {
-                const grid = document.getElementById('pricingGrid');
-                if (!grid) return;
-                grid.innerHTML = '';
-                PLANS.forEach(p => {
-                    const card = document.createElement('div');
-                    card.className = 'price-card';
-                    if (p.popular) {
-                        const badge = document.createElement('div');
-                        badge.className = 'badge';
-                        badge.textContent = '🔥 Популярный';
-                        card.appendChild(badge);
-                    }
-                    const amount = document.createElement('div');
-                    amount.className = 'amount';
-                    amount.textContent = `${p.price} ₽`;
-                    card.appendChild(amount);
-                    const period = document.createElement('div');
-                    period.className = 'period';
-                    period.textContent = p.label;
-                    card.appendChild(period);
-                    const desc = document.createElement('div');
-                    desc.className = 'desc';
-                    desc.textContent = p.desc;
-                    card.appendChild(desc);
-                    const btn = document.createElement('button');
-                    btn.className = 'btn-buy';
-                    btn.dataset.planId = p.id;
-                    btn.textContent = 'Купить';
-                    btn.addEventListener('click', function() {
-                        if (!currentUser) {
-                            showAuthModal('login');
-                            return;
-                        }
-                        openPurchaseModal(this.dataset.planId);
-                    });
-                    card.appendChild(btn);
-                    grid.appendChild(card);
-                });
-            }
-
-            // === МОДАЛКА ПОКУПКИ ===
-            function openPurchaseModal(planId) {
-                const plan = PLANS.find(p => p.id === planId);
-                if (!plan) return;
-
-                const wrap = document.createElement('div');
-                wrap.className = 'modal-wrap';
-
+        function renderPricing() {
+            const grid = document.getElementById('pricingGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            PLANS.forEach(p => {
                 const card = document.createElement('div');
-                card.className = 'modal-card';
-                wrap.appendChild(card);
-
-                const title = document.createElement('h2');
-                title.textContent = 'Подтверждение';
-                card.appendChild(title);
-
-                const sub = document.createElement('div');
-                sub.className = 'sub';
-                sub.textContent = `${plan.label} — ${plan.price} ₽`;
-                card.appendChild(sub);
-
-                const info = document.createElement('div');
-                info.style.cssText = 'color:#888899;font-size:0.85rem;text-align:center;margin-bottom:1.5rem;';
-                info.textContent = `Баланс: ${currentUser.balance || 0} ₽`;
-                card.appendChild(info);
-
-                const btnGroup = document.createElement('div');
-                btnGroup.style.cssText = 'display:flex;gap:0.8rem;';
-
-                const confirmBtn = document.createElement('button');
-                confirmBtn.className = 'btn-modal-action';
-                confirmBtn.textContent = 'Купить';
-                confirmBtn.addEventListener('click', async function() {
-                    this.textContent = '⏳ Обработка...';
-                    this.disabled = true;
-                    const result = await purchasePlan(planId);
-                    if (result) {
-                        wrap.remove();
-                    } else {
-                        this.textContent = 'Купить';
-                        this.disabled = false;
-                    }
-                });
-                btnGroup.appendChild(confirmBtn);
-
-                const cancelBtn = document.createElement('button');
-                cancelBtn.className = 'btn-modal-cancel';
-                cancelBtn.textContent = 'Отмена';
-                cancelBtn.addEventListener('click', () => wrap.remove());
-                btnGroup.appendChild(cancelBtn);
-
-                card.appendChild(btnGroup);
-                document.body.appendChild(wrap);
-            }
-
-            // === МОДАЛКА КОШЕЛЕК ===
-            function openWalletModal() {
-                const wrap = document.createElement('div');
-                wrap.className = 'modal-wrap';
-
-                const card = document.createElement('div');
-                card.className = 'modal-card';
-                wrap.appendChild(card);
-
-                const title = document.createElement('h2');
-                title.textContent = '💰 Кошелёк';
-                card.appendChild(title);
-
-                const sub = document.createElement('div');
-                sub.className = 'sub';
-                sub.textContent = `Баланс: ${currentUser.balance || 0} ₽`;
-                card.appendChild(sub);
-
+                card.className = 'price-card';
+                if (p.popular) {
+                    const badge = document.createElement('div');
+                    badge.className = 'badge';
+                    badge.textContent = '🔥 Популярный';
+                    card.appendChild(badge);
+                }
+                const amount = document.createElement('div');
+                amount.className = 'amount';
+                amount.textContent = `${p.price} ₽`;
+                card.appendChild(amount);
+                const period = document.createElement('div');
+                period.className = 'period';
+                period.textContent = p.label;
+                card.appendChild(period);
+                const desc = document.createElement('div');
+                desc.className = 'desc';
+                desc.textContent = p.desc;
+                card.appendChild(desc);
                 const btn = document.createElement('button');
-                btn.className = 'btn-modal-action';
-                btn.textContent = '💳 Пополнить через DonationAlerts';
-                btn.addEventListener('click', () => {
-                    const url = new URL('https://www.donationalerts.com/r/lethaldlc');
-                    url.searchParams.set('message', `USER_${currentUser.email} TOPUP`);
-                    window.open(url.toString(), '_blank', 'noopener,noreferrer');
-                    wrap.remove();
-                    addNotification('🔄 Перенаправление', 'Оплата через DonationAlerts');
+                btn.className = 'btn-buy';
+                btn.dataset.planId = p.id;
+                btn.textContent = 'Купить';
+                btn.addEventListener('click', function() {
+                    if (!currentUser) { showAuthModal('login'); return; }
+                    openPurchaseModal(this.dataset.planId);
                 });
                 card.appendChild(btn);
+                grid.appendChild(card);
+            });
+        }
 
-                const closeBtn = document.createElement('button');
-                closeBtn.className = 'btn-modal-cancel';
-                closeBtn.textContent = 'Закрыть';
-                closeBtn.addEventListener('click', () => wrap.remove());
-                card.appendChild(closeBtn);
+        // === МОДАЛКИ ===
+        function openPurchaseModal(planId) {
+            const plan = PLANS.find(p => p.id === planId);
+            if (!plan) return;
+            const wrap = document.createElement('div');
+            wrap.className = 'modal-wrap';
+            const card = document.createElement('div');
+            card.className = 'modal-card';
+            wrap.appendChild(card);
+            const title = document.createElement('h2');
+            title.textContent = 'Подтверждение';
+            card.appendChild(title);
+            const sub = document.createElement('div');
+            sub.className = 'sub';
+            sub.textContent = `${plan.label} — ${plan.price} ₽`;
+            card.appendChild(sub);
+            const info = document.createElement('div');
+            info.style.cssText = 'color:#888899;font-size:0.85rem;text-align:center;margin-bottom:1.5rem;';
+            info.textContent = `Баланс: ${currentUser.balance || 0} ₽`;
+            card.appendChild(info);
+            const btnGroup = document.createElement('div');
+            btnGroup.style.cssText = 'display:flex;gap:0.8rem;';
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'btn-modal-action';
+            confirmBtn.textContent = 'Купить';
+            confirmBtn.addEventListener('click', async function() {
+                this.textContent = '⏳ Обработка...';
+                this.disabled = true;
+                const result = await purchasePlan(planId);
+                if (result) { wrap.remove(); } else { this.textContent = 'Купить'; this.disabled = false; }
+            });
+            btnGroup.appendChild(confirmBtn);
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'btn-modal-cancel';
+            cancelBtn.textContent = 'Отмена';
+            cancelBtn.addEventListener('click', () => wrap.remove());
+            btnGroup.appendChild(cancelBtn);
+            card.appendChild(btnGroup);
+            document.body.appendChild(wrap);
+        }
 
-                document.body.appendChild(wrap);
-            }
+        function openWalletModal() {
+            const wrap = document.createElement('div');
+            wrap.className = 'modal-wrap';
+            const card = document.createElement('div');
+            card.className = 'modal-card';
+            wrap.appendChild(card);
+            const title = document.createElement('h2');
+            title.textContent = '💰 Кошелёк';
+            card.appendChild(title);
+            const sub = document.createElement('div');
+            sub.className = 'sub';
+            sub.textContent = `Баланс: ${currentUser.balance || 0} ₽`;
+            card.appendChild(sub);
+            const btn = document.createElement('button');
+            btn.className = 'btn-modal-action';
+            btn.textContent = '💳 Пополнить через DonationAlerts';
+            btn.addEventListener('click', () => {
+                const url = new URL('https://www.donationalerts.com/r/lethaldlc');
+                url.searchParams.set('message', `USER_${currentUser.email} TOPUP`);
+                window.open(url.toString(), '_blank', 'noopener,noreferrer');
+                wrap.remove();
+                addNotification('🔄 Перенаправление', 'Оплата через DonationAlerts');
+            });
+            card.appendChild(btn);
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'btn-modal-cancel';
+            closeBtn.textContent = 'Закрыть';
+            closeBtn.addEventListener('click', () => wrap.remove());
+            card.appendChild(closeBtn);
+            document.body.appendChild(wrap);
+        }
 
-            // === МОДАЛКА МЕДИА ЗАЯВКА ===
-            function openMediaApplyModal() {
-                const wrap = document.createElement('div');
-                wrap.className = 'modal-wrap';
+        function openMediaApplyModal() {
+            const wrap = document.createElement('div');
+            wrap.className = 'modal-wrap';
+            const card = document.createElement('div');
+            card.className = 'modal-card';
+            wrap.appendChild(card);
+            const title = document.createElement('h2');
+            title.textContent = '🎬 TikTok Медиа';
+            card.appendChild(title);
+            const sub = document.createElement('div');
+            sub.className = 'sub';
+            sub.textContent = 'Партнёрская программа и промокоды — подписка не обязательна!';
+            card.appendChild(sub);
+            const fg1 = document.createElement('div');
+            fg1.className = 'field-group';
+            const l1 = document.createElement('label');
+            l1.textContent = 'Ссылка на TikTok';
+            fg1.appendChild(l1);
+            const inp1 = document.createElement('input');
+            inp1.type = 'url';
+            inp1.id = 'mediaTiktok';
+            inp1.placeholder = 'https://www.tiktok.com/@username';
+            fg1.appendChild(inp1);
+            card.appendChild(fg1);
+            const fg2 = document.createElement('div');
+            fg2.className = 'field-group';
+            const l2 = document.createElement('label');
+            l2.textContent = 'Желаемый промокод (3-12 символов)';
+            fg2.appendChild(l2);
+            const inp2 = document.createElement('input');
+            inp2.type = 'text';
+            inp2.id = 'mediaPromo';
+            inp2.maxLength = '12';
+            inp2.placeholder = 'Например: STREAM2027';
+            fg2.appendChild(inp2);
+            card.appendChild(fg2);
+            const fg3 = document.createElement('div');
+            fg3.className = 'field-group';
+            const l3 = document.createElement('label');
+            l3.textContent = 'Ваш Telegram для связи';
+            fg3.appendChild(l3);
+            const inp3 = document.createElement('input');
+            inp3.type = 'text';
+            inp3.id = 'mediaTelegram';
+            inp3.placeholder = '@username';
+            fg3.appendChild(inp3);
+            card.appendChild(fg3);
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'btn-modal-action';
+            submitBtn.id = 'submitMediaBtn';
+            submitBtn.textContent = '📤 Подать заявку';
+            card.appendChild(submitBtn);
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'btn-modal-cancel';
+            cancelBtn.id = 'cancelMediaBtn';
+            cancelBtn.textContent = 'Отмена';
+            card.appendChild(cancelBtn);
+            document.body.appendChild(wrap);
+            cancelBtn.addEventListener('click', () => wrap.remove());
+            submitBtn.addEventListener('click', async function() {
+                const tiktok = document.getElementById('mediaTiktok').value.trim();
+                const promo = document.getElementById('mediaPromo').value.trim().toUpperCase();
+                const tg = document.getElementById('mediaTelegram').value.trim();
+                if (!tiktok || !promo || !tg) { addNotification('❌ Ошибка', 'Заполните все поля', 'error'); return; }
+                const tiktokRegex = /^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/@[a-zA-Z0-9._]+(\/)?$/i;
+                if (!tiktokRegex.test(tiktok)) { addNotification('❌ Ошибка', 'Некорректная ссылка TikTok', 'error'); return; }
+                const promoRegex = /^[A-Z0-9_]{3,12}$/;
+                if (!promoRegex.test(promo)) { addNotification('❌ Ошибка', 'Промокод: 3-12 латинских букв или цифр', 'error'); return; }
+                const tgRegex = /^@[a-zA-Z0-9_]{3,32}$/;
+                if (!tgRegex.test(tg)) { addNotification('❌ Ошибка', 'Укажите корректный Telegram (@username)', 'error'); return; }
+                this.textContent = '⏳ Отправка...';
+                this.disabled = true;
+                if (await submitMediaApplication(tiktok, promo, tg)) { wrap.remove(); } else { this.textContent = '📤 Подать заявку'; this.disabled = false; }
+            });
+        }
 
+        function openMediaStatsModal(promoCode) {
+            const wrap = document.createElement('div');
+            wrap.className = 'modal-wrap';
+            const card = document.createElement('div');
+            card.className = 'modal-card';
+            wrap.appendChild(card);
+            const title = document.createElement('h2');
+            title.textContent = '📊 Медиа Аналитика';
+            card.appendChild(title);
+            const sub = document.createElement('div');
+            sub.className = 'sub';
+            sub.textContent = `Промокод: ${promoCode}`;
+            card.appendChild(sub);
+            const box = document.createElement('div');
+            box.className = 'split-calculation-box';
+            getMediaStats(promoCode).then(stat => {
+                const rows = [
+                    { label: 'Покупок по коду', value: stat.uses || 0 },
+                    { label: 'Сгенерированный оборот', value: `${stat.volume || 0} ₽` },
+                    { label: 'Доход партнёра (15%)', value: `${stat.reward || 0} ₽` }
+                ];
+                rows.forEach((row, index) => {
+                    const r = document.createElement('div');
+                    r.className = `split-row ${index === rows.length - 1 ? 'total' : ''}`;
+                    r.appendChild(document.createTextNode(row.label));
+                    const span = document.createElement('span');
+                    span.textContent = row.value;
+                    if (index === rows.length - 1) span.style.color = '#ffffff';
+                    r.appendChild(span);
+                    box.appendChild(r);
+                });
+            });
+            card.appendChild(box);
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'btn-modal-cancel';
+            closeBtn.textContent = 'Закрыть';
+            closeBtn.addEventListener('click', () => wrap.remove());
+            card.appendChild(closeBtn);
+            document.body.appendChild(wrap);
+        }
+
+        function showAuthModal(mode = 'login') {
+            const wrap = document.createElement('div');
+            wrap.className = 'modal-wrap';
+            let isLogin = mode === 'login';
+            function render() {
+                wrap.innerHTML = '';
                 const card = document.createElement('div');
                 card.className = 'modal-card';
                 wrap.appendChild(card);
-
+                const tabs = document.createElement('div');
+                tabs.style.cssText = 'display:flex;gap:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0.8rem;margin-bottom:1.5rem;justify-content:center;';
+                const loginTab = document.createElement('button');
+                loginTab.className = `tab-trigger ${isLogin ? 'active' : ''}`;
+                loginTab.style.fontSize = '0.85rem';
+                loginTab.textContent = 'Вход';
+                loginTab.addEventListener('click', () => { isLogin = true; render(); });
+                tabs.appendChild(loginTab);
+                const registerTab = document.createElement('button');
+                registerTab.className = `tab-trigger ${!isLogin ? 'active' : ''}`;
+                registerTab.style.fontSize = '0.85rem';
+                registerTab.textContent = 'Регистрация';
+                registerTab.addEventListener('click', () => { isLogin = false; render(); });
+                tabs.appendChild(registerTab);
+                card.appendChild(tabs);
                 const title = document.createElement('h2');
-                title.textContent = '🎬 TikTok Медиа';
+                title.textContent = isLogin ? 'Вход' : 'Регистрация';
                 card.appendChild(title);
-
                 const sub = document.createElement('div');
                 sub.className = 'sub';
-                sub.textContent = 'Партнёрская программа и промокоды — подписка не обязательна!';
+                sub.textContent = isLogin ? 'Войдите в аккаунт' : 'Создайте новый аккаунт';
                 card.appendChild(sub);
-
+                const errorEl = document.createElement('div');
+                errorEl.className = 'auth-error';
+                errorEl.id = 'authError';
+                card.appendChild(errorEl);
+                if (!isLogin) {
+                    const fg = document.createElement('div');
+                    fg.className = 'field-group';
+                    const label = document.createElement('label');
+                    label.textContent = 'Имя';
+                    fg.appendChild(label);
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.id = 'authNameInp';
+                    input.placeholder = 'Ваше имя';
+                    fg.appendChild(input);
+                    card.appendChild(fg);
+                }
                 const fg1 = document.createElement('div');
                 fg1.className = 'field-group';
                 const l1 = document.createElement('label');
-                l1.textContent = 'Ссылка на TikTok';
+                l1.textContent = 'Email';
                 fg1.appendChild(l1);
                 const inp1 = document.createElement('input');
-                inp1.type = 'url';
-                inp1.id = 'mediaTiktok';
-                inp1.placeholder = 'https://www.tiktok.com/@username';
+                inp1.type = 'email';
+                inp1.id = 'authEmailInp';
+                inp1.placeholder = 'your@email.com';
                 fg1.appendChild(inp1);
                 card.appendChild(fg1);
-
                 const fg2 = document.createElement('div');
                 fg2.className = 'field-group';
                 const l2 = document.createElement('label');
-                l2.textContent = 'Желаемый промокод (3-12 символов)';
+                l2.textContent = 'Пароль';
                 fg2.appendChild(l2);
                 const inp2 = document.createElement('input');
-                inp2.type = 'text';
-                inp2.id = 'mediaPromo';
-                inp2.maxLength = '12';
-                inp2.placeholder = 'Например: STREAM2027';
+                inp2.type = 'password';
+                inp2.id = 'authPassInp';
+                inp2.placeholder = '••••••••';
                 fg2.appendChild(inp2);
                 card.appendChild(fg2);
-
-                const fg3 = document.createElement('div');
-                fg3.className = 'field-group';
-                const l3 = document.createElement('label');
-                l3.textContent = 'Ваш Telegram для связи';
-                fg3.appendChild(l3);
-                const inp3 = document.createElement('input');
-                inp3.type = 'text';
-                inp3.id = 'mediaTelegram';
-                inp3.placeholder = '@username';
-                fg3.appendChild(inp3);
-                card.appendChild(fg3);
-
                 const submitBtn = document.createElement('button');
                 submitBtn.className = 'btn-modal-action';
-                submitBtn.id = 'submitMediaBtn';
-                submitBtn.textContent = '📤 Подать заявку';
+                submitBtn.id = 'submitAuthBtn';
+                submitBtn.textContent = isLogin ? 'Войти' : 'Зарегистрироваться';
                 card.appendChild(submitBtn);
-
+                const toggle = document.createElement('div');
+                toggle.className = 'toggle-auth';
+                if (isLogin) { toggle.innerHTML = 'Нет аккаунта? <span id="toggleToRegBtn">Создать</span>'; } else { toggle.innerHTML = 'Уже есть аккаунт? <span id="toggleToLogBtn">Войти</span>'; }
+                card.appendChild(toggle);
                 const cancelBtn = document.createElement('button');
                 cancelBtn.className = 'btn-modal-cancel';
-                cancelBtn.id = 'cancelMediaBtn';
                 cancelBtn.textContent = 'Отмена';
-                card.appendChild(cancelBtn);
-
-                document.body.appendChild(wrap);
-
                 cancelBtn.addEventListener('click', () => wrap.remove());
-
-                submitBtn.addEventListener('click', async function() {
-                    const tiktok = document.getElementById('mediaTiktok').value.trim();
-                    const promo = document.getElementById('mediaPromo').value.trim().toUpperCase();
-                    const tg = document.getElementById('mediaTelegram').value.trim();
-
-                    if (!tiktok || !promo || !tg) {
-                        addNotification('❌ Ошибка', 'Заполните все поля', 'error');
-                        return;
-                    }
-
-                    const tiktokRegex =
-                        /^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\/@[a-zA-Z0-9._]+(\/)?$/i;
-                    if (!tiktokRegex.test(tiktok)) {
-                        addNotification('❌ Ошибка', 'Некорректная ссылка TikTok', 'error');
-                        return;
-                    }
-
-                    const promoRegex = /^[A-Z0-9_]{3,12}$/;
-                    if (!promoRegex.test(promo)) {
-                        addNotification('❌ Ошибка', 'Промокод: 3-12 латинских букв или цифр', 'error');
-                        return;
-                    }
-
-                    const tgRegex = /^@[a-zA-Z0-9_]{3,32}$/;
-                    if (!tgRegex.test(tg)) {
-                        addNotification('❌ Ошибка', 'Укажите корректный Telegram (@username)', 'error');
-                        return;
-                    }
-
-                    this.textContent = '⏳ Отправка...';
-                    this.disabled = true;
-
-                    if (await submitMediaApplication(tiktok, promo, tg)) {
-                        wrap.remove();
-                    } else {
-                        this.textContent = '📤 Подать заявку';
-                        this.disabled = false;
-                    }
+                card.appendChild(cancelBtn);
+                document.getElementById('toggleToRegBtn')?.addEventListener('click', () => { isLogin = false; render(); });
+                document.getElementById('toggleToLogBtn')?.addEventListener('click', () => { isLogin = true; render(); });
+                document.querySelectorAll('#authEmailInp, #authPassInp, #authNameInp').forEach(inp => {
+                    if (inp) { inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('submitAuthBtn').click(); }); }
+                });
+                document.getElementById('submitAuthBtn').addEventListener('click', async function() {
+                    const errEl = document.getElementById('authError');
+                    errEl.classList.remove('show');
+                    const email = document.getElementById('authEmailInp').value.trim().toLowerCase();
+                    const pass = document.getElementById('authPassInp').value;
+                    const name = document.getElementById('authNameInp')?.value.trim() || '';
+                    if (!email || !email.includes('@')) { errEl.textContent = 'Введите корректный email'; errEl.classList.add('show'); return; }
+                    if (pass.length < 6) { errEl.textContent = 'Пароль должен быть минимум 6 символов'; errEl.classList.add('show'); return; }
+                    let success;
+                    if (isLogin) { success = await login(email, pass); } else { if (!name) { errEl.textContent = 'Укажите ваше имя'; errEl.classList.add('show'); return; } success = await register(email, pass, name); }
+                    if (success) { wrap.remove(); }
                 });
             }
+            document.body.appendChild(wrap);
+            render();
+        }
 
-            // === МОДАЛКА СТАТИСТИКА МЕДИА ===
-            function openMediaStatsModal(promoCode) {
-                const wrap = document.createElement('div');
-                wrap.className = 'modal-wrap';
-
-                const card = document.createElement('div');
-                card.className = 'modal-card';
-                wrap.appendChild(card);
-
-                const title = document.createElement('h2');
-                title.textContent = '📊 Медиа Аналитика';
-                card.appendChild(title);
-
-                const sub = document.createElement('div');
-                sub.className = 'sub';
-                sub.textContent = `Промокод: ${promoCode}`;
-                card.appendChild(sub);
-
-                const box = document.createElement('div');
-                box.className = 'split-calculation-box';
-
-                getMediaStats(promoCode).then(stat => {
-                    const rows = [
-                        { label: 'Покупок по коду', value: stat.uses || 0 },
-                        { label: 'Сгенерированный оборот', value: `${stat.volume || 0} ₽` },
-                        { label: 'Доход партнёра (15%)', value: `${stat.reward || 0} ₽` }
-                    ];
-
-                    rows.forEach((row, index) => {
-                        const r = document.createElement('div');
-                        r.className = `split-row ${index === rows.length - 1 ? 'total' : ''}`;
-                        r.appendChild(document.createTextNode(row.label));
-                        const span = document.createElement('span');
-                        span.textContent = row.value;
-                        if (index === rows.length - 1) {
-                            span.style.color = '#ffffff';
-                        }
-                        r.appendChild(span);
-                        box.appendChild(r);
-                    });
-                });
-
-                card.appendChild(box);
-
-                const closeBtn = document.createElement('button');
-                closeBtn.className = 'btn-modal-cancel';
-                closeBtn.textContent = 'Закрыть';
-                closeBtn.addEventListener('click', () => wrap.remove());
-                card.appendChild(closeBtn);
-
-                document.body.appendChild(wrap);
-            }
-
-            // === МОДАЛКА АВТОРИЗАЦИИ ===
-            function showAuthModal(mode = 'login') {
-                const wrap = document.createElement('div');
-                wrap.className = 'modal-wrap';
-                let isLogin = mode === 'login';
-
-                function render() {
-                    wrap.innerHTML = '';
-                    const card = document.createElement('div');
-                    card.className = 'modal-card';
-                    wrap.appendChild(card);
-
-                    const tabs = document.createElement('div');
-                    tabs.style.cssText =
-                        'display:flex;gap:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0.8rem;margin-bottom:1.5rem;justify-content:center;';
-
-                    const loginTab = document.createElement('button');
-                    loginTab.className = `tab-trigger ${isLogin ? 'active' : ''}`;
-                    loginTab.style.fontSize = '0.85rem';
-                    loginTab.textContent = 'Вход';
-                    loginTab.addEventListener('click', () => {
-                        isLogin = true;
-                        render();
-                    });
-                    tabs.appendChild(loginTab);
-
-                    const registerTab = document.createElement('button');
-                    registerTab.className = `tab-trigger ${!isLogin ? 'active' : ''}`;
-                    registerTab.style.fontSize = '0.85rem';
-                    registerTab.textContent = 'Регистрация';
-                    registerTab.addEventListener('click', () => {
-                        isLogin = false;
-                        render();
-                    });
-                    tabs.appendChild(registerTab);
-
-                    card.appendChild(tabs);
-
-                    const title = document.createElement('h2');
-                    title.textContent = isLogin ? 'Вход' : 'Регистрация';
-                    card.appendChild(title);
-
-                    const sub = document.createElement('div');
-                    sub.className = 'sub';
-                    sub.textContent = isLogin ? 'Войдите в аккаунт' : 'Создайте новый аккаунт';
-                    card.appendChild(sub);
-
-                    const errorEl = document.createElement('div');
-                    errorEl.className = 'auth-error';
-                    errorEl.id = 'authError';
-                    card.appendChild(errorEl);
-
-                    if (!isLogin) {
-                        const fg = document.createElement('div');
-                        fg.className = 'field-group';
-                        const label = document.createElement('label');
-                        label.textContent = 'Имя';
-                        fg.appendChild(label);
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.id = 'authNameInp';
-                        input.placeholder = 'Ваше имя';
-                        fg.appendChild(input);
-                        card.appendChild(fg);
-                    }
-
-                    const fg1 = document.createElement('div');
-                    fg1.className = 'field-group';
-                    const l1 = document.createElement('label');
-                    l1.textContent = 'Email';
-                    fg1.appendChild(l1);
-                    const inp1 = document.createElement('input');
-                    inp1.type = 'email';
-                    inp1.id = 'authEmailInp';
-                    inp1.placeholder = 'your@email.com';
-                    fg1.appendChild(inp1);
-                    card.appendChild(fg1);
-
-                    const fg2 = document.createElement('div');
-                    fg2.className = 'field-group';
-                    const l2 = document.createElement('label');
-                    l2.textContent = 'Пароль';
-                    fg2.appendChild(l2);
-                    const inp2 = document.createElement('input');
-                    inp2.type = 'password';
-                    inp2.id = 'authPassInp';
-                    inp2.placeholder = '••••••••';
-                    fg2.appendChild(inp2);
-                    card.appendChild(fg2);
-
-                    const submitBtn = document.createElement('button');
-                    submitBtn.className = 'btn-modal-action';
-                    submitBtn.id = 'submitAuthBtn';
-                    submitBtn.textContent = isLogin ? 'Войти' : 'Зарегистрироваться';
-                    card.appendChild(submitBtn);
-
-                    const toggle = document.createElement('div');
-                    toggle.className = 'toggle-auth';
-                    if (isLogin) {
-                        toggle.innerHTML = 'Нет аккаунта? <span id="toggleToRegBtn">Создать</span>';
-                    } else {
-                        toggle.innerHTML = 'Уже есть аккаунт? <span id="toggleToLogBtn">Войти</span>';
-                    }
-                    card.appendChild(toggle);
-
-                    const cancelBtn = document.createElement('button');
-                    cancelBtn.className = 'btn-modal-cancel';
-                    cancelBtn.textContent = 'Отмена';
-                    cancelBtn.addEventListener('click', () => wrap.remove());
-                    card.appendChild(cancelBtn);
-
-                    document.getElementById('toggleToRegBtn')?.addEventListener('click', () => {
-                        isLogin = false;
-                        render();
-                    });
-                    document.getElementById('toggleToLogBtn')?.addEventListener('click', () => {
-                        isLogin = true;
-                        render();
-                    });
-
-                    document.querySelectorAll('#authEmailInp, #authPassInp, #authNameInp').forEach(inp => {
-                        if (inp) {
-                            inp.addEventListener('keydown', (e) => {
-                                if (e.key === 'Enter') document.getElementById('submitAuthBtn')
-                                    .click();
-                            });
-                        }
-                    });
-
-                    document.getElementById('submitAuthBtn').addEventListener('click', async function() {
-                        const errEl = document.getElementById('authError');
-                        errEl.classList.remove('show');
-
-                        const email = document.getElementById('authEmailInp').value.trim().toLowerCase();
-                        const pass = document.getElementById('authPassInp').value;
-                        const name = document.getElementById('authNameInp')?.value.trim() || '';
-
-                        if (!email || !email.includes('@')) {
-                            errEl.textContent = 'Введите корректный email';
-                            errEl.classList.add('show');
-                            return;
-                        }
-                        if (pass.length < 6) {
-                            errEl.textContent = 'Пароль должен быть минимум 6 символов';
-                            errEl.classList.add('show');
-                            return;
-                        }
-
-                        let success;
-                        if (isLogin) {
-                            success = await login(email, pass);
-                        } else {
-                            if (!name) {
-                                errEl.textContent = 'Укажите ваше имя';
-                                errEl.classList.add('show');
-                                return;
-                            }
-                            success = await register(email, pass, name);
-                        }
-
-                        if (success) {
-                            wrap.remove();
-                        }
-                    });
-                }
-
-                document.body.appendChild(wrap);
-                render();
-            }
-
-            // === РЕНДЕР КАБИНЕТА ===
-            async function renderCabinet() {
-                const container = document.getElementById('cabinetWrapper');
-                if (!currentUser) {
-                    container.innerHTML = '';
-                    const placeholder = document.createElement('div');
-                    placeholder.style.cssText = 'text-align:center;padding:4rem 0;';
-                    const msg = document.createElement('h3');
-                    msg.style.cssText =
-                        'margin-bottom:1rem;color:#888899;font-family:Orbitron,monospace;letter-spacing:2px;';
-                    msg.textContent = '🔒 Требуется авторизация';
-                    placeholder.appendChild(msg);
-                    const btn = document.createElement('button');
-                    btn.className = 'btn';
-                    btn.textContent = 'Войти';
-                    btn.addEventListener('click', () => showAuthModal('login'));
-                    placeholder.appendChild(btn);
-                    container.appendChild(placeholder);
-                    return;
-                }
-
-                await getBalance();
-
-                const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
-                const isSubActive = currentUser.subscription?.active;
-
-                let applications = [];
-                try {
-                    const result = await apiGet('/api/media');
-                    if (result.success) {
-                        applications = result.applications || [];
-                    }
-                } catch (e) {}
-
-                const approvedMedia = applications.find(a => a.status === 'approved');
-
+        // === РЕНДЕР КАБИНЕТА ===
+        async function renderCabinet() {
+            const container = document.getElementById('cabinetWrapper');
+            if (!currentUser) {
                 container.innerHTML = '';
+                const placeholder = document.createElement('div');
+                placeholder.style.cssText = 'text-align:center;padding:4rem 0;';
+                const msg = document.createElement('h3');
+                msg.style.cssText = 'margin-bottom:1rem;color:#888899;font-family:Orbitron,monospace;letter-spacing:2px;';
+                msg.textContent = '🔒 Требуется авторизация';
+                placeholder.appendChild(msg);
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.textContent = 'Войти';
+                btn.addEventListener('click', () => showAuthModal('login'));
+                placeholder.appendChild(btn);
+                container.appendChild(placeholder);
+                return;
+            }
 
-                const grid = document.createElement('div');
-                grid.className = 'cabinet-grid';
+            await getBalance();
 
-                // === SIDEBAR ===
-                const sidebar = document.createElement('div');
-                sidebar.className = 'cabinet-sidebar';
+            const lastKey = currentUser.keys?.length > 0 ? currentUser.keys[currentUser.keys.length - 1] : null;
+            const isSubActive = currentUser.subscription?.active;
 
-                const avatar = document.createElement('div');
-                avatar.className = 'avatar-box';
-                avatar.textContent = currentUser.name ? currentUser.name[0].toUpperCase() : 'U';
-                sidebar.appendChild(avatar);
+            let applications = [];
+            try {
+                const result = await apiGet('/api/media');
+                if (result.success) { applications = result.applications || []; }
+            } catch (e) {}
 
-                const nameEl = document.createElement('div');
-                nameEl.className = 'user-name-title';
-                nameEl.textContent = currentUser.name;
-                sidebar.appendChild(nameEl);
+            const approvedMedia = applications.find(a => a.status === 'approved');
 
-                const emailEl = document.createElement('div');
-                emailEl.className = 'user-email-sub';
-                emailEl.textContent = currentUser.email;
-                sidebar.appendChild(emailEl);
+            container.innerHTML = '';
+            const grid = document.createElement('div');
+            grid.className = 'cabinet-grid';
 
-                const idBadge = document.createElement('div');
-                idBadge.className = 'id-badge';
-                idBadge.textContent = `Email: ${currentUser.email}`;
-                sidebar.appendChild(idBadge);
+            // SIDEBAR
+            const sidebar = document.createElement('div');
+            sidebar.className = 'cabinet-sidebar';
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar-box';
+            avatar.textContent = currentUser.name ? currentUser.name[0].toUpperCase() : 'U';
+            sidebar.appendChild(avatar);
+            const nameEl = document.createElement('div');
+            nameEl.className = 'user-name-title';
+            nameEl.textContent = currentUser.name;
+            sidebar.appendChild(nameEl);
+            const emailEl = document.createElement('div');
+            emailEl.className = 'user-email-sub';
+            emailEl.textContent = currentUser.email;
+            sidebar.appendChild(emailEl);
+            const idBadge = document.createElement('div');
+            idBadge.className = 'id-badge';
+            idBadge.textContent = `Email: ${currentUser.email}`;
+            sidebar.appendChild(idBadge);
+            const statusPill = document.createElement('div');
+            statusPill.className = `status-pill ${isSubActive ? 'active' : ''}`;
+            const dot = document.createElement('span');
+            dot.className = 'dot';
+            statusPill.appendChild(dot);
+            statusPill.appendChild(document.createTextNode(isSubActive ? 'Подписка активна' : 'Нет подписки'));
+            sidebar.appendChild(statusPill);
+            const divider1 = document.createElement('div');
+            divider1.className = 'sidebar-divider';
+            sidebar.appendChild(divider1);
+            const infoRows = [
+                { label: 'Ключей', value: currentUser.keys?.length || 0 },
+                { label: 'Тариф', value: currentUser.subscription?.plan || 'Нет' },
+                { label: 'Баланс', value: `${currentUser.balance || 0} ₽` }
+            ];
+            infoRows.forEach(row => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'info-row';
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'label';
+                labelSpan.textContent = row.label;
+                const valSpan = document.createElement('span');
+                valSpan.className = 'val';
+                valSpan.textContent = row.value;
+                rowDiv.appendChild(labelSpan);
+                rowDiv.appendChild(valSpan);
+                sidebar.appendChild(rowDiv);
+            });
+            const divider2 = document.createElement('div');
+            divider2.className = 'sidebar-divider';
+            sidebar.appendChild(divider2);
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'sidebar-buttons-container';
+            const walletBtn = document.createElement('button');
+            walletBtn.className = 'btn-side-tile';
+            const icon1 = document.createElement('div');
+            icon1.className = 'icon-tag';
+            icon1.textContent = '💰';
+            walletBtn.appendChild(icon1);
+            const tg1 = document.createElement('div');
+            tg1.className = 'text-group';
+            const t1 = document.createElement('span');
+            t1.className = 'title';
+            t1.textContent = 'Кошелёк';
+            tg1.appendChild(t1);
+            const st1 = document.createElement('span');
+            st1.className = 'subtitle';
+            st1.textContent = `${currentUser.balance || 0} ₽`;
+            tg1.appendChild(st1);
+            walletBtn.appendChild(tg1);
+            walletBtn.addEventListener('click', openWalletModal);
+            btnContainer.appendChild(walletBtn);
+            if (approvedMedia) {
+                const mediaBtn = document.createElement('button');
+                mediaBtn.className = 'btn-side-tile';
+                mediaBtn.style.borderColor = 'rgba(255,255,255,0.15)';
+                const icon2 = document.createElement('div');
+                icon2.className = 'icon-tag';
+                icon2.textContent = '📊';
+                mediaBtn.appendChild(icon2);
+                const tg2 = document.createElement('div');
+                tg2.className = 'text-group';
+                const t2 = document.createElement('span');
+                t2.className = 'title';
+                t2.textContent = 'Медиа статистика';
+                tg2.appendChild(t2);
+                const st2 = document.createElement('span');
+                st2.className = 'subtitle';
+                st2.textContent = `Код: ${approvedMedia.promoCode}`;
+                tg2.appendChild(st2);
+                mediaBtn.appendChild(tg2);
+                mediaBtn.addEventListener('click', () => openMediaStatsModal(approvedMedia.promoCode));
+                btnContainer.appendChild(mediaBtn);
+            } else {
+                const mediaBtn = document.createElement('button');
+                mediaBtn.className = 'btn-side-tile';
+                const icon2 = document.createElement('div');
+                icon2.className = 'icon-tag';
+                icon2.textContent = '🎬';
+                mediaBtn.appendChild(icon2);
+                const tg2 = document.createElement('div');
+                tg2.className = 'text-group';
+                const t2 = document.createElement('span');
+                t2.className = 'title';
+                t2.textContent = 'Медиа проект';
+                tg2.appendChild(t2);
+                const st2 = document.createElement('span');
+                st2.className = 'subtitle';
+                st2.textContent = 'TikTok & Промокоды';
+                tg2.appendChild(st2);
+                mediaBtn.appendChild(tg2);
+                mediaBtn.addEventListener('click', openMediaApplyModal);
+                btnContainer.appendChild(mediaBtn);
+            }
+            sidebar.appendChild(btnContainer);
+            const divider3 = document.createElement('div');
+            divider3.className = 'sidebar-divider';
+            sidebar.appendChild(divider3);
+            const buyBtn = document.createElement('button');
+            buyBtn.className = 'btn-sm';
+            buyBtn.style.width = '100%';
+            buyBtn.dataset.page = 'pricing';
+            buyBtn.textContent = 'Купить ключ';
+            buyBtn.addEventListener('click', () => navigateTo('pricing'));
+            sidebar.appendChild(buyBtn);
+            grid.appendChild(sidebar);
 
-                const statusPill = document.createElement('div');
-                statusPill.className = `status-pill ${isSubActive ? 'active' : ''}`;
-                const dot = document.createElement('span');
-                dot.className = 'dot';
-                statusPill.appendChild(dot);
-                statusPill.appendChild(document.createTextNode(isSubActive ? 'Подписка активна' : 'Нет подписки'));
-                sidebar.appendChild(statusPill);
+            // MAIN
+            const main = document.createElement('div');
+            main.className = 'cabinet-main';
+            const metricsRow = document.createElement('div');
+            metricsRow.className = 'metric-cards-row';
+            const metrics = [
+                { head: 'Баланс кошелька', val: `${currentUser.balance || 0} ₽`, sub: 'Автоматическая скидка при покупке' },
+                { head: 'Статус лицензии', val: isSubActive ? 'Активна' : 'Неактивна', sub: isSubActive ? 'Доступ открыт' : 'Оформите подписку' },
+                { head: 'Всего ключей', val: currentUser.keys?.length || 0, sub: 'В вашем инвентаре' }
+            ];
+            metrics.forEach(m => {
+                const card = document.createElement('div');
+                card.className = 'dash-card';
+                const head = document.createElement('div');
+                head.className = 'card-head';
+                head.textContent = m.head;
+                card.appendChild(head);
+                const val = document.createElement('div');
+                val.className = 'card-val';
+                if (m.head === 'Статус лицензии') val.style.fontSize = '1.4rem';
+                val.textContent = m.val;
+                card.appendChild(val);
+                const sub = document.createElement('div');
+                sub.className = 'card-sub';
+                sub.textContent = m.sub;
+                card.appendChild(sub);
+                metricsRow.appendChild(card);
+            });
+            main.appendChild(metricsRow);
 
-                const divider1 = document.createElement('div');
-                divider1.className = 'sidebar-divider';
-                sidebar.appendChild(divider1);
-
-                const infoRows = [
-                    { label: 'Ключей', value: currentUser.keys?.length || 0 },
-                    { label: 'Тариф', value: currentUser.subscription?.plan || 'Нет' },
-                    { label: 'Баланс', value: `${currentUser.balance || 0} ₽` }
-                ];
-                infoRows.forEach(row => {
-                    const rowDiv = document.createElement('div');
-                    rowDiv.className = 'info-row';
-                    const labelSpan = document.createElement('span');
-                    labelSpan.className = 'label';
-                    labelSpan.textContent = row.label;
-                    const valSpan = document.createElement('span');
-                    valSpan.className = 'val';
-                    valSpan.textContent = row.value;
-                    rowDiv.appendChild(labelSpan);
-                    rowDiv.appendChild(valSpan);
-                    sidebar.appendChild(rowDiv);
-                });
-
-                const divider2 = document.createElement('div');
-                divider2.className = 'sidebar-divider';
-                sidebar.appendChild(divider2);
-
-                const btnContainer = document.createElement('div');
-                btnContainer.className = 'sidebar-buttons-container';
-
-                // Кошелёк
-                const walletBtn = document.createElement('button');
-                walletBtn.className = 'btn-side-tile';
-                const icon1 = document.createElement('div');
-                icon1.className = 'icon-tag';
-                icon1.textContent = '💰';
-                walletBtn.appendChild(icon1);
-                const tg1 = document.createElement('div');
-                tg1.className = 'text-group';
-                const t1 = document.createElement('span');
-                t1.className = 'title';
-                t1.textContent = 'Кошелёк';
-                tg1.appendChild(t1);
-                const st1 = document.createElement('span');
-                st1.className = 'subtitle';
-                st1.textContent = `${currentUser.balance || 0} ₽`;
-                tg1.appendChild(st1);
-                walletBtn.appendChild(tg1);
-                walletBtn.addEventListener('click', openWalletModal);
-                btnContainer.appendChild(walletBtn);
-
-                // Медиа
-                if (approvedMedia) {
-                    const mediaBtn = document.createElement('button');
-                    mediaBtn.className = 'btn-side-tile';
-                    mediaBtn.style.borderColor = 'rgba(255,255,255,0.15)';
-                    const icon2 = document.createElement('div');
-                    icon2.className = 'icon-tag';
-                    icon2.textContent = '📊';
-                    mediaBtn.appendChild(icon2);
-                    const tg2 = document.createElement('div');
-                    tg2.className = 'text-group';
-                    const t2 = document.createElement('span');
-                    t2.className = 'title';
-                    t2.textContent = 'Медиа статистика';
-                    tg2.appendChild(t2);
-                    const st2 = document.createElement('span');
-                    st2.className = 'subtitle';
-                    st2.textContent = `Код: ${approvedMedia.promoCode}`;
-                    tg2.appendChild(st2);
-                    mediaBtn.appendChild(tg2);
-                    mediaBtn.addEventListener('click', () => openMediaStatsModal(approvedMedia.promoCode));
-                    btnContainer.appendChild(mediaBtn);
-                } else {
-                    const mediaBtn = document.createElement('button');
-                    mediaBtn.className = 'btn-side-tile';
-                    const icon2 = document.createElement('div');
-                    icon2.className = 'icon-tag';
-                    icon2.textContent = '🎬';
-                    mediaBtn.appendChild(icon2);
-                    const tg2 = document.createElement('div');
-                    tg2.className = 'text-group';
-                    const t2 = document.createElement('span');
-                    t2.className = 'title';
-                    t2.textContent = 'Медиа проект';
-                    tg2.appendChild(t2);
-                    const st2 = document.createElement('span');
-                    st2.className = 'subtitle';
-                    st2.textContent = 'TikTok & Промокоды';
-                    tg2.appendChild(st2);
-                    mediaBtn.appendChild(tg2);
-                    mediaBtn.addEventListener('click', openMediaApplyModal);
-                    btnContainer.appendChild(mediaBtn);
+            // КЛЮЧ
+            const keyHub = document.createElement('div');
+            keyHub.className = 'key-hub';
+            const khTitle = document.createElement('h3');
+            khTitle.textContent = '🔑 Лицензионный ключ';
+            keyHub.appendChild(khTitle);
+            const khDesc = document.createElement('p');
+            khDesc.textContent = 'Скопируйте ключ для активации';
+            keyHub.appendChild(khDesc);
+            const keyDisplay = document.createElement('div');
+            keyDisplay.className = 'key-display';
+            const keySpan = document.createElement('span');
+            keySpan.id = 'keyValueBox';
+            keySpan.textContent = lastKey ? lastKey.key : 'Нет активного ключа';
+            keyDisplay.appendChild(keySpan);
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'btn-sm primary';
+            copyBtn.textContent = '📋 Копировать';
+            copyBtn.addEventListener('click', function() {
+                const text = document.getElementById('keyValueBox')?.textContent;
+                if (text && text !== 'Нет активного ключа') {
+                    navigator.clipboard.writeText(text);
+                    this.textContent = '✅ Скопировано';
+                    setTimeout(() => this.textContent = '📋 Копировать', 2000);
                 }
+            });
+            keyDisplay.appendChild(copyBtn);
+            keyHub.appendChild(keyDisplay);
+            const instGrid = document.createElement('div');
+            instGrid.className = 'instructions-grid';
+            const insts = ['Скачайте лоадер: lethaldlc.com/loader', 'Запустите от имени администратора', 'Вставьте лицензионный ключ', 'Нажмите "Inject" и войдите в игру'];
+            insts.forEach((text, index) => {
+                const box = document.createElement('div');
+                box.className = 'inst-box';
+                const b = document.createElement('b');
+                b.textContent = `${index + 1}.`;
+                box.appendChild(b);
+                const span = document.createElement('span');
+                span.textContent = text;
+                box.appendChild(span);
+                instGrid.appendChild(box);
+            });
+            keyHub.appendChild(instGrid);
+            main.appendChild(keyHub);
 
-                sidebar.appendChild(btnContainer);
-
-                const divider3 = document.createElement('div');
-                divider3.className = 'sidebar-divider';
-                sidebar.appendChild(divider3);
-
-                const buyBtn = document.createElement('button');
-                buyBtn.className = 'btn-sm';
-                buyBtn.style.width = '100%';
-                buyBtn.dataset.page = 'pricing';
-                buyBtn.textContent = 'Купить ключ';
-                buyBtn.addEventListener('click', () => navigateTo('pricing'));
-                sidebar.appendChild(buyBtn);
-
-                grid.appendChild(sidebar);
-
-                // === MAIN ===
-                const main = document.createElement('div');
-                main.className = 'cabinet-main';
-
-                // Метрики
-                const metricsRow = document.createElement('div');
-                metricsRow.className = 'metric-cards-row';
-
-                const metrics = [
-                    { head: 'Баланс кошелька', val: `${currentUser.balance || 0} ₽`,
-                    sub: 'Автоматическая скидка при покупке' },
-                    { head: 'Статус лицензии', val: isSubActive ? 'Активна' : 'Неактивна',
-                    sub: isSubActive ? 'Доступ открыт' : 'Оформите подписку' },
-                    { head: 'Всего ключей', val: currentUser.keys?.length || 0, sub: 'В вашем инвентаре' }
-                ];
-                metrics.forEach(m => {
-                    const card = document.createElement('div');
-                    card.className = 'dash-card';
-                    const head = document.createElement('div');
-                    head.className = 'card-head';
-                    head.textContent = m.head;
-                    card.appendChild(head);
-                    const val = document.createElement('div');
-                    val.className = 'card-val';
-                    if (m.head === 'Статус лицензии') {
-                        val.style.fontSize = '1.4rem';
-                    }
-                    val.textContent = m.val;
-                    card.appendChild(val);
-                    const sub = document.createElement('div');
-                    sub.className = 'card-sub';
-                    sub.textContent = m.sub;
-                    card.appendChild(sub);
-                    metricsRow.appendChild(card);
-                });
-
-                main.appendChild(metricsRow);
-
-                // Ключ
-                const keyHub = document.createElement('div');
-                keyHub.className = 'key-hub';
-
-                const khTitle = document.createElement('h3');
-                khTitle.textContent = '🔑 Лицензионный ключ';
-                keyHub.appendChild(khTitle);
-
-                const khDesc = document.createElement('p');
-                khDesc.textContent = 'Скопируйте ключ для активации';
-                keyHub.appendChild(khDesc);
-
-                const keyDisplay = document.createElement('div');
-                keyDisplay.className = 'key-display';
-                const keySpan = document.createElement('span');
-                keySpan.id = 'keyValueBox';
-                keySpan.textContent = lastKey ? lastKey.key : 'Нет активного ключа';
-                keyDisplay.appendChild(keySpan);
-                const copyBtn = document.createElement('button');
-                copyBtn.className = 'btn-sm primary';
-                copyBtn.textContent = '📋 Копировать';
-                copyBtn.addEventListener('click', function() {
-                    const text = document.getElementById('keyValueBox')?.textContent;
-                    if (text && text !== 'Нет активного ключа') {
-                        navigator.clipboard.writeText(text);
-                        this.textContent = '✅ Скопировано';
-                        setTimeout(() => this.textContent = '📋 Копировать', 2000);
-                    }
-                });
-                keyDisplay.appendChild(copyBtn);
-                keyHub.appendChild(keyDisplay);
-
-                const instGrid = document.createElement('div');
-                instGrid.className = 'instructions-grid';
-                const insts = [
-                    'Скачайте лоадер: lethaldlc.com/loader',
-                    'Запустите от имени администратора',
-                    'Вставьте лицензионный ключ',
-                    'Нажмите "Inject" и войдите в игру'
-                ];
-                insts.forEach((text, index) => {
-                    const box = document.createElement('div');
-                    box.className = 'inst-box';
-                    const b = document.createElement('b');
-                    b.textContent = `${index + 1}.`;
-                    box.appendChild(b);
-                    const span = document.createElement('span');
-                    span.textContent = text;
-                    box.appendChild(span);
-                    instGrid.appendChild(box);
-                });
-                keyHub.appendChild(instGrid);
-
-                main.appendChild(keyHub);
-
-                // Вкладки
-                const tabsHub = document.createElement('div');
-                tabsHub.className = 'tabs-hub';
-
-                const tabsNav = document.createElement('div');
-                tabsNav.className = 'tabs-nav';
-
-                const tab1 = document.createElement('button');
-                tab1.className = `tab-trigger ${currentTab === 'withdrawals' ? 'active' : ''}`;
-                tab1.id = 'tabWithTrigger';
-                tab1.textContent = 'Выводы средств';
-                tab1.addEventListener('click', () => {
-                    currentTab = 'withdrawals';
-                    renderCabinet();
-                });
-                tabsNav.appendChild(tab1);
-
-                const tab2 = document.createElement('button');
-                tab2.className = `tab-trigger ${currentTab === 'media' ? 'active' : ''}`;
-                tab2.id = 'tabMediaTrigger';
-                tab2.textContent = 'Медиа заявки';
-                tab2.addEventListener('click', () => {
-                    currentTab = 'media';
-                    renderCabinet();
-                });
-                tabsNav.appendChild(tab2);
-
-                tabsHub.appendChild(tabsNav);
-
-                const tabContent = document.createElement('div');
-
-                if (currentTab === 'withdrawals') {
-                    if (currentUser.withdrawals?.length > 0) {
-                        currentUser.withdrawals.forEach(w => {
-                            const row = document.createElement('div');
-                            row.className = 'history-row';
-                            const left = document.createElement('div');
-                            const b = document.createElement('b');
-                            b.style.color = '#fff';
-                            b.textContent = `${w.amount} ₽`;
-                            left.appendChild(b);
-                            const details = document.createElement('div');
-                            details.style.cssText = 'font-size:0.65rem;color:#666;';
-                            details.textContent =
-                                `${w.requisites} • TG: ${w.telegram || '—'} • ${w.date}`;
-                            left.appendChild(details);
-                            row.appendChild(left);
-                            const tag = document.createElement('span');
-                            tag.className = 'history-tag';
-                            tag.textContent = w.status === 'pending' ? '⏳ В обработке' : '✅ Выполнен';
-                            row.appendChild(tag);
-                            tabContent.appendChild(row);
-                        });
-                    } else {
-                        const empty = document.createElement('div');
-                        empty.style.cssText = 'color:#555;font-size:0.8rem;padding:1rem 0;';
-                        empty.textContent = 'Заявок на вывод пока нет.';
-                        tabContent.appendChild(empty);
-                    }
-                } else {
-                    if (applications.length > 0) {
-                        applications.forEach(m => {
-                            const row = document.createElement('div');
-                            row.className = 'history-row';
-                            const left = document.createElement('div');
-                            const b = document.createElement('b');
-                            b.style.color = '#fff';
-                            b.textContent = `Промокод: ${m.promoCode}`;
-                            left.appendChild(b);
-                            const details = document.createElement('div');
-                            details.style.cssText = 'font-size:0.65rem;color:#666;';
-                            details.textContent =
-                                `${m.tiktokUrl} • TG: ${m.telegramContact || '—'} • ${new Date(m.createdAt).toLocaleDateString()}`;
-                            left.appendChild(details);
-                            row.appendChild(left);
-                            const tag = document.createElement('span');
-                            tag.className = `history-tag ${m.status}`;
-                            const statusMap = {
-                                'pending': '⏳ НА ПРОВЕРКЕ',
-                                'approved': '✅ ОДОБРЕНО',
-                                'rejected': '❌ ОТКЛОНЕНО'
-                            };
-                            tag.textContent = statusMap[m.status] || m.status;
-                            row.appendChild(tag);
-                            tabContent.appendChild(row);
-                        });
-                    } else {
-                        const empty = document.createElement('div');
-                        empty.style.cssText = 'color:#555;font-size:0.8rem;padding:1rem 0;';
-                        empty.textContent =
-                            'Медиа заявок пока нет. Подайте заявку через кнопку "Медиа проект"';
-                        tabContent.appendChild(empty);
-                    }
-                }
-
-                tabsHub.appendChild(tabContent);
-                main.appendChild(tabsHub);
-
-                grid.appendChild(main);
-                container.appendChild(grid);
-
-                document.querySelectorAll('[data-page]').forEach(el => {
-                    el.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        navigateTo(this.dataset.page);
+            // ВКЛАДКИ
+            const tabsHub = document.createElement('div');
+            tabsHub.className = 'tabs-hub';
+            const tabsNav = document.createElement('div');
+            tabsNav.className = 'tabs-nav';
+            const tab1 = document.createElement('button');
+            tab1.className = `tab-trigger ${currentTab === 'withdrawals' ? 'active' : ''}`;
+            tab1.textContent = 'Выводы средств';
+            tab1.addEventListener('click', () => { currentTab = 'withdrawals'; renderCabinet(); });
+            tabsNav.appendChild(tab1);
+            const tab2 = document.createElement('button');
+            tab2.className = `tab-trigger ${currentTab === 'media' ? 'active' : ''}`;
+            tab2.textContent = 'Медиа заявки';
+            tab2.addEventListener('click', () => { currentTab = 'media'; renderCabinet(); });
+            tabsNav.appendChild(tab2);
+            tabsHub.appendChild(tabsNav);
+            const tabContent = document.createElement('div');
+            if (currentTab === 'withdrawals') {
+                if (currentUser.withdrawals?.length > 0) {
+                    currentUser.withdrawals.forEach(w => {
+                        const row = document.createElement('div');
+                        row.className = 'history-row';
+                        const left = document.createElement('div');
+                        const b = document.createElement('b');
+                        b.style.color = '#fff';
+                        b.textContent = `${w.amount} ₽`;
+                        left.appendChild(b);
+                        const details = document.createElement('div');
+                        details.style.cssText = 'font-size:0.65rem;color:#666;';
+                        details.textContent = `${w.requisites} • TG: ${w.telegram || '—'} • ${w.date}`;
+                        left.appendChild(details);
+                        row.appendChild(left);
+                        const tag = document.createElement('span');
+                        tag.className = 'history-tag';
+                        tag.textContent = w.status === 'pending' ? '⏳ В обработке' : '✅ Выполнен';
+                        row.appendChild(tag);
+                        tabContent.appendChild(row);
                     });
-                });
-            }
-
-            // === ЧАСТИЦЫ ===
-            const canvas = document.getElementById('particles-canvas');
-            const ctx = canvas.getContext('2d');
-            let width, height;
-            let particles = [];
-
-            function resizeCanvas() {
-                width = window.innerWidth;
-                height = window.innerHeight;
-                canvas.width = width;
-                canvas.height = height;
-            }
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-
-            for (let i = 0; i < 120; i++) {
-                particles.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 0.2,
-                    vy: (Math.random() - 0.5) * 0.2,
-                    r: Math.random() * 1.8 + 0.3,
-                    opacity: Math.random() * 0.5 + 0.2
-                });
-            }
-
-            function loopParticles() {
-                ctx.clearRect(0, 0, width, height);
-
-                for (let i = 0; i < particles.length; i++) {
-                    const p = particles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    if (p.x < 0 || p.x > width) p.vx *= -1;
-                    if (p.y < 0 || p.y > height) p.vy *= -1;
-
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
-                    ctx.fill();
-
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const p2 = particles[j];
-                        const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                        if (dist < 150) {
-                            ctx.beginPath();
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.strokeStyle = `rgba(255, 255, 255, ${0.02 * (1 - dist / 150)})`;
-                            ctx.stroke();
-                        }
-                    }
+                } else {
+                    const empty = document.createElement('div');
+                    empty.style.cssText = 'color:#555;font-size:0.8rem;padding:1rem 0;';
+                    empty.textContent = 'Заявок на вывод пока нет.';
+                    tabContent.appendChild(empty);
                 }
-                requestAnimationFrame(loopParticles);
-            }
-            loopParticles();
-
-            // === ОБРАБОТЧИКИ ===
-            document.getElementById('loginBtn')?.addEventListener('click', () => showAuthModal('login'));
-            document.getElementById('registerBtn')?.addEventListener('click', () => showAuthModal('register'));
-            document.getElementById('logoutBtn')?.addEventListener('click', () => {
-                localStorage.removeItem('auth_token');
-                authToken = null;
-                currentUser = null;
-                updateUI();
-                navigateTo('main');
-                addNotification('👋 До свидания', 'Вы вышли из аккаунта');
-            });
-
-            document.getElementById('hwidResetBtn')?.addEventListener('click', () => {
-                if (!currentUser) {
-                    showAuthModal('login');
-                    return;
+            } else {
+                if (applications.length > 0) {
+                    applications.forEach(m => {
+                        const row = document.createElement('div');
+                        row.className = 'history-row';
+                        const left = document.createElement('div');
+                        const b = document.createElement('b');
+                        b.style.color = '#fff';
+                        b.textContent = `Промокод: ${m.promoCode}`;
+                        left.appendChild(b);
+                        const details = document.createElement('div');
+                        details.style.cssText = 'font-size:0.65rem;color:#666;';
+                        details.textContent = `${m.tiktokUrl} • TG: ${m.telegramContact || '—'} • ${new Date(m.createdAt).toLocaleDateString()}`;
+                        left.appendChild(details);
+                        row.appendChild(left);
+                        const tag = document.createElement('span');
+                        tag.className = `history-tag ${m.status}`;
+                        const statusMap = { 'pending': '⏳ НА ПРОВЕРКЕ', 'approved': '✅ ОДОБРЕНО', 'rejected': '❌ ОТКЛОНЕНО' };
+                        tag.textContent = statusMap[m.status] || m.status;
+                        row.appendChild(tag);
+                        tabContent.appendChild(row);
+                    });
+                } else {
+                    const empty = document.createElement('div');
+                    empty.style.cssText = 'color:#555;font-size:0.8rem;padding:1rem 0;';
+                    empty.textContent = 'Медиа заявок пока нет. Подайте заявку через кнопку "Медиа проект"';
+                    tabContent.appendChild(empty);
                 }
-                openPurchaseModal('hwid');
-            });
+            }
+            tabsHub.appendChild(tabContent);
+            main.appendChild(tabsHub);
+            grid.appendChild(main);
+            container.appendChild(grid);
 
             document.querySelectorAll('[data-page]').forEach(el => {
-                el.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    navigateTo(this.dataset.page);
-                });
+                el.addEventListener('click', function(e) { e.preventDefault(); navigateTo(this.dataset.page); });
             });
+        }
 
-            // === ВОССТАНОВЛЕНИЕ СЕССИИ ===
-            async function fixSession() {
-                const token = localStorage.getItem('auth_token');
-                if (!token) return false;
+        // === ОБРАБОТЧИКИ ===
+        document.getElementById('loginBtn')?.addEventListener('click', () => showAuthModal('login'));
+        document.getElementById('registerBtn')?.addEventListener('click', () => showAuthModal('register'));
+        document.getElementById('logoutBtn')?.addEventListener('click', () => {
+            clearToken();
+            currentUser = null;
+            updateUI();
+            navigateTo('main');
+            addNotification('👋 До свидания', 'Вы вышли из аккаунта');
+        });
+        document.getElementById('hwidResetBtn')?.addEventListener('click', () => {
+            if (!currentUser) { showAuthModal('login'); return; }
+            openPurchaseModal('hwid');
+        });
+        document.querySelectorAll('[data-page]').forEach(el => {
+            el.addEventListener('click', function(e) { e.preventDefault(); navigateTo(this.dataset.page); });
+        });
 
-                try {
-                    const response = await fetch('/api/auth', {
-                        headers: { 'X-Auth-Token': token }
-                    });
-                    const data = await response.json();
-                    if (data.success) {
-                        currentUser = data.user;
-                        authToken = token;
-                        updateUI();
-                        renderCabinet();
-                        return true;
-                    } else {
-                        localStorage.removeItem('auth_token');
-                        currentUser = null;
-                        updateUI();
-                        renderCabinet();
-                        return false;
-                    }
-                } catch (e) {
-                    return false;
-                }
-            }
-
-            // Перехват ошибок авторизации
-            const originalFetch = window.fetch;
-            window.fetch = function(...args) {
-                return originalFetch.apply(this, args).then(async response => {
-                    const clonedResponse = response.clone();
-                    try {
-                        const data = await clonedResponse.json();
-                        if (data.error && (
-                                data.error.includes('пользователь не найден') ||
-                                data.error.includes('Пользователь не найден') ||
-                                data.error.includes('Недействительный токен')
-                            )) {
-                            setTimeout(() => fixSession(), 500);
-                        }
-                    } catch (e) {}
-                    return response;
-                });
-            };
-
-            // === СТАРТ ===
-            (async function init() {
-                if (authToken) {
-                    const result = await getBalance();
-                    if (result && result.success) {
-                        // Пользователь авторизован
-                    } else {
-                        authToken = null;
-                        localStorage.removeItem('auth_token');
-                    }
-                }
-                updateUI();
-                renderPricing();
+        // === ИНИЦИАЛИЗАЦИЯ ===
+        (async function init() {
+            console.log('🚀 Инициализация...');
+            await restoreSession();
+            renderPricing();
+            if (currentUser) {
+                navigateTo('cabinet');
+            } else {
                 navigateTo('main');
-            })();
-
+            }
         })();
+
+    })();
     </script>
 </body>
 </html>
