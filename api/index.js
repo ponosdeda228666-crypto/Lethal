@@ -34,17 +34,17 @@ function savePromocodes(data) {
   try { fs.writeFileSync(PROMO_FILE, JSON.stringify(data, null, 2)); } catch {}
 }
 
+// Упрощенный токен - без времени
 function generateToken(email) {
-  const data = `${email}|${Date.now()}`;
-  const hash = crypto.createHash('sha256').update(data + SECRET).digest('hex');
-  return Buffer.from(JSON.stringify({ email, hash, time: Date.now() })).toString('base64');
+  const hash = crypto.createHash('sha256').update(email + SECRET).digest('hex');
+  return Buffer.from(JSON.stringify({ email, hash })).toString('base64');
 }
 
 function verifyToken(token) {
   try {
     if (!token) return null;
     const decoded = JSON.parse(Buffer.from(token, 'base64').toString());
-    const checkHash = crypto.createHash('sha256').update(`${decoded.email}|${decoded.time}` + SECRET).digest('hex');
+    const checkHash = crypto.createHash('sha256').update(decoded.email + SECRET).digest('hex');
     if (decoded.hash !== checkHash) return null;
     return decoded.email;
   } catch { return null; }
@@ -275,6 +275,7 @@ export default async function handler(req, res) {
         message: '✅ Заявка подана!'
       });
     } catch (e) {
+      console.error('POST /api/media error:', e);
       return res.status(500).json({ error: 'Внутренняя ошибка' });
     }
   }
